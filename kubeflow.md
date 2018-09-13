@@ -18,24 +18,25 @@
 
 3. Install kubeflow:
 
-  ```
-  export KUBEFLOW_VERSION=0.2.5
-  curl https://raw.githubusercontent.com/kubeflow/kubeflow/v${KUBEFLOW_VERSION}/scripts/deploy.sh | bash
-  cd kubeflow_ks_app/
-  ks show default > /tmp/manifests.yaml
-  kubectl apply -f /tmp/manifests.yaml
-  ```
-  The workaround is tracked at https://github.com/ksonnet/ksonnet/issues/853.
+   ```
+   export KUBEFLOW_VERSION=0.2.5
+   curl https://raw.githubusercontent.com/kubeflow/kubeflow/v${KUBEFLOW_VERSION}/scripts/deploy.sh | bash
+   cd kubeflow_ks_app/
+   ks show default > /tmp/manifests.yaml
+   kubectl apply -f /tmp/manifests.yaml
+   ```
+
+   The workaround is tracked at https://github.com/ksonnet/ksonnet/issues/853.
 
 4. Get complete memory and CPU for the cluster:
 
-  ```
-  kubectl get nodes -o=jsonpath="{range .items[*]}{.metadata.name}{'\t'}{.status.allocatable.memory}{'\t'}{.status.allocatable.cpu}{'\n'}{end}"
+   ```
+   kubectl get nodes -o=jsonpath="{range .items[*]}{.metadata.name}{'\t'}{.status.allocatable.memory}{'\t'}{.status.allocatable.cpu}{'\n'}{end}"
   ```
 
-  Shows something like:
+   Shows something like:
 
-  ```
-  ip-192-168-101-177.us-west-2.compute.internal 251643680Ki 32
-  ip-192-168-196-254.us-west-2.compute.internal 251643680Ki 32
-  ```
+   ```
+   ip-192-168-101-177.us-west-2.compute.internal 251643680Ki 32
+   ip-192-168-196-254.us-west-2.compute.internal 251643680Ki 32
+   ```

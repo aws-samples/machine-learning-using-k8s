@@ -1,9 +1,10 @@
 # KubeFlow on Amazon EKS
 
 1. Create EKS cluster with GPU nodes:
-  ```
-  eksctl create cluster eks-gpu --node-type=p3.8xlarge --timeout=40m
-  ```
+   ```
+   eksctl create cluster eks-gpu --node-type=p3.8xlarge --timeout=40m
+   ```
+   
 2. Ksonnet
 
    2.1. Install: `brew install ksonnet/tap/ks` or `brew upgrade ksonnet/tap/ks`

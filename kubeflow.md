@@ -21,12 +21,14 @@
    ip-192-168-196-254.us-west-2.compute.internal   4
    ```
 
+   This will be simplified after https://github.com/weaveworks/eksctl/issues/205 is fixed.
+
 3. Ksonnet
 
    1. Install: `brew install ksonnet/tap/ks` or `brew upgrade ksonnet/tap/ks`
 
    2. Check version:
-   
+
       ```
       $ ks version
       ksonnet version: 0.12.0

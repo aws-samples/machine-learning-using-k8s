@@ -32,7 +32,7 @@
 
    ```
    kubectl get nodes -o=jsonpath="{range .items[*]}{.metadata.name}{'\t'}{.status.allocatable.memory}{'\t'}{.status.allocatable.cpu}{'\n'}{end}"
-  ```
+   ```
 
    Shows something like:
 

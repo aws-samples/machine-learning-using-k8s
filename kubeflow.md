@@ -27,12 +27,12 @@
 
    2. Check version:
    
-   ```
-   $ ks version
-   ksonnet version: 0.12.0
-   jsonnet version: v0.11.2
-   client-go version: kubernetes-1.10.4
-   ```
+      ```
+      $ ks version
+      ksonnet version: 0.12.0
+      jsonnet version: v0.11.2
+      client-go version: kubernetes-1.10.4
+      ```
 
 3. Install kubeflow:
 

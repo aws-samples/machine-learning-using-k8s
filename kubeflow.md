@@ -1,19 +1,22 @@
 # KubeFlow on Amazon EKS
 
-- Create EKS cluster with GPU nodes:
+1. Create EKS cluster with GPU nodes:
   ```
   eksctl create cluster eks-gpu --node-type=p3.8xlarge --timeout=40m
   ```
-- Ksonnet
-  - Install: `brew install ksonnet/tap/ks` or `brew upgrade ksonnet/tap/ks`
-  - Check version:
+2. Ksonnet
+
+  2.1. Install: `brew install ksonnet/tap/ks` or `brew upgrade ksonnet/tap/ks`
+
+  2.2. Check version:
     ```
     $ ks version
     ksonnet version: 0.12.0
     jsonnet version: v0.11.2
     client-go version: kubernetes-1.10.4
     ```
-- Install kubeflow
+3. Install kubeflow:
+
   ```
   export KUBEFLOW_VERSION=0.2.5
   curl https://raw.githubusercontent.com/kubeflow/kubeflow/v${KUBEFLOW_VERSION}/scripts/deploy.sh | bash
@@ -23,3 +26,16 @@
   ```
   The workaround is tracked at https://github.com/ksonnet/ksonnet/issues/853.
 
+4. Get complete memory and CPU for the cluster:
+
+  ```
+  kubectl get nodes -o=jsonpath="{range .items[*]}{.metadata.name}{'\t'}{.status.allocatable.memory}{'\t'}{.status.allocatable.cpu}{'\n'}{end}"
+  ```
+
+  Shows something like:
+
+  ```
+  ip-192-168-101-177.us-west-2.compute.internal 251643680Ki 32
+  ip-192-168-196-254.us-west-2.compute.internal 251643680Ki 32
+  ```
+  

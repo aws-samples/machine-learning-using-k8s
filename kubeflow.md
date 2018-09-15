@@ -23,35 +23,18 @@
 
    This will be simplified after https://github.com/weaveworks/eksctl/issues/205 is fixed.
 
-3. Ksonnet
-
-   1. Install: `brew install ksonnet/tap/ks` or `brew upgrade ksonnet/tap/ks`
-
-   2. Check version:
-
-      ```
-      $ ks version
-      ksonnet version: 0.12.0
-      jsonnet version: v0.11.2
-      client-go version: kubernetes-1.10.4
-      ```
-
-3. Install kubeflow:
-
-   ```
-   export KUBEFLOW_VERSION=0.2.5
-   curl https://raw.githubusercontent.com/kubeflow/kubeflow/v${KUBEFLOW_VERSION}/scripts/deploy.sh | bash
-   cd kubeflow_ks_app/
-   ks show default > /tmp/manifests.yaml
-   kubectl apply -f /tmp/manifests.yaml
-   ```
-
-   The workaround is tracked at https://github.com/ksonnet/ksonnet/issues/853.
-
-4. Get complete memory and CPU for the cluster:
+3. Get complete memory, CPU and GPU for each node in the cluster:
 
    ```
    kubectl get nodes -o=jsonpath="{range .items[*]}{.metadata.name}{'\t'}{.status.allocatable.memory}{'\t'}{.status.allocatable.cpu}{'\n'}{end}"
+   ```
+
+   ```
+   kubectl get nodes -o=jsonpath="{range .items[*]}{-o=custom-columns=NAME:.metadata.name}{'\t'}{MEMORY:.status.allocatable.memory}{'\t'}{CPU:.status.allocatable.cpu}{'\t'}{GPU:.status.allocatable.nvidia\.com/gpu}{'\n'}{end}"
+   ```
+
+   ```
+   kubectl get nodes "-o=custom-columns=NAME:.metadata.name,MEMORY:.status.allocatable.memory,CPU:.status.allocatable.cpu,GPU:.status.allocatable.nvidia\.com/gpu"
    ```
 
    Shows something like:
@@ -60,3 +43,103 @@
    ip-192-168-101-177.us-west-2.compute.internal 251643680Ki 32
    ip-192-168-196-254.us-west-2.compute.internal 251643680Ki 32
    ```
+
+   The maximum number of GPUs that may be scheduled to a pod is capped by the number of GPUs available per node. By default, pods are scheduled on CPU. 
+
+4. Find the number of GPUs assigned:
+
+   ```
+   $ kubectl get nodes     "-o=custom-columns=NAME:.metadata.name,GPU:.status.allocatable.nvidia\.com/gpu"
+   NAME                                            GPU
+   ip-192-168-101-177.us-west-2.compute.internal   4
+   ip-192-168-196-254.us-west-2.compute.internal   4
+   ```
+
+5. Install Ksonnet:
+
+   ```
+   brew install ksonnet/tap/ks
+   ```
+
+   Or upgrade:
+
+   ```
+   brew upgrade ksonnet/tap/ks
+   ```
+
+   Check version:
+
+   ```
+   $ ks version
+   ksonnet version: 0.12.0
+   jsonnet version: v0.11.2
+   client-go version: kubernetes-1.10.4
+   ```
+
+6. Install kubeflow:
+
+   Ksonnet almost always requires a GitHub access token setup to work. Otherwise it will quickly run into API access limits. Generate one at https://github.com/settings/tokens and set environmental variable `GITHUB_TOKEN=<token>`.
+
+   Now, install kubeflow:
+
+   ```
+   export KUBEFLOW_VERSION=0.2.5
+   curl https://raw.githubusercontent.com/kubeflow/kubeflow/v${KUBEFLOW_VERSION}/scripts/deploy.sh | bash
+   ```
+
+   Sometimes the following workaround may be required:
+
+   ```
+   cd kubeflow_ks_app/
+   ks show default > /tmp/manifests.yaml
+   kubectl apply -f /tmp/manifests.yaml
+   ```
+
+   This is tracked at https://github.com/ksonnet/ksonnet/issues/853.
+
+7. Verify kubeflow:
+
+   ```
+   kubectl get pods
+   NAME                                        READY     STATUS    RESTARTS   AGE
+   ambassador-59cb5ccd89-bgbpc                 2/2       Running   0          1d
+   ambassador-59cb5ccd89-wkf76                 2/2       Running   0          1d
+   ambassador-59cb5ccd89-wvdz9                 2/2       Running   0          1d
+   centraldashboard-7d7744cccb-g6hcn           1/1       Running   0          1d
+   spartakus-volunteer-8bf586df9-xdtqf         1/1       Running   0          1d
+   tf-hub-0                                    1/1       Running   0          1d
+   tf-job-dashboard-bfc9bc6bc-h5lql            1/1       Running   0          1d
+   tf-job-operator-v1alpha2-756cf9cb97-rkdtv   1/1       Running   0          1d
+   ```
+
+## TensorFlow using Kubeflow on Amazon EKS
+
+KubeFlow installation creates a `TFJob` custom resource. This makes it easy to run TensorFlow training jobs on Kubernetes. `tf-*` pods from the output of `kubectl get pods` verifies that.
+
+Run TensorFlow [TfCnn example](https://github.com/tensorflow/benchmarks/tree/master/scripts/tf_cnn_benchmarks)
+
+ks init hello
+CNN_JOB_NAME=mycnnjob
+VERSION=v0.2-branch
+ks registry add kubeflow-git github.com/kubeflow/kubeflow/tree/${VERSION}/kubeflow
+ks pkg install kubeflow-git/examples
+ks generate tf-job-simple ${CNN_JOB_NAME} --name=${CNN_JOB_NAME}
+
+
+ks env list - Pick the environment name, `default` in this case
+
+hello $ ks env list
+NAME    OVERRIDE KUBERNETES-VERSION NAMESPACE SERVER
+====    ======== ================== ========= ======
+default          v1.10.3            default   https://1E7360C77135B57E36AF7DAB726206C2.sk1.us-west-2.eks.amazonaws.com
+
+KF_ENV=default
+
+
+hello $ ks apply ${KF_ENV} -c ${CNN_JOB_NAME}
+INFO Applying tfjobs default.mycnnjob             
+INFO Creating non-existent tfjobs default.mycnnjob 
+
+
+
+Setup VERSION=master and try it

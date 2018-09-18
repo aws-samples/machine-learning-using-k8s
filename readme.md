@@ -7,3 +7,4 @@ This repository explains how to run different Machine Learning frameworks on [Am
 - [TensorFlow job on Amazon EKS](tensorflow.md)
 - [TensorFlow + Keras Hello World on Amazon EKS](tensorflow-keras.md)
 - [Jupyter notebook on Amazon EKS](jupyter.md)
+- [MXNet on Amazon EKS](mxnet.md)

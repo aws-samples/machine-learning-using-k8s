@@ -6,7 +6,7 @@ spec:
   restartPolicy: OnFailure
   containers:
   - name: mxnet 
-    image: rgaut/deepearning-mxnet:with_mxnet 
+    image: rgaut/deeplearning-mxnet:with_mxnet 
     command:
       - "python"
       - "/root/incubator-mxnet/example/image-classification/train_mnist.py"

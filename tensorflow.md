@@ -1,4 +1,4 @@
-# TensorFlow Job on Amazon EKS
+# TensorFlow on Amazon EKS
 
 This document explains how to run TensorFlow jobs on [Amazon EKS](https://www.tensorflow.org/). It requires to setup KubeFlow as explained in [KubeFlow on Amazon EKS](kubeflow.md).
 

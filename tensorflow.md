@@ -168,6 +168,7 @@ Run TensorFlow [TfCnn example](https://github.com/tensorflow/benchmarks/tree/mas
    INFO|2018-09-14T21:58:16|/opt/launcher.py|80| Finished: python tf_cnn_benchmarks.py --batch_size=32 --model=resnet50 --variable_update=parameter_server --flush_stdout=true --num_gpus=2 --local_parameter_device=gpu --device=gpu --data_format=NHWC --job_name=worker --ps_hosts=mycnnjob-ps-0.default.svc.cluster.local:2222 --worker_hosts=mycnnjob-worker-0.default.svc.cluster.local:2222 --task_index=0
    ```
 
+More details at [TensorFlow Training](https://www.kubeflow.org/docs/guides/components/tftraining/).
 
 ## Open Questions
 

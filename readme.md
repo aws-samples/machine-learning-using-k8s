@@ -5,3 +5,4 @@ This repository explains how to run different Machine Learning frameworks on [Am
 
 - [Setup KubeFlow on Amazon EKS](kubeflow.md)
 - [TensorFlow job on Amazon EKS](tensorflow.md)
+- [Jupyter notebook on Amazon EKS](jupyter.md)

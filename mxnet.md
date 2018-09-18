@@ -14,7 +14,7 @@ This documents assumes that you have EKS cluster available and running. You can 
 
    This will generate a docker image which will have all the utility to run MNIST. You can push this generated image to docker hub in your personal repo. For convenient I have docker image available publicly with name `rgaut/deeplearning-mxnet:with_mxnet`.
 
-2. Create a pod which will use the docker image built in step 1 and runs the MNIST training. The pod file is available at ``k8s-machine-learning/mxnet/mnist/mxnet.yaml`
+2. Create a pod which will use the docker image built in step 1 and runs the MNIST training. The pod file is available at `k8s-machine-learning/mxnet/mnist/mxnet.yaml`
 
    ```
       cd k8s-machine-learning/mxnet/mnist

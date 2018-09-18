@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mxnet 
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - name: mxnet 
+    image: rgaut/deepearning-mxnet:with_mxnet 
+    command:
+      - "python"
+      - "/root/incubator-mxnet/example/image-classification/train_mnist.py"
+       

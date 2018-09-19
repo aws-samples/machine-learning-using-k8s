@@ -11,7 +11,7 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 1. Build a docker image with MNIST source code and installation. Use the Dockerfile in `mxnet/mnist/Dockerfile` to use it.
 
    ```
-   docker image build mxnet/mnist -t <tag_for_image>`
+   docker image build mxnet/mnist -t <tag_for_image>
    ```
 
    This will generate a docker image which will have all the utility to run MNIST. You can push this generated image to docker hub in your personal repo. For convenience, A docker image is already pushed in the docker hub `rgaut/deeplearning-mxnet:with_mxnet`.

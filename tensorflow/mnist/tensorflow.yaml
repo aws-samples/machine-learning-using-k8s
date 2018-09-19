@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tensorflow 
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - name: tensorflow 
+    image: rgaut/deeplearning-tensorflow:with_tf_keras
+    command:
+      - "python"
+      - "/root/keras/examples/mnist_cnn.py" 
+       

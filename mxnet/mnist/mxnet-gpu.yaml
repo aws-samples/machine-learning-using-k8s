@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mxnet-gpu 
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - name: mxnet-gpu
+    image: rgaut/deeplearning-mxnet:with_mxnet 
+    command:
+      - "python"
+      - "/root/incubator-mxnet/example/image-classification/train_mnist.py"
+      - "--gpus"
+      - "0"
+       

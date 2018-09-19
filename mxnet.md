@@ -14,7 +14,7 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
    docker image build mxnet/mnist -t <tag_for_image>
    ```
 
-   This will generate a docker image which will have all the utility to run MNIST. You can push this generated image to docker hub in your personal repo. For convenience, A docker image is already pushed in the docker hub `rgaut/deeplearning-mxnet:with_mxnet`.
+   This will generate a docker image which will have all the utility to run MNIST. You can push this generated image to docker hub in your personal repo. For convenience, a docker image is already pushed in the docker hub `rgaut/deeplearning-mxnet:with_mxnet`.
 
 2. Create a pod which will use this docker image and runs the MNIST training. The pod file is available at `mxnet/mnist/mxnet.yaml`
 
@@ -28,7 +28,7 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
    kubectl create -f mxnet/mnist/mxnet-gpu.yaml
    ```   
 
-   At this point you have the pod running and training will start. You can check the status of pod by running `kubectl get pod mxnet` 
+   At this point you have the pod running and training will start. You can check the status of pod by running `kubectl get pod mxnet`.
 
 3. Check the progress in training:
 

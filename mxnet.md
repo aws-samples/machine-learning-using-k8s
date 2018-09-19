@@ -4,9 +4,9 @@ This document explains how to run MXNet training on [Amazon EKS](https://aws.ama
 
 This documents assumes that you have an EKS cluster available and running. Make sure to have a [GPU-enabled Amazon EKS cluster](eks-gpu.md) ready.
 
-In this sample, we'll use MNIST database of handwritten digits and train the model to recognize any handwritten digit.
+## MNIST training using MXNet on EKS
 
-## Single node MNIST training using MXNet on EKS
+In this sample, we'll use MNIST database of handwritten digits and train the model to recognize any handwritten digit.
 
 1. Build a docker image with MNIST source code and installation. Use the Dockerfile in `mxnet/mnist/Dockerfile` to use it.
 

@@ -7,7 +7,7 @@ TensorFlow Docker image has Jupyter notebook installed into it and is started al
 1. Create a pod using `samples/notebook/tensorflow/tensorflow.yaml`. It uses the `tensorflow/tensorflow` docker image. 
 
    ```
-   kubectl create -f tensorflow.yaml
+   kubectl create -f samples/notebook/tensorflow/tensorflow.yaml
    ```
 
    Check the logs:

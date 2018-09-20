@@ -61,4 +61,4 @@ This document explains how to setup KubeFlow on Amazon EKS cluster. Make sure to
    tf-job-operator-v1alpha2-756cf9cb97-rkdtv   1/1       Running   0          1d
    ```
 
-Now, run a [TensorFlow](tensorflow.md) job.
+Now, run a [TensorFlow and Keras](tensorflow-keras.md) job.

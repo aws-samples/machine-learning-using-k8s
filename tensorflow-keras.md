@@ -19,7 +19,7 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 2. Create a pod which will use this docker image and runs the MNIST training. The pod file is available at `tensorflow/mnist/tensorflow.yaml`
 
    ```
-   kubectl create -f tensorflow/mnist/tensorflow.yaml
+   kubectl create -f samples/tensorflow/mnist/tensorflow.yaml
    ```
 
    At this point you have the pod running and training will start. You can check the status of pod by running `kubectl get pod tensorflow`.

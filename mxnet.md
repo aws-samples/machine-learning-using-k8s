@@ -19,13 +19,13 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 2. Create a pod which will use this docker image and runs the MNIST training. The pod file is available at `mxnet/mnist/mxnet.yaml`
 
    ```
-   kubectl create -f mxnet/mnist/mxnet.yaml
+   kubectl create -f samples/mxnet/mnist/mxnet.yaml
    ```
 
    To use gpu for training you can run below command
 
    ```
-   kubectl create -f mxnet/mnist/mxnet-gpu.yaml
+   kubectl create -f samples/mxnet/mnist/mxnet-gpu.yaml
    ```   
 
    At this point you have the pod running and training will start. You can check the status of pod by running `kubectl get pod mxnet`.

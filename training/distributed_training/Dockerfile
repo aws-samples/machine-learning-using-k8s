@@ -92,7 +92,7 @@ RUN cat /etc/ssh/ssh_config | grep -v StrictHostKeyChecking > /etc/ssh/ssh_confi
 
 
 
-#Cloen the tensorflow benchmark script
+#Clone the tensorflow benchmark script
 RUN git clone https://github.com/tensorflow/benchmarks -b cnn_tf_v1.10_compatible /examples/official-benchmarks
 
 

@@ -27,7 +27,11 @@ This document explains how to setup KubeFlow on Amazon EKS cluster. Make sure to
 
 2. Install kubeflow:
 
-   Ksonnet almost always requires a GitHub access token setup to work. Otherwise it will quickly run into API access limits. Generate one at https://github.com/settings/tokens and set environmental variable `GITHUB_TOKEN=<token>`.
+   Ksonnet almost always requires a GitHub access token setup to work. Otherwise it will quickly run into API access limits. Generate one at https://github.com/settings/tokens and set environmental variable:
+
+   ```
+   export GITHUB_TOKEN=<token>
+   ```
 
    Now, install kubeflow:
 
@@ -60,5 +64,3 @@ This document explains how to setup KubeFlow on Amazon EKS cluster. Make sure to
    tf-job-dashboard-bfc9bc6bc-h5lql            1/1       Running   0          1d
    tf-job-operator-v1alpha2-756cf9cb97-rkdtv   1/1       Running   0          1d
    ```
-
-Now, run a [TensorFlow and Keras](tensorflow-keras.md) job.

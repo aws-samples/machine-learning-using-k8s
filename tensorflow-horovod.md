@@ -58,21 +58,22 @@ This document explains how to perform distributed training on [Amazon EKS](https
 1. Define the number of workers (number of machines) and number of GPU available per machine
 
     ```
-    WORKERS=3 
-    GPU=1
+    WORKERS=2
+    GPU=4
     ```
 
 1. Formulate the MPI command based on official document from [Horovod](https://github.com/uber/horovod)
 
     ```
-    EXEC="mpiexec -np 3 --hostfile /kubeflow/openmpi/assets/hostfile --allow-run-as-root --display-map --tag-output --timestamp-output -mca btl_tcp_if_exclude lo,docker0 --mca plm_rsh_no_tree_spawn 1 -bind-to none -map-by slot -mca pml ob1 -mca btl ^openib sh -c 'NCCL_MIN_NRINGS=8 NCCL_DEBUG=INFO python3.6 /examples/official-benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --num_batches=100 --model vgg16 --batch_size 64 --variable_update horovod --horovod_device gpu --use_fp16'"
+    EXEC="mpiexec -np 8 --hostfile /kubeflow/openmpi/assets/hostfile --allow-run-as-root --display-map --tag-output --timestamp-output -mca btl_tcp_if_exclude lo,docker0 --mca plm_rsh_no_tree_spawn 1 -bind-to none -map-by slot -mca pml ob1 -mca btl ^openib sh -c 'NCCL_MIN_NRINGS=8 NCCL_DEBUG=INFO python3.6 /examples/official-benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --num_batches=100 --model vgg16 --batch_size 64 --variable_update horovod --horovod_device gpu --use_fp16'"
     ```
 
-   MPI command needs some explanations. `-np` represents number of total process which will be equal to WORKERS * GPU.
+   MPI command needs some explanations. `-np` represents a total number process which will be equal to WORKERS * GPU.
 
 1. Generate the config
 
     ```
+    COMPONENT=openmpi
     ks generate openmpi ${COMPONENT} --image ${IMAGE} --secret ${SECRET} --workers ${WORKERS} --gpu ${GPU} --exec "${EXEC}"
     ```
 

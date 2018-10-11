@@ -10,14 +10,14 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
 ## Steps
 
-1. Create namespace
+1. Create namespace:
 
     ```
     NAMESPACE=kubeflow-dist-train
     kubectl create namespace ${NAMESPACE}
     ```
 
-1. Create ksonnet app
+1. Create ksonnet app:
 
     ```
     APP_NAME=kubeflow-tf-hvd
@@ -25,7 +25,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
     cd ${APP_NAME}
     ```
 
-1. Set as default namespace
+1. Set as default namespace:
 
     ```
     ks env set default --namespace ${NAMESPACE}

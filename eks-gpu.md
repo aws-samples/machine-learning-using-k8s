@@ -7,6 +7,16 @@ This document explains how to create an Amazon EKS cluster with GPU-enabled work
    ```
    eksctl create cluster eks-gpu --node-type=p3.8xlarge --timeout=40m
    ```
+
+   By default, ssh access is not enabled. Here is how it can be done:
+
+   ```
+   eksctl create cluster eks-gpu \
+      --node-type=p3.8xlarge \
+      --timeout=40m \
+      --ssh-access \
+      --ssh-public-key arun-us-west2
+   ```
    
 1. Apply NVIDIA driver:
 

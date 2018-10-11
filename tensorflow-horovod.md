@@ -49,7 +49,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
     ks pkg install kubeflow/openmpi@${VERSION}
     ```
 
-1. Define Docker Image, you can build a docker image from `training/distributed_training/Dockerfile` or you can pull the already built image 
+1. Build a Docker image for Horovod using Dockerfile from `training/distributed_training/Dockerfile` and the command `docker image build -t arungupta/horovod .`. Alternatively, you can use the image that already exists on Docker Hub:
 
     ```
     IMAGE=rgaut/horovod:latest

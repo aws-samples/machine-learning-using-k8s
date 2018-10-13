@@ -13,16 +13,13 @@ This document explains how to perform distributed training on [Amazon EKS](https
 1. Create namespace:
 
     ```
-    NAMESPACE=kubeflow-dist-train
-    kubectl create namespace ${NAMESPACE}
+    NAMESPACE=kubeflow-dist-train; kubectl create namespace ${NAMESPACE}
     ```
 
 1. Create ksonnet app:
 
     ```
-    APP_NAME=kubeflow-tf-hvd
-    ks init ${APP_NAME}
-    cd ${APP_NAME}
+    APP_NAME=kubeflow-tf-hvd; ks init ${APP_NAME}; cd ${APP_NAME}
     ```
 
 1. Set as default namespace:
@@ -34,9 +31,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
 1. Create secret for ssh access between nodes
 
     ```
-    SECRET=openmpi-secret
-    mkdir -p .tmp
-    yes | ssh-keygen -N "" -f .tmp/id_rsa
+    SECRET=openmpi-secret; mkdir -p .tmp; yes | ssh-keygen -N "" -f .tmp/id_rsa
     kubectl delete secret ${SECRET} -n ${NAMESPACE} || true
     kubectl create secret generic ${SECRET} -n ${NAMESPACE} --from-file=id_rsa=.tmp/id_rsa --from-file=id_rsa.pub=.tmp/id_rsa.pub --from-file=authorized_keys=.tmp/id_rsa.pub
     ```
@@ -53,13 +48,13 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
     ```
     IMAGE=rgaut/horovod:latest
+    IMAGE=armandmcqueen/horovod_benchmark:v1
     ```
 
 1. Define the number of workers (number of machines) and number of GPU available per machine
 
     ```
-    WORKERS=2
-    GPU=4
+    WORKERS=2; GPU=4
     ```
 
 1. Formulate the MPI command based on official document from [Horovod](https://github.com/uber/horovod)
@@ -80,7 +75,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
 1. Deploy the config to your cluster
 
     ```
-    ks apply default 
+    ks apply default
     ```
 
 1. Check the pod status

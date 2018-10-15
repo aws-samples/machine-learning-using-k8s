@@ -1,0 +1,732 @@
+
+OPENMPI_DIR=/kubeflow/openmpi
++ OPENMPI_DIR=/kubeflow/openmpi
+SSHD_CONFIG=${OPENMPI_DIR}/assets/sshd_config
++ SSHD_CONFIG=/kubeflow/openmpi/assets/sshd_config
+MPIEXEC_TIMEOUT_ON_WAIT_MPI_READY=10
++ MPIEXEC_TIMEOUT_ON_WAIT_MPI_READY=10
+BACKOFF_SECS=10
++ BACKOFF_SECS=10
+TIMEOUT_EXIT_CODE=124
++ TIMEOUT_EXIT_CODE=124
+
+run_by_non_root() {
+  [ "$(id -u)" != "0" ]
+}
+
+wait_mpi_ready() {
+  local workers=$1
+  local max_retries=$2
+  local retries=0
+
+  until MPIEXEC_TIMEOUT=${MPIEXEC_TIMEOUT_ON_WAIT_MPI_READY} mpiexec -n ${workers} --hostfile ${OPENMPI_DIR}/assets/hostfile --allow-run-as-root -q sh -c 'echo $(hostname) is ready'; do
+    sleep ${BACKOFF_SECS}
+
+    retries=$(expr ${retries} + 1)
+    if [ -n "${max_retries}" ] && [ ${retries} -ge ${max_retries} ]; then
+      exit ${TIMEOUT_EXIT_CODE}
+    fi
+  done
+}
+
+wait_controller_signal() {
+  local signal=$1
+  local max_retries=$2
+  local retries=0
+
+  until [ -f ${OPENMPI_DIR}/data/.openmpi-controller/${signal} ]; do
+    sleep ${BACKOFF_SECS}
+
+    retries=$(expr ${retries} + 1)
+    if [ -n "${max_retries}" ] && [ ${retries} -ge ${max_retries} ]; then
+      exit ${TIMEOUT_EXIT_CODE}
+    fi
+  done
+}
+
+if [ $# -ne 4 ]; then
+  echo "illegal number of parameters"
+  exit 1
+fi
++ [ 4 -ne 4 ]
+
+role="$1"
++ role=master
+workers="$2"
++ workers=2
+exec="$3"
++ exec=mpiexec -np 8 --hostfile /kubeflow/openmpi/assets/hostfile --allow-run-as-root --display-map --tag-output --timestamp-output -mca btl_tcp_if_exclude lo,docker0 --mca plm_rsh_no_tree_spawn 1 -bind-to none -map-by slot -mca pml ob1 -mca btl ^openib sh -c 'NCCL_SOCKET_IFNAME=eth0 NCCL_SOCKET_IFNAME=eth0 NCCL_MIN_NRINGS=8 NCCL_DEBUG=INFO python3.6 /examples/official-benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --num_batches=100 --model vgg16 --batch_size 64 --variable_update horovod --horovod_device gpu --use_fp16'
+timeout_secs="$4"
++ timeout_secs=300
+max_retries=$(expr ${timeout_secs} / ${BACKOFF_SECS})
++ expr 300 / 10
++ max_retries=30
+
+# Set up openmpi
+mkdir -p ${HOME}/.openmpi
++ mkdir -p /root/.openmpi
+cp ${OPENMPI_DIR}/assets/mca-params.conf ${HOME}/.openmpi
++ cp /kubeflow/openmpi/assets/mca-params.conf /root/.openmpi
+
+# Set up ssh
+mkdir -p ${HOME}/.ssh
++ mkdir -p /root/.ssh
+cp ${OPENMPI_DIR}/secrets/id_rsa ${HOME}/.ssh
++ cp /kubeflow/openmpi/secrets/id_rsa /root/.ssh
+chmod 400 ${HOME}/.ssh/id_rsa
++ chmod 400 /root/.ssh/id_rsa
+cp ${OPENMPI_DIR}/secrets/id_rsa.pub ${HOME}/.ssh
++ cp /kubeflow/openmpi/secrets/id_rsa.pub /root/.ssh
+cp ${OPENMPI_DIR}/secrets/authorized_keys ${HOME}/.ssh
++ cp /kubeflow/openmpi/secrets/authorized_keys /root/.ssh
+cp ${OPENMPI_DIR}/assets/ssh_config ${HOME}/.ssh/config
++ cp /kubeflow/openmpi/assets/ssh_config /root/.ssh/config
+
+# when this runs by non-root user.
+# we have to create ephemeral hostkeys
+if run_by_non_root ; then
+  mkdir -p ${HOME}/.sshd
+  cp ${OPENMPI_DIR}/assets/sshd_config ${HOME}/.sshd/sshd_config
+  SSHD_CONFIG=${HOME}/.sshd/sshd_config
+
+  ssh-keygen -f ${HOME}/.sshd/host_rsa_key -C '' -N '' -t rsa
+  ssh-keygen -f ${HOME}/.sshd/host_dsa_key -C '' -N '' -t dsa
+  echo "HostKey ${HOME}/.sshd/host_rsa_key" >> ${SSHD_CONFIG}
+  echo "HostKey ${HOME}/.sshd/host_dsa_key" >> ${SSHD_CONFIG}
+fi
++ run_by_non_root
++ id -u
++ [ 0 != 0 ]
+
+exit_code=0
++ exit_code=0
+if [ "${role}" = "master" ]; then
+  # Wait until workers are ready.
+  wait_mpi_ready ${workers} ${max_retries}
+
+  # Run the exec command in master
+  sh -c "${exec}" || exit_code=$?
+else
+  # Wait until controller finishes initialization.
+  wait_controller_signal SIGCONT ${max_retries}
+
+  # Start sshd in daemon mode
+  /usr/sbin/sshd -e -f ${SSHD_CONFIG}
+
+  # Block forever until controller terminates.
+  wait_controller_signal SIGTERM
+fi
++ [ master = master ]
++ wait_mpi_ready 2 30
++ local workers=2
++ local max_retries=30
++ local retries=0
++ MPIEXEC_TIMEOUT=10 mpiexec -n 2 --hostfile /kubeflow/openmpi/assets/hostfile --allow-run-as-root -q sh -c echo $(hostname) is ready
+ssh: Could not resolve hostname openmpi-worker-1.openmpi.kubeflow-dist-train: Name or service not known
+ssh: Could not resolve hostname openmpi-worker-0.openmpi.kubeflow-dist-train: Name or service not known
++ sleep 10
++ expr 0 + 1
++ retries=1
++ [ -n 30 ]
++ [ 1 -ge 30 ]
++ MPIEXEC_TIMEOUT=10 mpiexec -n 2 --hostfile /kubeflow/openmpi/assets/hostfile --allow-run-as-root -q sh -c echo $(hostname) is ready
+Warning: Permanently added '[openmpi-worker-1.openmpi.kubeflow-dist-train]:2022,[192.168.230.127]:2022' (ECDSA) to the list of known hosts.
+Warning: Permanently added '[openmpi-worker-0.openmpi.kubeflow-dist-train]:2022,[192.168.146.63]:2022' (ECDSA) to the list of known hosts.
+openmpi-worker-0 is ready
+openmpi-worker-0 is ready
++ sh -c mpiexec -np 8 --hostfile /kubeflow/openmpi/assets/hostfile --allow-run-as-root --display-map --tag-output --timestamp-output -mca btl_tcp_if_exclude lo,docker0 --mca plm_rsh_no_tree_spawn 1 -bind-to none -map-by slot -mca pml ob1 -mca btl ^openib sh -c 'NCCL_SOCKET_IFNAME=eth0 NCCL_SOCKET_IFNAME=eth0 NCCL_MIN_NRINGS=8 NCCL_DEBUG=INFO python3.6 /examples/official-benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --num_batches=100 --model vgg16 --batch_size 64 --variable_update horovod --horovod_device gpu --use_fp16'
+Warning: Permanently added '[openmpi-worker-0.openmpi.kubeflow-dist-train]:2022,[192.168.146.63]:2022' (ECDSA) to the list of known hosts.
+Warning: Permanently added '[openmpi-worker-1.openmpi.kubeflow-dist-train]:2022,[192.168.230.127]:2022' (ECDSA) to the list of known hosts.
+ Data for JOB [13245,1] offset 0 Total slots allocated 24
+
+ ========================   JOB MAP   ========================
+
+ Data for node: openmpi-worker-0.openmpi.kubeflow-dist-train	Num slots: 4	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [13245,1] App: 0 Process rank: 0 Bound: N/A
+ 	Process OMPI jobid: [13245,1] App: 0 Process rank: 1 Bound: N/A
+ 	Process OMPI jobid: [13245,1] App: 0 Process rank: 2 Bound: N/A
+ 	Process OMPI jobid: [13245,1] App: 0 Process rank: 3 Bound: N/A
+
+ Data for node: openmpi-worker-1.openmpi.kubeflow-dist-train	Num slots: 4	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [13245,1] App: 0 Process rank: 4 Bound: N/A
+ 	Process OMPI jobid: [13245,1] App: 0 Process rank: 5 Bound: N/A
+ 	Process OMPI jobid: [13245,1] App: 0 Process rank: 6 Bound: N/A
+ 	Process OMPI jobid: [13245,1] App: 0 Process rank: 7 Bound: N/A
+
+ =============================================================
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:TensorFlow:  1.11
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:Model:       vgg16
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:Dataset:     imagenet (synthetic)
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:Mode:        training
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:SingleSess:  False
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:Batch size:  512 global
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:             64.0 per device
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:Num batches: 100
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:Num epochs:  0.04
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:Data format: NCHW
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:Layout optimizer: False
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:Optimizer:   sgd
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:TensorFlow:  1.11
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:Variables:   horovod
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:Horovod on:  gpu
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:==========
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:Model:       vgg16
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:Dataset:     imagenet (synthetic)
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:Mode:        training
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:SingleSess:  False
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:Batch size:  512 global
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:             64.0 per device
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:Num batches: 100
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:Num epochs:  0.04
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:TensorFlow:  1.11
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:Model:       vgg16
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:Dataset:     imagenet (synthetic)
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:TensorFlow:  1.11
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:Model:       vgg16
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:Dataset:     imagenet (synthetic)
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:Mode:        training
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:SingleSess:  False
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:Batch size:  512 global
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:             64.0 per device
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:Num batches: 100
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:Num epochs:  0.04
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:Mode:        training
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:SingleSess:  False
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:Batch size:  512 global
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:Data format: NCHW
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:             64.0 per device
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:Layout optimizer: False
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:Optimizer:   sgd
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:TensorFlow:  1.11
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:Num batches: 100
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:Num epochs:  0.04
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:Data format: NCHW
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:Layout optimizer: False
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:Optimizer:   sgd
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:Variables:   horovod
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:Variables:   horovod
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:Horovod on:  gpu
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:==========
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:Horovod on:  gpu
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:==========
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:Model:       vgg16
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:Dataset:     imagenet (synthetic)
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:Mode:        training
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:SingleSess:  False
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:Batch size:  512 global
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:             64.0 per device
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:Data format: NCHW
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:Layout optimizer: False
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:Num batches: 100
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:Num epochs:  0.04
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:Optimizer:   sgd
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:Data format: NCHW
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:Layout optimizer: False
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:Optimizer:   sgd
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:Variables:   horovod
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:Horovod on:  gpu
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:==========
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:Variables:   horovod
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:TensorFlow:  1.11
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:Horovod on:  gpu
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:==========
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:Model:       vgg16
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:Dataset:     imagenet (synthetic)
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:Mode:        training
+Mon Oct 15 23:15:14 2018[1,1]<stdout>:Generating model
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:SingleSess:  False
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:TensorFlow:  1.11
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:Batch size:  512 global
+Mon Oct 15 23:15:14 2018[1,0]<stdout>:Generating model
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:             64.0 per device
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:Model:       vgg16
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:Dataset:     imagenet (synthetic)
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:Mode:        training
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:SingleSess:  False
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:Batch size:  512 global
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:Num batches: 100
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:             64.0 per device
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:Num batches: 100
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:Num epochs:  0.04
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:Num epochs:  0.04
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:Data format: NCHW
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:Layout optimizer: False
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:Optimizer:   sgd
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:Data format: NCHW
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:Layout optimizer: False
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:Optimizer:   sgd
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:Variables:   horovod
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:Variables:   horovod
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:Horovod on:  gpu
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:==========
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:Horovod on:  gpu
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:==========
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:TensorFlow:  1.11
+Mon Oct 15 23:15:14 2018[1,6]<stdout>:Generating model
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:Model:       vgg16
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:Dataset:     imagenet (synthetic)
+Mon Oct 15 23:15:14 2018[1,5]<stdout>:Generating model
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:Mode:        training
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:SingleSess:  False
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:Batch size:  512 global
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:             64.0 per device
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:Num batches: 100
+Mon Oct 15 23:15:14 2018[1,7]<stdout>:Generating model
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:Num epochs:  0.04
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Mon Oct 15 23:15:14 2018[1,4]<stdout>:Generating model
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:Data format: NCHW
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:Layout optimizer: False
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:Optimizer:   sgd
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:Variables:   horovod
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:Horovod on:  gpu
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:==========
+Mon Oct 15 23:15:14 2018[1,2]<stdout>:Generating model
+Mon Oct 15 23:15:14 2018[1,3]<stdout>:Generating model
+Mon Oct 15 23:15:15 2018[1,6]<stderr>:W1015 23:15:15.611330 139990433425152 tf_logging.py:125] From /examples/official-benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:1778: Supervisor.__init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Mon Oct 15 23:15:15 2018[1,6]<stderr>:Instructions for updating:
+Mon Oct 15 23:15:15 2018[1,6]<stderr>:Please switch to tf.train.MonitoredTrainingSession
+Mon Oct 15 23:15:15 2018[1,5]<stderr>:W1015 23:15:15.613610 140410371155712 tf_logging.py:125] From /examples/official-benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:1778: Supervisor.__init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Mon Oct 15 23:15:15 2018[1,5]<stderr>:Instructions for updating:
+Mon Oct 15 23:15:15 2018[1,5]<stderr>:Please switch to tf.train.MonitoredTrainingSession
+Mon Oct 15 23:15:15 2018[1,2]<stderr>:W1015 23:15:15.624171 140576501425920 tf_logging.py:125] From /examples/official-benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:1778: Supervisor.__init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Mon Oct 15 23:15:15 2018[1,2]<stderr>:Instructions for updating:
+Mon Oct 15 23:15:15 2018[1,2]<stderr>:Please switch to tf.train.MonitoredTrainingSession
+Mon Oct 15 23:15:15 2018[1,1]<stderr>:W1015 23:15:15.662408 139718135842560 tf_logging.py:125] From /examples/official-benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:1778: Supervisor.__init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Mon Oct 15 23:15:15 2018[1,1]<stderr>:Instructions for updating:
+Mon Oct 15 23:15:15 2018[1,1]<stderr>:Please switch to tf.train.MonitoredTrainingSession
+Mon Oct 15 23:15:15 2018[1,4]<stderr>:W1015 23:15:15.673417 140413681174272 tf_logging.py:125] From /examples/official-benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:1778: Supervisor.__init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Mon Oct 15 23:15:15 2018[1,4]<stderr>:Instructions for updating:
+Mon Oct 15 23:15:15 2018[1,4]<stderr>:Please switch to tf.train.MonitoredTrainingSession
+Mon Oct 15 23:15:15 2018[1,7]<stderr>:W1015 23:15:15.682211 139956279510784 tf_logging.py:125] From /examples/official-benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:1778: Supervisor.__init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Mon Oct 15 23:15:15 2018[1,7]<stderr>:Instructions for updating:
+Mon Oct 15 23:15:15 2018[1,7]<stderr>:Please switch to tf.train.MonitoredTrainingSession
+Mon Oct 15 23:15:15 2018[1,0]<stderr>:W1015 23:15:15.690154 140274593548032 tf_logging.py:125] From /examples/official-benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:1778: Supervisor.__init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Mon Oct 15 23:15:15 2018[1,0]<stderr>:Instructions for updating:
+Mon Oct 15 23:15:15 2018[1,0]<stderr>:Please switch to tf.train.MonitoredTrainingSession
+Mon Oct 15 23:15:15 2018[1,3]<stderr>:W1015 23:15:15.694842 140003701024512 tf_logging.py:125] From /examples/official-benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:1778: Supervisor.__init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Mon Oct 15 23:15:15 2018[1,3]<stderr>:Instructions for updating:
+Mon Oct 15 23:15:15 2018[1,3]<stderr>:Please switch to tf.train.MonitoredTrainingSession
+Mon Oct 15 23:15:15 2018[1,6]<stderr>:2018-10-15 23:15:15.743522: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+Mon Oct 15 23:15:15 2018[1,5]<stderr>:2018-10-15 23:15:15.745091: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+Mon Oct 15 23:15:15 2018[1,2]<stderr>:2018-10-15 23:15:15.758343: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+Mon Oct 15 23:15:15 2018[1,1]<stderr>:2018-10-15 23:15:15.801815: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+Mon Oct 15 23:15:15 2018[1,4]<stderr>:2018-10-15 23:15:15.814035: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+Mon Oct 15 23:15:15 2018[1,7]<stderr>:2018-10-15 23:15:15.826931: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+Mon Oct 15 23:15:15 2018[1,0]<stderr>:2018-10-15 23:15:15.833988: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+Mon Oct 15 23:15:15 2018[1,3]<stderr>:2018-10-15 23:15:15.843640: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+Mon Oct 15 23:15:16 2018[1,2]<stderr>:2018-10-15 23:15:16.136340: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+Mon Oct 15 23:15:16 2018[1,2]<stderr>:2018-10-15 23:15:16.141616: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+Mon Oct 15 23:15:16 2018[1,2]<stderr>:name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+Mon Oct 15 23:15:16 2018[1,2]<stderr>:pciBusID: 0000:00:1d.0
+Mon Oct 15 23:15:16 2018[1,2]<stderr>:totalMemory: 15.78GiB freeMemory: 15.37GiB
+Mon Oct 15 23:15:16 2018[1,2]<stderr>:2018-10-15 23:15:16.141647: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 2
+Mon Oct 15 23:15:16 2018[1,6]<stderr>:2018-10-15 23:15:16.172121: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+Mon Oct 15 23:15:16 2018[1,5]<stderr>:2018-10-15 23:15:16.172369: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+Mon Oct 15 23:15:16 2018[1,6]<stderr>:2018-10-15 23:15:16.177324: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+Mon Oct 15 23:15:16 2018[1,6]<stderr>:name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+Mon Oct 15 23:15:16 2018[1,6]<stderr>:pciBusID: 0000:00:1d.0
+Mon Oct 15 23:15:16 2018[1,6]<stderr>:totalMemory: 15.78GiB freeMemory: 15.37GiB
+Mon Oct 15 23:15:16 2018[1,6]<stderr>:2018-10-15 23:15:16.177357: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 2
+Mon Oct 15 23:15:16 2018[1,5]<stderr>:2018-10-15 23:15:16.177738: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+Mon Oct 15 23:15:16 2018[1,5]<stderr>:name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+Mon Oct 15 23:15:16 2018[1,5]<stderr>:pciBusID: 0000:00:1c.0
+Mon Oct 15 23:15:16 2018[1,5]<stderr>:totalMemory: 15.78GiB freeMemory: 15.37GiB
+Mon Oct 15 23:15:16 2018[1,5]<stderr>:2018-10-15 23:15:16.177767: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 1
+Mon Oct 15 23:15:16 2018[1,1]<stderr>:2018-10-15 23:15:16.196374: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+Mon Oct 15 23:15:16 2018[1,1]<stderr>:2018-10-15 23:15:16.198288: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+Mon Oct 15 23:15:16 2018[1,1]<stderr>:name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+Mon Oct 15 23:15:16 2018[1,1]<stderr>:pciBusID: 0000:00:1c.0
+Mon Oct 15 23:15:16 2018[1,1]<stderr>:totalMemory: 15.78GiB freeMemory: 15.37GiB
+Mon Oct 15 23:15:16 2018[1,1]<stderr>:2018-10-15 23:15:16.198321: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 1
+Mon Oct 15 23:15:16 2018[1,4]<stderr>:2018-10-15 23:15:16.218166: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+Mon Oct 15 23:15:16 2018[1,4]<stderr>:2018-10-15 23:15:16.221034: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+Mon Oct 15 23:15:16 2018[1,4]<stderr>:name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+Mon Oct 15 23:15:16 2018[1,4]<stderr>:pciBusID: 0000:00:1b.0
+Mon Oct 15 23:15:16 2018[1,4]<stderr>:totalMemory: 15.78GiB freeMemory: 15.37GiB
+Mon Oct 15 23:15:16 2018[1,4]<stderr>:2018-10-15 23:15:16.221064: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+Mon Oct 15 23:15:16 2018[1,0]<stderr>:2018-10-15 23:15:16.231826: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+Mon Oct 15 23:15:16 2018[1,0]<stderr>:2018-10-15 23:15:16.233017: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+Mon Oct 15 23:15:16 2018[1,0]<stderr>:name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+Mon Oct 15 23:15:16 2018[1,0]<stderr>:pciBusID: 0000:00:1b.0
+Mon Oct 15 23:15:16 2018[1,0]<stderr>:totalMemory: 15.78GiB freeMemory: 15.37GiB
+Mon Oct 15 23:15:16 2018[1,0]<stderr>:2018-10-15 23:15:16.233046: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+Mon Oct 15 23:15:16 2018[1,3]<stderr>:2018-10-15 23:15:16.257130: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+Mon Oct 15 23:15:16 2018[1,7]<stderr>:2018-10-15 23:15:16.258251: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+Mon Oct 15 23:15:16 2018[1,3]<stderr>:2018-10-15 23:15:16.257848: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+Mon Oct 15 23:15:16 2018[1,3]<stderr>:name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+Mon Oct 15 23:15:16 2018[1,3]<stderr>:pciBusID: 0000:00:1e.0
+Mon Oct 15 23:15:16 2018[1,3]<stderr>:totalMemory: 15.78GiB freeMemory: 15.37GiB
+Mon Oct 15 23:15:16 2018[1,3]<stderr>:2018-10-15 23:15:16.257886: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 3
+Mon Oct 15 23:15:16 2018[1,7]<stderr>:2018-10-15 23:15:16.259073: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+Mon Oct 15 23:15:16 2018[1,7]<stderr>:name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+Mon Oct 15 23:15:16 2018[1,7]<stderr>:pciBusID: 0000:00:1e.0
+Mon Oct 15 23:15:16 2018[1,7]<stderr>:totalMemory: 15.78GiB freeMemory: 15.37GiB
+Mon Oct 15 23:15:16 2018[1,7]<stderr>:2018-10-15 23:15:16.259104: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 3
+Mon Oct 15 23:15:16 2018[1,2]<stderr>:2018-10-15 23:15:16.605732: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+Mon Oct 15 23:15:16 2018[1,2]<stderr>:2018-10-15 23:15:16.605780: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      2 
+Mon Oct 15 23:15:16 2018[1,2]<stderr>:2018-10-15 23:15:16.605791: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 2:   N 
+Mon Oct 15 23:15:16 2018[1,2]<stderr>:2018-10-15 23:15:16.606112: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14861 MB memory) -> physical GPU (device: 2, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1d.0, compute capability: 7.0)
+Mon Oct 15 23:15:16 2018[1,6]<stderr>:2018-10-15 23:15:16.636728: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+Mon Oct 15 23:15:16 2018[1,6]<stderr>:2018-10-15 23:15:16.636779: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      2 
+Mon Oct 15 23:15:16 2018[1,6]<stderr>:2018-10-15 23:15:16.636789: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 2:   N 
+Mon Oct 15 23:15:16 2018[1,6]<stderr>:2018-10-15 23:15:16.637139: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14861 MB memory) -> physical GPU (device: 2, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1d.0, compute capability: 7.0)
+Mon Oct 15 23:15:16 2018[1,5]<stderr>:2018-10-15 23:15:16.640233: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+Mon Oct 15 23:15:16 2018[1,5]<stderr>:2018-10-15 23:15:16.640265: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      1 
+Mon Oct 15 23:15:16 2018[1,5]<stderr>:2018-10-15 23:15:16.640274: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 1:   N 
+Mon Oct 15 23:15:16 2018[1,5]<stderr>:2018-10-15 23:15:16.653656: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14861 MB memory) -> physical GPU (device: 1, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1c.0, compute capability: 7.0)
+Mon Oct 15 23:15:16 2018[1,1]<stderr>:2018-10-15 23:15:16.668896: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+Mon Oct 15 23:15:16 2018[1,1]<stderr>:2018-10-15 23:15:16.668947: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      1 
+Mon Oct 15 23:15:16 2018[1,1]<stderr>:2018-10-15 23:15:16.668957: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 1:   N 
+Mon Oct 15 23:15:16 2018[1,1]<stderr>:2018-10-15 23:15:16.669291: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14861 MB memory) -> physical GPU (device: 1, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1c.0, compute capability: 7.0)
+Mon Oct 15 23:15:16 2018[1,0]<stderr>:2018-10-15 23:15:16.686950: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+Mon Oct 15 23:15:16 2018[1,0]<stderr>:2018-10-15 23:15:16.686996: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+Mon Oct 15 23:15:16 2018[1,0]<stderr>:2018-10-15 23:15:16.687006: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+Mon Oct 15 23:15:16 2018[1,0]<stderr>:2018-10-15 23:15:16.687328: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14861 MB memory) -> physical GPU (device: 0, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1b.0, compute capability: 7.0)
+Mon Oct 15 23:15:16 2018[1,4]<stderr>:2018-10-15 23:15:16.689671: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+Mon Oct 15 23:15:16 2018[1,4]<stderr>:2018-10-15 23:15:16.689713: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+Mon Oct 15 23:15:16 2018[1,4]<stderr>:2018-10-15 23:15:16.689723: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+Mon Oct 15 23:15:16 2018[1,4]<stderr>:2018-10-15 23:15:16.690052: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14861 MB memory) -> physical GPU (device: 0, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1b.0, compute capability: 7.0)
+Mon Oct 15 23:15:16 2018[1,3]<stderr>:2018-10-15 23:15:16.746764: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+Mon Oct 15 23:15:16 2018[1,3]<stderr>:2018-10-15 23:15:16.746815: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      3 
+Mon Oct 15 23:15:16 2018[1,3]<stderr>:2018-10-15 23:15:16.746825: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 3:   N 
+Mon Oct 15 23:15:16 2018[1,3]<stderr>:2018-10-15 23:15:16.747161: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14861 MB memory) -> physical GPU (device: 3, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1e.0, compute capability: 7.0)
+Mon Oct 15 23:15:16 2018[1,7]<stderr>:2018-10-15 23:15:16.751393: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+Mon Oct 15 23:15:16 2018[1,7]<stderr>:2018-10-15 23:15:16.751441: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      3 
+Mon Oct 15 23:15:16 2018[1,7]<stderr>:2018-10-15 23:15:16.751454: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 3:   N 
+Mon Oct 15 23:15:16 2018[1,7]<stderr>:2018-10-15 23:15:16.751837: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14861 MB memory) -> physical GPU (device: 3, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1e.0, compute capability: 7.0)
+Mon Oct 15 23:15:16 2018[1,2]<stderr>:I1015 23:15:16.972756 140576501425920 tf_logging.py:115] Running local_init_op.
+Mon Oct 15 23:15:17 2018[1,5]<stderr>:I1015 23:15:17.016152 140410371155712 tf_logging.py:115] Running local_init_op.
+Mon Oct 15 23:15:17 2018[1,6]<stderr>:I1015 23:15:17.037972 139990433425152 tf_logging.py:115] Running local_init_op.
+Mon Oct 15 23:15:17 2018[1,1]<stderr>:I1015 23:15:17.048830 139718135842560 tf_logging.py:115] Running local_init_op.
+Mon Oct 15 23:15:17 2018[1,0]<stderr>:I1015 23:15:17.053663 140274593548032 tf_logging.py:115] Running local_init_op.
+Mon Oct 15 23:15:17 2018[1,4]<stderr>:I1015 23:15:17.056240 140413681174272 tf_logging.py:115] Running local_init_op.
+Mon Oct 15 23:15:17 2018[1,3]<stderr>:I1015 23:15:17.123084 140003701024512 tf_logging.py:115] Running local_init_op.
+Mon Oct 15 23:15:17 2018[1,7]<stderr>:I1015 23:15:17.138019 139956279510784 tf_logging.py:115] Running local_init_op.
+Mon Oct 15 23:15:17 2018[1,2]<stderr>:I1015 23:15:17.404757 140576501425920 tf_logging.py:115] Done running local_init_op.
+Mon Oct 15 23:15:17 2018[1,5]<stderr>:I1015 23:15:17.429721 140410371155712 tf_logging.py:115] Done running local_init_op.
+Mon Oct 15 23:15:17 2018[1,6]<stderr>:I1015 23:15:17.462089 139990433425152 tf_logging.py:115] Done running local_init_op.
+Mon Oct 15 23:15:17 2018[1,1]<stderr>:I1015 23:15:17.464776 139718135842560 tf_logging.py:115] Done running local_init_op.
+Mon Oct 15 23:15:17 2018[1,0]<stderr>:I1015 23:15:17.466485 140274593548032 tf_logging.py:115] Done running local_init_op.
+Mon Oct 15 23:15:17 2018[1,4]<stderr>:I1015 23:15:17.468648 140413681174272 tf_logging.py:115] Done running local_init_op.
+Mon Oct 15 23:15:17 2018[1,3]<stderr>:I1015 23:15:17.536994 140003701024512 tf_logging.py:115] Done running local_init_op.
+Mon Oct 15 23:15:17 2018[1,7]<stderr>:I1015 23:15:17.564055 139956279510784 tf_logging.py:115] Done running local_init_op.
+Mon Oct 15 23:15:23 2018[1,5]<stdout>:Running warm up
+Mon Oct 15 23:15:23 2018[1,3]<stdout>:Running warm up
+Mon Oct 15 23:15:23 2018[1,7]<stdout>:Running warm up
+Mon Oct 15 23:15:23 2018[1,4]<stdout>:Running warm up
+Mon Oct 15 23:15:23 2018[1,6]<stdout>:Running warm up
+Mon Oct 15 23:15:23 2018[1,1]<stdout>:Running warm up
+Mon Oct 15 23:15:23 2018[1,2]<stdout>:Running warm up
+Mon Oct 15 23:15:23 2018[1,0]<stdout>:Running warm up
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Using internal Network Socket
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO NET : Using interface eth0:192.168.146.63<0>
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO NET/Socket : 1 interfaces found
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:NCCL version 2.3.5+cuda9.0
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO rank 0 nranks 8
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO Using internal Network Socket
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO rank 1 nranks 8
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Using internal Network Socket
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO rank 4 nranks 8
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO Using internal Network Socket
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO rank 5 nranks 8
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO Using internal Network Socket
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO rank 6 nranks 8
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO Using internal Network Socket
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO rank 2 nranks 8
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO Using internal Network Socket
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO rank 3 nranks 8
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO Using internal Network Socket
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO rank 7 nranks 8
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO comm 0x7f11a037b4d0 rank 1 nranks 8
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO NET : Using interface eth0:192.168.146.63<0>
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO NET/Socket : 1 interfaces found
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO CUDA Dev 1, IP Interfaces : eth0(SOC) 
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO comm 0x7fd97c3845b0 rank 2 nranks 8
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO NET : Using interface eth0:192.168.146.63<0>
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO NET/Socket : 1 interfaces found
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO comm 0x7f9330338570 rank 0 nranks 8
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO CUDA Dev 2, IP Interfaces : eth0(SOC) 
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO CUDA Dev 0, IP Interfaces : eth0(SOC) 
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO comm 0x7f541c3836c0 rank 3 nranks 8
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO NET : Using interface eth0:192.168.146.63<0>
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO NET/Socket : 1 interfaces found
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO CUDA Dev 3, IP Interfaces : eth0(SOC) 
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO comm 0x7f4914366770 rank 7 nranks 8
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO NET : Using interface eth0:192.168.230.127<0>
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO NET/Socket : 1 interfaces found
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO CUDA Dev 3, IP Interfaces : eth0(SOC) 
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO comm 0x7fb2cc3d76d0 rank 5 nranks 8
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO NET : Using interface eth0:192.168.230.127<0>
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO NET/Socket : 1 interfaces found
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO comm 0x7f51083d6090 rank 6 nranks 8
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO NET : Using interface eth0:192.168.230.127<0>
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO NET/Socket : 1 interfaces found
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO CUDA Dev 1, IP Interfaces : eth0(SOC) 
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO CUDA Dev 2, IP Interfaces : eth0(SOC) 
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO comm 0x7fb3943bb1e0 rank 4 nranks 8
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO NET : Using interface eth0:192.168.230.127<0>
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO NET/Socket : 1 interfaces found
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO CUDA Dev 0, IP Interfaces : eth0(SOC) 
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO NCCL_MIN_NRINGS set by environment to 8.
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Duplicating rings to 8 per user request.
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO NCCL_MIN_NRINGS set by environment to 8.
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO NCCL_MIN_NRINGS set by environment to 8.
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO NCCL_MIN_NRINGS set by environment to 8.
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO NCCL_MIN_NRINGS set by environment to 8.
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO NCCL_MIN_NRINGS set by environment to 8.
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO NCCL_MIN_NRINGS set by environment to 8.
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO NCCL_MIN_NRINGS set by environment to 8.
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Using 256 threads
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Min Comp Cap 7
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 00 :    0   1   2   3   4   5   6   7
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 01 :    0   1   2   3   4   5   6   7
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 02 :    0   1   2   3   4   5   6   7
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 03 :    0   1   2   3   4   5   6   7
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 04 :    0   1   2   3   4   5   6   7
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 05 :    0   1   2   3   4   5   6   7
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 06 :    0   1   2   3   4   5   6   7
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 07 :    0   1   2   3   4   5   6   7
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO Ring 00 : 5[1] -> 6[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO Ring 00 : 6[2] -> 7[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 00 : 3 -> 4 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 00 : 4[0] -> 5[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO Ring 00 : 1[1] -> 2[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO Ring 00 : 2[2] -> 3[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 00 : 7 -> 0 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 00 : 0[0] -> 1[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO Ring 01 : 1[1] -> 2[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO Ring 01 : 2[2] -> 3[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO Ring 01 : 5[1] -> 6[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO Ring 01 : 6[2] -> 7[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 01 : 3 -> 4 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 01 : 4[0] -> 5[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 01 : 7 -> 0 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 01 : 0[0] -> 1[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO Ring 02 : 1[1] -> 2[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO Ring 02 : 2[2] -> 3[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO Ring 02 : 5[1] -> 6[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 02 : 3 -> 4 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 02 : 4[0] -> 5[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO Ring 02 : 6[2] -> 7[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 02 : 7 -> 0 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 02 : 0[0] -> 1[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO Ring 03 : 1[1] -> 2[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO Ring 03 : 2[2] -> 3[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO Ring 03 : 5[1] -> 6[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 03 : 3 -> 4 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO Ring 03 : 6[2] -> 7[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 03 : 4[0] -> 5[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 03 : 7 -> 0 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 03 : 0[0] -> 1[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO Ring 04 : 1[1] -> 2[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO Ring 04 : 2[2] -> 3[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO Ring 04 : 5[1] -> 6[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 04 : 3 -> 4 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO Ring 04 : 6[2] -> 7[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 04 : 4[0] -> 5[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 04 : 7 -> 0 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 04 : 0[0] -> 1[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO Ring 05 : 1[1] -> 2[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO Ring 05 : 2[2] -> 3[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO Ring 05 : 5[1] -> 6[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 05 : 3 -> 4 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO Ring 05 : 6[2] -> 7[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 05 : 4[0] -> 5[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 05 : 7 -> 0 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 05 : 0[0] -> 1[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO Ring 06 : 1[1] -> 2[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO Ring 06 : 2[2] -> 3[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO Ring 06 : 5[1] -> 6[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 06 : 3 -> 4 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO Ring 06 : 6[2] -> 7[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 06 : 4[0] -> 5[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 06 : 7 -> 0 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 06 : 0[0] -> 1[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,1]<stdout>:openmpi-worker-0:43:316 [1] NCCL INFO Ring 07 : 1[1] -> 2[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,2]<stdout>:openmpi-worker-0:45:310 [2] NCCL INFO Ring 07 : 2[2] -> 3[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,3]<stdout>:openmpi-worker-0:46:313 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,5]<stdout>:openmpi-worker-1:39:306 [1] NCCL INFO Ring 07 : 5[1] -> 6[2] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 07 : 3 -> 4 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,6]<stdout>:openmpi-worker-1:41:312 [2] NCCL INFO Ring 07 : 6[2] -> 7[3] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,4]<stdout>:openmpi-worker-1:37:303 [0] NCCL INFO Ring 07 : 4[0] -> 5[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,7]<stdout>:openmpi-worker-1:42:309 [3] NCCL INFO nvmlDeviceGetNvLinkState() failed: Not Supported 
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 07 : 7 -> 0 via NET/Socket/0
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Ring 07 : 0[0] -> 1[1] via P2P/IPC
+Mon Oct 15 23:15:32 2018[1,0]<stdout>:openmpi-worker-0:41:307 [0] NCCL INFO Launch mode Parallel
+Mon Oct 15 23:15:44 2018[1,3]<stdout>:Done warm up
+Mon Oct 15 23:15:44 2018[1,3]<stdout>:Step	Img/sec	total_loss
+Mon Oct 15 23:15:44 2018[1,2]<stdout>:Done warm up
+Mon Oct 15 23:15:44 2018[1,2]<stdout>:Step	Img/sec	total_loss
+Mon Oct 15 23:15:44 2018[1,1]<stdout>:Done warm up
+Mon Oct 15 23:15:44 2018[1,1]<stdout>:Step	Img/sec	total_loss
+Mon Oct 15 23:15:44 2018[1,7]<stdout>:Done warm up
+Mon Oct 15 23:15:44 2018[1,7]<stdout>:Step	Img/sec	total_loss
+Mon Oct 15 23:15:44 2018[1,0]<stdout>:Done warm up
+Mon Oct 15 23:15:44 2018[1,0]<stdout>:Step	Img/sec	total_loss
+Mon Oct 15 23:15:44 2018[1,6]<stdout>:Done warm up
+Mon Oct 15 23:15:44 2018[1,6]<stdout>:Step	Img/sec	total_loss
+Mon Oct 15 23:15:44 2018[1,5]<stdout>:Done warm up
+Mon Oct 15 23:15:44 2018[1,5]<stdout>:Step	Img/sec	total_loss
+Mon Oct 15 23:15:44 2018[1,4]<stdout>:Done warm up
+Mon Oct 15 23:15:44 2018[1,4]<stdout>:Step	Img/sec	total_loss
+Mon Oct 15 23:15:44 2018[1,6]<stdout>:1	images/sec: 66.8 +/- 0.0 (jitter = 0.0)	7.277
+Mon Oct 15 23:15:44 2018[1,2]<stdout>:1	images/sec: 66.7 +/- 0.0 (jitter = 0.0)	7.254
+Mon Oct 15 23:15:44 2018[1,1]<stdout>:1	images/sec: 66.7 +/- 0.0 (jitter = 0.0)	7.259
+Mon Oct 15 23:15:44 2018[1,3]<stdout>:1	images/sec: 66.7 +/- 0.0 (jitter = 0.0)	7.266
+Mon Oct 15 23:15:44 2018[1,7]<stdout>:1	images/sec: 66.8 +/- 0.0 (jitter = 0.0)	7.242
+Mon Oct 15 23:15:44 2018[1,0]<stdout>:1	images/sec: 66.7 +/- 0.0 (jitter = 0.0)	7.274
+Mon Oct 15 23:15:44 2018[1,4]<stdout>:1	images/sec: 66.8 +/- 0.0 (jitter = 0.0)	7.271
+Mon Oct 15 23:15:44 2018[1,5]<stdout>:1	images/sec: 66.8 +/- 0.0 (jitter = 0.0)	7.276
+Mon Oct 15 23:15:53 2018[1,2]<stdout>:10	images/sec: 64.4 +/- 1.0 (jitter = 2.9)	7.263
+Mon Oct 15 23:15:53 2018[1,3]<stdout>:10	images/sec: 64.4 +/- 1.0 (jitter = 3.4)	7.245
+Mon Oct 15 23:15:53 2018[1,1]<stdout>:10	images/sec: 64.4 +/- 1.0 (jitter = 3.5)	7.253
+Mon Oct 15 23:15:53 2018[1,7]<stdout>:10	images/sec: 64.4 +/- 1.0 (jitter = 3.4)	7.266
+Mon Oct 15 23:15:53 2018[1,0]<stdout>:10	images/sec: 64.4 +/- 1.0 (jitter = 3.6)	7.253
+Mon Oct 15 23:15:53 2018[1,6]<stdout>:10	images/sec: 64.4 +/- 1.0 (jitter = 3.4)	7.246
+Mon Oct 15 23:15:53 2018[1,5]<stdout>:10	images/sec: 64.4 +/- 1.0 (jitter = 3.5)	7.265
+Mon Oct 15 23:15:53 2018[1,4]<stdout>:10	images/sec: 64.4 +/- 1.0 (jitter = 3.9)	7.242
+Mon Oct 15 23:16:03 2018[1,6]<stdout>:20	images/sec: 64.2 +/- 0.6 (jitter = 2.7)	7.252
+Mon Oct 15 23:16:03 2018[1,5]<stdout>:20	images/sec: 64.2 +/- 0.6 (jitter = 2.8)	7.269
+Mon Oct 15 23:16:03 2018[1,4]<stdout>:20	images/sec: 64.2 +/- 0.6 (jitter = 3.0)	7.254
+Mon Oct 15 23:16:03 2018[1,7]<stdout>:20	images/sec: 64.2 +/- 0.6 (jitter = 2.7)	7.245
+Mon Oct 15 23:16:03 2018[1,2]<stdout>:20	images/sec: 64.2 +/- 0.6 (jitter = 2.4)	7.250
+Mon Oct 15 23:16:03 2018[1,3]<stdout>:20	images/sec: 64.2 +/- 0.6 (jitter = 2.7)	7.259
+Mon Oct 15 23:16:03 2018[1,1]<stdout>:20	images/sec: 64.2 +/- 0.6 (jitter = 2.6)	7.271
+Mon Oct 15 23:16:03 2018[1,0]<stdout>:20	images/sec: 64.2 +/- 0.6 (jitter = 2.6)	7.247
+Mon Oct 15 23:16:14 2018[1,1]<stdout>:30	images/sec: 63.9 +/- 0.5 (jitter = 2.2)	7.256
+Mon Oct 15 23:16:14 2018[1,2]<stdout>:30	images/sec: 63.9 +/- 0.5 (jitter = 2.2)	7.261
+Mon Oct 15 23:16:14 2018[1,0]<stdout>:30	images/sec: 63.9 +/- 0.5 (jitter = 2.2)	7.265
+Mon Oct 15 23:16:14 2018[1,7]<stdout>:30	images/sec: 63.9 +/- 0.5 (jitter = 2.5)	7.262
+Mon Oct 15 23:16:14 2018[1,6]<stdout>:30	images/sec: 63.9 +/- 0.5 (jitter = 2.4)	7.254
+Mon Oct 15 23:16:14 2018[1,3]<stdout>:30	images/sec: 63.9 +/- 0.5 (jitter = 2.4)	7.259
+Mon Oct 15 23:16:14 2018[1,5]<stdout>:30	images/sec: 63.9 +/- 0.5 (jitter = 2.4)	7.258
+Mon Oct 15 23:16:14 2018[1,4]<stdout>:30	images/sec: 63.9 +/- 0.5 (jitter = 2.5)	7.258
+Mon Oct 15 23:16:24 2018[1,2]<stdout>:40	images/sec: 63.8 +/- 0.4 (jitter = 2.1)	7.252
+Mon Oct 15 23:16:24 2018[1,5]<stdout>:40	images/sec: 63.8 +/- 0.4 (jitter = 2.4)	7.249
+Mon Oct 15 23:16:24 2018[1,6]<stdout>:40	images/sec: 63.8 +/- 0.4 (jitter = 2.4)	7.254
+Mon Oct 15 23:16:24 2018[1,1]<stdout>:40	images/sec: 63.8 +/- 0.4 (jitter = 2.2)	7.265
+Mon Oct 15 23:16:24 2018[1,7]<stdout>:40	images/sec: 63.8 +/- 0.4 (jitter = 2.4)	7.253
+Mon Oct 15 23:16:24 2018[1,3]<stdout>:40	images/sec: 63.8 +/- 0.4 (jitter = 2.4)	7.264
+Mon Oct 15 23:16:24 2018[1,4]<stdout>:40	images/sec: 63.8 +/- 0.4 (jitter = 2.5)	7.253
+Mon Oct 15 23:16:24 2018[1,0]<stdout>:40	images/sec: 63.8 +/- 0.4 (jitter = 2.4)	7.251
+Mon Oct 15 23:16:34 2018[1,2]<stdout>:50	images/sec: 63.7 +/- 0.3 (jitter = 2.2)	7.261
+Mon Oct 15 23:16:34 2018[1,1]<stdout>:50	images/sec: 63.7 +/- 0.3 (jitter = 2.1)	7.255
+Mon Oct 15 23:16:34 2018[1,0]<stdout>:50	images/sec: 63.7 +/- 0.3 (jitter = 2.2)	7.265
+Mon Oct 15 23:16:34 2018[1,7]<stdout>:50	images/sec: 63.7 +/- 0.3 (jitter = 2.3)	7.252
+Mon Oct 15 23:16:34 2018[1,6]<stdout>:50	images/sec: 63.7 +/- 0.3 (jitter = 2.4)	7.253
+Mon Oct 15 23:16:34 2018[1,3]<stdout>:50	images/sec: 63.7 +/- 0.3 (jitter = 2.4)	7.250
+Mon Oct 15 23:16:34 2018[1,5]<stdout>:50	images/sec: 63.7 +/- 0.3 (jitter = 2.4)	7.257
+Mon Oct 15 23:16:34 2018[1,4]<stdout>:50	images/sec: 63.7 +/- 0.3 (jitter = 2.5)	7.253
+Mon Oct 15 23:16:44 2018[1,1]<stdout>:60	images/sec: 63.8 +/- 0.3 (jitter = 2.4)	7.251
+Mon Oct 15 23:16:44 2018[1,0]<stdout>:60	images/sec: 63.8 +/- 0.3 (jitter = 2.3)	7.254
+Mon Oct 15 23:16:44 2018[1,7]<stdout>:60	images/sec: 63.8 +/- 0.3 (jitter = 2.5)	7.263
+Mon Oct 15 23:16:44 2018[1,2]<stdout>:60	images/sec: 63.8 +/- 0.3 (jitter = 2.4)	7.258
+Mon Oct 15 23:16:44 2018[1,6]<stdout>:60	images/sec: 63.8 +/- 0.3 (jitter = 2.6)	7.252
+Mon Oct 15 23:16:44 2018[1,3]<stdout>:60	images/sec: 63.8 +/- 0.3 (jitter = 2.6)	7.251
+Mon Oct 15 23:16:44 2018[1,5]<stdout>:60	images/sec: 63.8 +/- 0.3 (jitter = 2.7)	7.250
+Mon Oct 15 23:16:44 2018[1,4]<stdout>:60	images/sec: 63.8 +/- 0.3 (jitter = 2.7)	7.257
+Mon Oct 15 23:16:54 2018[1,7]<stdout>:70	images/sec: 63.8 +/- 0.3 (jitter = 2.6)	7.248
+Mon Oct 15 23:16:54 2018[1,3]<stdout>:70	images/sec: 63.8 +/- 0.3 (jitter = 2.6)	7.254
+Mon Oct 15 23:16:54 2018[1,2]<stdout>:70	images/sec: 63.8 +/- 0.3 (jitter = 2.6)	7.258
+Mon Oct 15 23:16:54 2018[1,6]<stdout>:70	images/sec: 63.8 +/- 0.3 (jitter = 2.7)	7.262
+Mon Oct 15 23:16:54 2018[1,4]<stdout>:70	images/sec: 63.8 +/- 0.3 (jitter = 2.7)	7.252
+Mon Oct 15 23:16:54 2018[1,5]<stdout>:70	images/sec: 63.8 +/- 0.3 (jitter = 2.7)	7.257
+Mon Oct 15 23:16:54 2018[1,0]<stdout>:70	images/sec: 63.8 +/- 0.3 (jitter = 2.5)	7.254
+Mon Oct 15 23:16:54 2018[1,1]<stdout>:70	images/sec: 63.8 +/- 0.3 (jitter = 2.5)	7.251
+Mon Oct 15 23:17:04 2018[1,1]<stdout>:80	images/sec: 63.9 +/- 0.3 (jitter = 2.6)	7.256
+Mon Oct 15 23:17:04 2018[1,7]<stdout>:80	images/sec: 63.9 +/- 0.3 (jitter = 2.6)	7.261
+Mon Oct 15 23:17:04 2018[1,0]<stdout>:80	images/sec: 63.9 +/- 0.3 (jitter = 2.5)	7.255
+Mon Oct 15 23:17:04 2018[1,2]<stdout>:80	images/sec: 63.9 +/- 0.3 (jitter = 2.7)	7.248
+Mon Oct 15 23:17:04 2018[1,6]<stdout>:80	images/sec: 63.9 +/- 0.3 (jitter = 2.7)	7.265
+Mon Oct 15 23:17:04 2018[1,3]<stdout>:80	images/sec: 63.9 +/- 0.3 (jitter = 2.6)	7.251
+Mon Oct 15 23:17:04 2018[1,5]<stdout>:80	images/sec: 63.9 +/- 0.3 (jitter = 2.7)	7.260
+Mon Oct 15 23:17:04 2018[1,4]<stdout>:80	images/sec: 63.9 +/- 0.3 (jitter = 2.7)	7.260
+Mon Oct 15 23:17:14 2018[1,2]<stdout>:90	images/sec: 63.7 +/- 0.3 (jitter = 2.5)	7.258
+Mon Oct 15 23:17:14 2018[1,1]<stdout>:90	images/sec: 63.7 +/- 0.3 (jitter = 2.5)	7.255
+Mon Oct 15 23:17:14 2018[1,0]<stdout>:90	images/sec: 63.7 +/- 0.3 (jitter = 2.4)	7.255
+Mon Oct 15 23:17:14 2018[1,7]<stdout>:90	images/sec: 63.7 +/- 0.3 (jitter = 2.5)	7.257
+Mon Oct 15 23:17:14 2018[1,6]<stdout>:90	images/sec: 63.7 +/- 0.3 (jitter = 2.6)	7.255
+Mon Oct 15 23:17:14 2018[1,3]<stdout>:90	images/sec: 63.7 +/- 0.3 (jitter = 2.5)	7.255
+Mon Oct 15 23:17:14 2018[1,5]<stdout>:90	images/sec: 63.7 +/- 0.3 (jitter = 2.6)	7.257
+Mon Oct 15 23:17:14 2018[1,4]<stdout>:90	images/sec: 63.7 +/- 0.3 (jitter = 2.7)	7.258
+Mon Oct 15 23:17:24 2018[1,2]<stdout>:100	images/sec: 63.8 +/- 0.2 (jitter = 2.4)	7.258
+Mon Oct 15 23:17:24 2018[1,1]<stdout>:100	images/sec: 63.8 +/- 0.2 (jitter = 2.4)	7.259
+Mon Oct 15 23:17:24 2018[1,1]<stdout>:----------------------------------------------------------------
+Mon Oct 15 23:17:24 2018[1,1]<stdout>:total images/sec: 510.75
+Mon Oct 15 23:17:24 2018[1,1]<stdout>:----------------------------------------------------------------
+Mon Oct 15 23:17:24 2018[1,2]<stdout>:----------------------------------------------------------------
+Mon Oct 15 23:17:24 2018[1,2]<stdout>:total images/sec: 510.74
+Mon Oct 15 23:17:24 2018[1,2]<stdout>:----------------------------------------------------------------
+Mon Oct 15 23:17:24 2018[1,7]<stdout>:100	images/sec: 63.8 +/- 0.2 (jitter = 2.4)	7.259
+Mon Oct 15 23:17:24 2018[1,7]<stdout>:----------------------------------------------------------------
+Mon Oct 15 23:17:24 2018[1,7]<stdout>:total images/sec: 510.74
+Mon Oct 15 23:17:24 2018[1,7]<stdout>:----------------------------------------------------------------
+Mon Oct 15 23:17:24 2018[1,0]<stdout>:100	images/sec: 63.8 +/- 0.2 (jitter = 2.4)	7.253
+Mon Oct 15 23:17:24 2018[1,0]<stdout>:----------------------------------------------------------------
+Mon Oct 15 23:17:24 2018[1,0]<stdout>:total images/sec: 510.73
+Mon Oct 15 23:17:24 2018[1,0]<stdout>:----------------------------------------------------------------
+Mon Oct 15 23:17:24 2018[1,6]<stdout>:100	images/sec: 63.8 +/- 0.2 (jitter = 2.3)	7.258
+Mon Oct 15 23:17:24 2018[1,6]<stdout>:----------------------------------------------------------------
+Mon Oct 15 23:17:24 2018[1,6]<stdout>:total images/sec: 510.72
+Mon Oct 15 23:17:24 2018[1,6]<stdout>:----------------------------------------------------------------
+Mon Oct 15 23:17:24 2018[1,3]<stdout>:100	images/sec: 63.8 +/- 0.2 (jitter = 2.3)	7.260
+Mon Oct 15 23:17:24 2018[1,3]<stdout>:----------------------------------------------------------------
+Mon Oct 15 23:17:24 2018[1,3]<stdout>:total images/sec: 510.71
+Mon Oct 15 23:17:24 2018[1,3]<stdout>:----------------------------------------------------------------
+Mon Oct 15 23:17:24 2018[1,5]<stdout>:100	images/sec: 63.8 +/- 0.2 (jitter = 2.4)	7.266
+Mon Oct 15 23:17:24 2018[1,5]<stdout>:----------------------------------------------------------------
+Mon Oct 15 23:17:24 2018[1,5]<stdout>:total images/sec: 510.70
+Mon Oct 15 23:17:24 2018[1,5]<stdout>:----------------------------------------------------------------
+Mon Oct 15 23:17:24 2018[1,4]<stdout>:100	images/sec: 63.8 +/- 0.2 (jitter = 2.4)	7.258
+Mon Oct 15 23:17:24 2018[1,4]<stdout>:----------------------------------------------------------------
+Mon Oct 15 23:17:24 2018[1,4]<stdout>:total images/sec: 510.69
+Mon Oct 15 23:17:24 2018[1,4]<stdout>:----------------------------------------------------------------
+
+exit ${exit_code}
++ exit 0

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-data
+  namespace: kubeflow-dist-train 
+spec:
+  accessModes:
+    - ReadWriteMany
+  capacity:
+    storage: 85Gi
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    path: /
+    server: fs-xxxxxx.efs.<region>.amazonaws.com
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-external

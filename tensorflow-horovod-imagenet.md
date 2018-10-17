@@ -1,4 +1,4 @@
-# Distributed training using TensorFlow and Horovod on Amazon EKS 
+# Distributed training using TensorFlow and Horovod on Amazon EKS with ImageNet Data
 
 This document explains how to perform distributed training on [Amazon EKS](https://aws.amazon.com/eks/) using TensorFlow and [Horovod](https://github.com/uber/horovod) with [ImageNet dataset](http://www.image-net.org/). The following steps can be ued for any data set though.
 

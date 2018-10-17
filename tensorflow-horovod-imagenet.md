@@ -10,6 +10,10 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
 1. Create an [EFS](https://aws.amazon.com/efs/) and mount it to each worker nodes as explained in [efs-on-eks-worker-nodes.md](efs-on-eks-worker-nodes.md).
 
+### ImageNet Data
+
+If you work for Amazon, then reach out to the authors of this document to have access to the data. Otherwise, follow the instructions below.
+
 1. Download [ImageNet](http://image-net.org/download-images) dataset to EFS in the `data` directory. This would typically be in the directory `/home/ec2-user/efs/data`. Use `Download Original Images (for non-commercial research/educational use only)` option.
 
 1. TensorFlow consumes the ImageNet data in a specific format. You can preprocess them by downloading and modifying the script:
@@ -20,6 +24,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
     ```
 
     The following values need to be changed:
+
     1. `[your imagenet account]`
     1. `[your imagenet access key]`
     1. `[PATH TO TFRECORD TRAINING DATASET]`
@@ -56,19 +61,21 @@ This document explains how to perform distributed training on [Amazon EKS](https
 1. Create the Persistent Volume (PV) based on EFS. You need to update the name of EFS server in the Kubernetes manifest file. Storage capacity based on dataset size and other requirements can be updated as well.
 
     ```
-    kubectl create -f training/distributed_training/dist_pv.yaml
+    kubectl create -f ../training/distributed_training/dist_pv.yaml
     ```
 
 1. Create the Persistent Volume Claim (PVC) based on EFS. The storage capacity based on PV's capacity may adjusted in the manifest. The storage capacity of PVC should be the at most storage capacity of PV.
 
     ```
-    kubectl create -f training/distributed_training/dist_pvc.yaml
+    kubectl create -f ../training/distributed_training/dist_pvc.yaml
     ```
 
 1. Make sure that PV has been claimed by PVC under same namespace. You can verify that by running below command. 
 
     ```
     kubectl get pv -n ${NAMESPACE}
+    NAME       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                              STORAGECLASS   REASON   AGE
+nfs-data   85Gi       RWX            Retain           Bound    kubeflow-dist-train/nfs-external   nfs-external            58s
     ```
 
 1. Create secret for ssh access between nodes
@@ -107,29 +114,28 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
     If more than one GPU is used, then you may have to replace `NCCL_SOCKET_IFNAME=eth0` with `NCCL_SOCKET_IFNAME=^docker0`.
 
-   MPI command needs some explanations. `-np` represents a total number process which will be equal to `WORKERS` * `GPU`.
+    MPI command needs some explanations. `-np` represents a total number process which will be equal to `WORKERS` * `GPU`.
 
-1. Generate the config
+1. Generate the config:
 
     ```
     COMPONENT=openmpi
     ks generate openmpi ${COMPONENT} --image ${IMAGE} --secret ${SECRET} --workers ${WORKERS} --gpu ${GPU} --exec "${EXEC}"
     ```
 
-1. Set the parameter for created Volume 
+1. Set the parameter for the created volume:
 
     ```
     ks param set ${COMPONENT} volumes '[{ "name": "efs-pvc", "persistentVolumeClaim": { "claimName": "nfs-external" }}]'
-
     ```
 
-1. Set the parameter for volumeMounts  
+1. Set the parameter for volumeMounts  :
 
     ```
     ks param set ${COMPONENT} volumeMounts '[{ "name": "efs-pvc", "mountPath": "/mnt"}]'
-
     ```
-    Above command will make the `data` available under `\mnt\data` directory for each pod.
+
+    This command will make the `data` available under `/mnt/data` directory for each pod.
 
 1. Deploy the config to your cluster
 

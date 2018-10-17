@@ -1,20 +1,18 @@
 # Distributed training using TensorFlow and Horovod on Amazon EKS 
 
-This document explains how to perform distributed training on [Amazon EKS](https://aws.amazon.com/eks/) using TensorFlow and [Horovod](https://github.com/uber/horovod) with Imagenet dataset. One can use the following steps for any dataset. 
+This document explains how to perform distributed training on [Amazon EKS](https://aws.amazon.com/eks/) using TensorFlow and [Horovod](https://github.com/uber/horovod) with [ImageNet dataset](http://www.image-net.org/). The following steps can be ued for any data set though.
 
 ## Prerequisite
 
-1. Create [EKS cluster using GPU](eks-gpu.md)
+1. Create [EKS cluster using GPU](eks-gpu.md).
 
-1. Install [Kubeflow](kubeflow.md)
+1. Install [Kubeflow](kubeflow.md).
 
-1. Create an [EFS](https://aws.amazon.com/efs/) and mount it to each worker nodes. 
+1. Create an [EFS](https://aws.amazon.com/efs/) and mount it to each worker nodes as explained in [efs-on-eks-worker-nodes.md](efs-on-eks-worker-nodes.md).
 
-1. Download [ImageNet](http://image-net.org/download-images) dataset to EFS.  
+1. Download [ImageNet](http://image-net.org/download-images) dataset to EFS in the `data` directory. This would typically be in the directory `/home/ec2-user/efs/data`. Use `Download Original Images (for non-commercial research/educational use only)` option.
 
-1. TensorFlow consumes the ImageNet data in specific format. You can preprocess them by running the [script](https://github.com/aws-samples/deep-learning-models/blob/master/utils/tensorflow/preprocess_imagenet.sh).
-
-1. Store the preprocessed data to `/data` folder inside the EFS.
+1. TensorFlow consumes the ImageNet data in a specific format. You can preprocess them by running the [script](https://github.com/aws-samples/deep-learning-models/blob/master/utils/tensorflow/preprocess_imagenet.sh).
 
 ## Steps
 

@@ -21,11 +21,3 @@ Click on the created EFS. Under `File system access`, click on `Amazon EC2 mount
 	sudo mkdir efs
 	sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-xxxxxxx.efs.<region>.amazonaws.com:/ efs
 	```
-	
-1. Download the data set: Login to one of the worker node and run the below command. It may take about 20 minutes or so.
-
-	```
-    cd efs
-    sudo bash
-    mkdir data
-    ```

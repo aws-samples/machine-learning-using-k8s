@@ -33,7 +33,6 @@ This document explains how to perform distributed training on [Amazon EKS](https
     ./preprocess_imagenet.sh
     ```
 
-
 ## Steps
 
 1. Create namespace:
@@ -54,13 +53,13 @@ This document explains how to perform distributed training on [Amazon EKS](https
     ks env set default --namespace ${NAMESPACE}
     ```
 
-1. Create the Persistent Volume (PV) based on EFS. We have provided the pod file for PV. One can use it by just replacing the name of EFS server. One can also adjust the storage capacity based on Dataset size and other requirements. Please update the file accordingly before running the below command.
+1. Create the Persistent Volume (PV) based on EFS. You need to update the name of EFS server in the Kubernetes manifest file. Storage capacity based on dataset size and other requirements can be updated as well.
 
     ```
     kubectl create -f training/distributed_training/dist_pv.yaml
     ```
 
-1. Create the Persistent Volume Claim (PVC) based on EFS. We have provided the pod file for PVC. One can adjust the storage capacity based on PV's capacity. Please note that storage capacity of PVC should be at most storage capacity of PV.  Please update the file bccordingly before running the below command.
+1. Create the Persistent Volume Claim (PVC) based on EFS. The storage capacity based on PV's capacity may adjusted in the manifest. The storage capacity of PVC should be the at most storage capacity of PV.
 
     ```
     kubectl create -f training/distributed_training/dist_pvc.yaml
@@ -92,7 +91,6 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
     ```
     IMAGE=rgaut/horovod:latest
-    IMAGE=armandmcqueen/horovod_benchmark:v1
     ```
 
 1. Define the number of workers (number of machines) and number of GPU available per machine
@@ -152,7 +150,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
     kubectl logs -n ${NAMESPACE} -f ${COMPONENT}-master > results/benchmark_1.out
     ```
 
-    Here is a [sample output](tensorflow-horovod-log.txt).
+    Here is a [sample output](tensorflow-horovod-imagenet-log.txt).
 
 1. To iterate quickly. Remove pods, recreate openmpi component, restart from generate openmpi command
 

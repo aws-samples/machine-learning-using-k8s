@@ -10,4 +10,4 @@ This repository explains how to run different Machine Learning frameworks on [Am
   - [Jupyter notebook for TensorFlow on Amazon EKS](jupyter.md)
   - [TensorFlow on Amazon EKS](tensorflow.md)
 - Distributed training
-  - [TensorFlow and Horovod on Amazon EKS](tensorflow-horovod.md)
+  - [TensorFlow and Horovod on Amazon EKS with Synthetic Data](tensorflow-horovod.md)

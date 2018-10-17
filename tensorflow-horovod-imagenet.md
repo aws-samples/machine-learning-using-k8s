@@ -40,7 +40,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
     kubectl create -f training/distributed_training/dist_pv.yaml
     ```
 
-1. Create the Persistent Volume Claim (PVC) based on EFS. We have provided the pod file for PVC. One can adjust the storage capacity based on PV's capacity. Please note that storage capacity of PVC should be at most storage capacity of PV.  Please update the file bccordingly efore running the below command.
+1. Create the Persistent Volume Claim (PVC) based on EFS. We have provided the pod file for PVC. One can adjust the storage capacity based on PV's capacity. Please note that storage capacity of PVC should be at most storage capacity of PV.  Please update the file bccordingly before running the below command.
 
     ```
     kubectl create -f training/distributed_training/dist_pvc.yaml

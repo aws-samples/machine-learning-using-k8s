@@ -12,7 +12,27 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
 1. Download [ImageNet](http://image-net.org/download-images) dataset to EFS in the `data` directory. This would typically be in the directory `/home/ec2-user/efs/data`. Use `Download Original Images (for non-commercial research/educational use only)` option.
 
-1. TensorFlow consumes the ImageNet data in a specific format. You can preprocess them by running the [script](https://github.com/aws-samples/deep-learning-models/blob/master/utils/tensorflow/preprocess_imagenet.sh).
+1. TensorFlow consumes the ImageNet data in a specific format. You can preprocess them by downloading and modifying the script:
+
+    ```
+    curl -O https://raw.githubusercontent.com/aws-samples/deep-learning-models/master/utils/tensorflow/preprocess_imagenet.sh
+    chmod +x preprocess_imagenet.sh
+    ```
+
+    The following values need to be changed:
+    1. `[your imagenet account]`
+    1. `[your imagenet access key]`
+    1. `[PATH TO TFRECORD TRAINING DATASET]`
+    1. `[PATH TO RESIZED TFRECORD TRAINING DATASET]`
+    1. `[PATH TO TFRECORD VALIDATION DATASET]`
+    1. `[PATH TO RESIZED TFRECORD VALIDATION DATASET]`
+
+    Execute the script:
+
+    ```
+    ./preprocess_imagenet.sh
+    ```
+
 
 ## Steps
 

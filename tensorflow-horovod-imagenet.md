@@ -70,7 +70,7 @@ If you work for Amazon, then reach out to the authors of this document to have a
     kubectl create -f ../training/distributed_training/dist_pvc.yaml
     ```
 
-1. Make sure that PV has been claimed by PVC under same namespace. You can verify that by running below command. 
+1. Make sure that PV has been claimed by PVC under same namespace. You can verify that by running the command:
 
     ```
     kubectl get pv -n ${NAMESPACE}
@@ -78,7 +78,7 @@ If you work for Amazon, then reach out to the authors of this document to have a
 nfs-data   85Gi       RWX            Retain           Bound    kubeflow-dist-train/nfs-external   nfs-external            58s
     ```
 
-1. Create secret for ssh access between nodes
+1. Create secret for ssh access between nodes:
 
     ```
     SECRET=openmpi-secret; mkdir -p .tmp; yes | ssh-keygen -N "" -f .tmp/id_rsa
@@ -86,7 +86,7 @@ nfs-data   85Gi       RWX            Retain           Bound    kubeflow-dist-tra
     kubectl create secret generic ${SECRET} -n ${NAMESPACE} --from-file=id_rsa=.tmp/id_rsa --from-file=id_rsa.pub=.tmp/id_rsa.pub --from-file=authorized_keys=.tmp/id_rsa.pub
     ```
 
-1. Install Kubeflow openmpi component
+1. Install Kubeflow openmpi component:
 
     ``` 
     VERSION=master
@@ -100,13 +100,13 @@ nfs-data   85Gi       RWX            Retain           Bound    kubeflow-dist-tra
     IMAGE=rgaut/horovod:latest
     ```
 
-1. Define the number of workers (number of machines) and number of GPU available per machine
+1. Define the number of workers (number of machines) and number of GPU available per machine:
 
     ```
     WORKERS=2; GPU=4
     ```
 
-1. Formulate the MPI command based on official document from [Horovod](https://github.com/uber/horovod)
+1. Formulate the MPI command based on official document from [Horovod](https://github.com/uber/horovod):
 
     ```
     EXEC="mpiexec -np 8 --hostfile /kubeflow/openmpi/assets/hostfile --allow-run-as-root --display-map --tag-output --timestamp-output -mca btl_tcp_if_exclude lo,docker0 --mca plm_rsh_no_tree_spawn 1 -bind-to none -map-by slot -mca pml ob1 -mca btl ^openib sh -c 'NCCL_SOCKET_IFNAME=eth0 NCCL_MIN_NRINGS=8 NCCL_DEBUG=INFO python3.6 /examples/official-benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --num_batches=100 --model vgg16 --batch_size 64  --data_name=imagenet  --data_dir=/mnt/data --variable_update horovod --horovod_device gpu --use_fp16'"
@@ -129,7 +129,7 @@ nfs-data   85Gi       RWX            Retain           Bound    kubeflow-dist-tra
     ks param set ${COMPONENT} volumes '[{ "name": "efs-pvc", "persistentVolumeClaim": { "claimName": "nfs-external" }}]'
     ```
 
-1. Set the parameter for volumeMounts  :
+1. Set the parameter for volumeMounts:
 
     ```
     ks param set ${COMPONENT} volumeMounts '[{ "name": "efs-pvc", "mountPath": "/mnt"}]'
@@ -137,19 +137,19 @@ nfs-data   85Gi       RWX            Retain           Bound    kubeflow-dist-tra
 
     This command will make the `data` available under `/mnt/data` directory for each pod.
 
-1. Deploy the config to your cluster
+1. Deploy the config to your cluster:
 
     ```
     ks apply default
     ```
 
-1. Check the pod status
+1. Check the pod status:
 
     ```
     kubectl get pod -n ${NAMESPACE} -o wide
     ```
 
-1. Save the log
+1. Save the log:
 
     ```
     mkdir -p results

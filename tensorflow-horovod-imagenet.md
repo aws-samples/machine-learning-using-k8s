@@ -75,7 +75,7 @@ If you work for Amazon, then reach out to the authors of this document to have a
     ```
     kubectl get pv -n ${NAMESPACE}
     NAME       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                              STORAGECLASS   REASON   AGE
-nfs-data   85Gi       RWX            Retain           Bound    kubeflow-dist-train/nfs-external   nfs-external            58s
+    nfs-data   85Gi       RWX            Retain           Bound    kubeflow-dist-train/nfs-external   nfs-external            58s
     ```
 
 1. Create secret for ssh access between nodes:

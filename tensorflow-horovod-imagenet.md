@@ -174,3 +174,12 @@ If you work for Amazon, then reach out to the authors of this document to have a
     ```
 
     Then follow the steps from 10-13.
+
+
+1. [Optional] To store checkpoints for resnet50 model on efs `mnt` directory.
+
+    ```
+    EXEC="mpiexec -np 32 --hostfile /kubeflow/openmpi/assets/hostfile --allow-run-as-root --display-map --tag-output --timestamp-output -mca btl_tcp_if_exclude lo,docker0 --mca plm_rsh_no_tree_spawn 1 -bind-to none -map-by slot -mca pml ob1 -mca btl ^openib sh -c 'NCCL_SOCKET_IFNAME=eth0 NCCL_MIN_NRINGS=8 NCCL_DEBUG=INFO python3.6 /examples/official-benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model resnet50 --num_epochs=25 --batch_size 64 --data_name=imagenet  --data_dir=/mnt/data --train_dir=/mnt/checkpoint  --variable_update horovod --horovod_device gpu --weight_decay=1e-4 --use_fp16'" 
+    ``` 
+   
+    To store the checkpoint which is necessary to perform inference or model evaluation. Please specify `--train_dir`. One can use either `num_epochs` or `num_batches`.

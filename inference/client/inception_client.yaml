@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: inception-client-deployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: inception-client
+    spec:
+      containers:
+      - name: inception-client-container
+        image: rgaut/inception_client:latest 
+        command:
+          - "python"
+          - "/root/demo.py"
+          - "--server"
+          - "inception-server-service:9000"
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: inception-client-service
+  name: inception-client-service
+spec:
+  ports:
+  - port: 5000
+    targetPort: 5000
+  selector:
+    app: inception-client
+  type: LoadBalancer

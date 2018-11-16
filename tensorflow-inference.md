@@ -39,9 +39,9 @@ Server is responsible to run the TensorFlow Model Server. It will load the train
 
 1. TF serving model server can only load the model if its in [SavedModel](https://www.tensorflow.org/guide/saved_model) format.Previous steps have performed the setup to convert a Inception model checkpoint to SavedModel. Lets export the checkpoint into SavedModel format. Run below command on docker container 
    ```
-     python tensorflow_serving/example/inception_saved_model.py --checkpoint_dir <Directory where the inception model extracted in previous step>  --output_dir /root/<Directory where you want to save the exported model> 
+     python serving/tensorflow_serving/example/inception_saved_model.py --checkpoint_dir <Directory where the inception model extracted in previous step>  --output_dir /root/inception <Directory where you want to save the exported model> 
    ```
-   Provide your `--output-dir` under /root so that it will be saved to your host's /tmp, since we mapped the volume in step 1. You can now exit from tensorflow container. Your SavedModel directory will have name `1`. 
+   Provide your `--output-dir` under /root so that it will be saved to your host's /tmp, since we mapped the volume in step 1. You can now exit from tensorflow container. Your SavedModel directory will be available `/tmp/models/inception/`. 
 
 1. Now you have inception model in SavedModel format which can be directly loaded by TF serving. 
    1. Run serving image as deamon 
@@ -51,7 +51,7 @@ Server is responsible to run the TensorFlow Model Server. It will load the train
 
    1. Copy the inception model (SavedModel format) to container's model folder 
       ```
-        docker cp /tmp/1 serving_base:/models/inception/1
+        docker cp /tmp/inception serving_base:/models/inception/
       ```
 
    1. Commit the container to create an image out of it.
@@ -68,13 +68,13 @@ Server is responsible to run the TensorFlow Model Server. It will load the train
  
    1. [Test] You have a server image which you can run in back ground and test the inference. To test the inference you will need a picture, a host with TensorFlow install in it as well source code of TF serving. 
       ``` 
-        docker run -p 9000:9000 -t $USER/inception_serving & 
+        docker run -p 8500:8500 -t $USER/inception_serving & 
       ```
 
       Now run the inference, lets say you have cat.jpeg picture, python which has TF, TF-Serving-API installed as well TF serving-1.10.0 code base.
 
       ```
-        python serving/tensorflow_serving/example/inception_client.py --server=127.0.0.1:9000 --image=<path to cat.jpeg>     
+        python serving/tensorflow_serving/example/inception_client.py --server=127.0.0.1:8500 --image=<path to cat.jpeg>     
       ```
       
       it should return output like below along with other information
@@ -106,15 +106,15 @@ Server is responsible to run the TensorFlow Model Server. It will load the train
    ```
      kubectl get service inception-client-service -o wide
    ```
-     goto your browser and type the EXTERNAL-IP:PORT, you should see below page
-     ![Upload Page](images/inference-upload.png)
-    
-     feel free to upload an image, once you hit on `upload`, you should see page like below.
-     ![Output Page](images/inference-output.png
+   goto your browser and type the EXTERNAL-IP:PORT, you should see below page
+   ![Upload Page](images/inference-upload.png)
+   
+   feel free to upload an image, once you hit on `upload`, you should see page like below.
+   ![Output Page](images/inference-output.png)
 
-     In case if the page is not accessible due to VPN issue, use port forwarding
-     ```
-       kubectl port-forward deployment/inception-client-deployment 5000:5000 
-     ```
+   In case if the page is not accessible due to VPN issue, use port forwarding
+   ```
+     kubectl port-forward deployment/inception-client-deployment 5000:5000 
+   ```
    
 

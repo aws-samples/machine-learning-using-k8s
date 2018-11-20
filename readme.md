@@ -12,3 +12,6 @@ This repository explains how to run different Machine Learning frameworks on [Am
 - Distributed training
   - [TensorFlow and Horovod on Amazon EKS with ImageNet Data](tensorflow-horovod-imagenet.md)
   - [TensorFlow and Horovod on Amazon EKS with Synthetic Data](tensorflow-horovod.md)
+- TensorBoard setup
+  - [TensorBoard on Amazon EKS](tensorboard.md)
+

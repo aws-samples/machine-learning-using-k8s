@@ -5,7 +5,7 @@ This document explains how to create an Amazon EKS cluster with GPU-enabled work
 1. Create EKS cluster with GPU nodes:
 
    ```
-   eksctl create cluster eks-gpu --node-type=p3.8xlarge --timeout=40m
+   eksctl create cluster eks-gpu --node-type=p3.8xlarge --timeout=40m --nodes=2 --region=us-west-2
    ```
 
    By default, ssh access is not enabled. Here is how it can be done:
@@ -13,6 +13,8 @@ This document explains how to create an Amazon EKS cluster with GPU-enabled work
    ```
    eksctl create cluster eks-gpu \
       --node-type=p3.8xlarge \
+      --nodes=2 \
+      --region=us-west-2 \
       --timeout=40m \
       --ssh-access \
       --ssh-public-key arun-us-west2
@@ -21,7 +23,7 @@ This document explains how to create an Amazon EKS cluster with GPU-enabled work
 1. Apply NVIDIA driver:
 
    ```
-   kubectl apply -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v1.10/nvidia-device-plugin.yml
+   kubectl apply -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v1.11/nvidia-device-plugin.yml
    ```
 
    This will be simplified after https://github.com/weaveworks/eksctl/issues/205 is fixed.

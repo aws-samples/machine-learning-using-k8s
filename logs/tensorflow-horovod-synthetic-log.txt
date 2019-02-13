@@ -1,0 +1,529 @@
++ POD_NAME=tf-resnet50-horovod-job-worker-0
++ shift
++ /opt/kube/kubectl exec tf-resnet50-horovod-job-worker-0 -- /bin/sh -c     PATH=/usr/local/bin:$PATH ; export PATH ; LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH ; export LD_LIBRARY_PATH ; DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH ; export DYLD_LIBRARY_PATH ;   /usr/local/bin/orted -mca ess "env" -mca ess_base_jobid "2913271808" -mca ess_base_vpid 1 -mca ess_base_num_procs "3" -mca orte_node_regex "tf-resnet[2:50]-horovod-job-launcher-w9pdz,tf-resnet[2:50]-horovod-job-worker-0,tf-resnet[2:50]-horovod-job-worker-1@0(3)" -mca orte_hnp_uri "2913271808.0;tcp://192.168.10.221:37937" -mca btl_tcp_if_exclude "lo" -mca pml "ob1" -mca btl "^openib" -mca plm "rsh" -mca plm_rsh_agent "/etc/mpi/kubexec.sh" -mca orte_default_hostfile "/etc/mpi/hostfile" -mca hwloc_base_binding_policy "none" -mca rmaps_base_mapping_policy "slot" -mca pmix "^s1,s2,cray,isolated"
++ POD_NAME=tf-resnet50-horovod-job-worker-1
++ shift
++ /opt/kube/kubectl exec tf-resnet50-horovod-job-worker-1 -- /bin/sh -c     PATH=/usr/local/bin:$PATH ; export PATH ; LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH ; export LD_LIBRARY_PATH ; DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH ; export DYLD_LIBRARY_PATH ;   /usr/local/bin/orted -mca ess "env" -mca ess_base_jobid "2913271808" -mca ess_base_vpid 2 -mca ess_base_num_procs "3" -mca orte_node_regex "tf-resnet[2:50]-horovod-job-launcher-w9pdz,tf-resnet[2:50]-horovod-job-worker-0,tf-resnet[2:50]-horovod-job-worker-1@0(3)" -mca orte_hnp_uri "2913271808.0;tcp://192.168.10.221:37937" -mca btl_tcp_if_exclude "lo" -mca pml "ob1" -mca btl "^openib" -mca plm "rsh" -mca plm_rsh_agent "/etc/mpi/kubexec.sh" -mca orte_default_hostfile "/etc/mpi/hostfile" -mca hwloc_base_binding_policy "none" -mca rmaps_base_mapping_policy "slot" -mca pmix "^s1,s2,cray,isolated"
+2019-02-12 22:36:52.744292: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-02-12 22:36:52.744667: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-02-12 22:36:52.744727: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-02-12 22:36:52.744818: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-02-12 22:36:52.744766: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-02-12 22:36:52.744861: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-02-12 22:36:52.744922: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-02-12 22:36:52.745195: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-02-12 22:36:54.969924: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-02-12 22:36:54.970170: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-02-12 22:36:54.970749: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-02-12 22:36:54.970493: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-02-12 22:36:54.971018: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-02-12 22:36:54.971269: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-02-12 22:36:54.971550: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-02-12 22:36:54.971816: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-02-12 22:36:54.982027: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1432] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:18.0
+totalMemory: 15.78GiB freeMemory: 15.37GiB
+2019-02-12 22:36:54.982060: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 1
+2019-02-12 22:36:54.982215: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1432] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:17.0
+totalMemory: 15.78GiB freeMemory: 15.37GiB
+2019-02-12 22:36:54.982244: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 0
+2019-02-12 22:36:54.982308: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1432] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:1e.0
+totalMemory: 15.78GiB freeMemory: 15.37GiB
+2019-02-12 22:36:54.982340: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 3
+2019-02-12 22:36:54.982381: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1432] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:1d.0
+totalMemory: 15.78GiB freeMemory: 15.37GiB
+2019-02-12 22:36:54.982410: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 3
+2019-02-12 22:36:54.982465: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1432] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:1b.0
+totalMemory: 15.78GiB freeMemory: 15.37GiB
+2019-02-12 22:36:54.982495: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 1
+2019-02-12 22:36:54.982578: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1432] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:19.0
+totalMemory: 15.78GiB freeMemory: 15.37GiB
+2019-02-12 22:36:54.982608: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 2
+2019-02-12 22:36:54.982680: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1432] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:1a.0
+totalMemory: 15.78GiB freeMemory: 15.37GiB
+2019-02-12 22:36:54.982713: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 0
+2019-02-12 22:36:54.982752: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1432] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:1c.0
+totalMemory: 15.78GiB freeMemory: 15.37GiB
+2019-02-12 22:36:54.982779: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 2
+2019-02-12 22:36:55.494175: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:36:55.494225: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      0 
+2019-02-12 22:36:55.494235: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 0:   N 
+2019-02-12 22:36:55.494303: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:36:55.494331: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      2 
+2019-02-12 22:36:55.494341: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 2:   N 
+2019-02-12 22:36:55.494587: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 0, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:17.0, compute capability: 7.0)
+2019-02-12 22:36:55.494510: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:36:55.494549: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      1 
+2019-02-12 22:36:55.494558: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 1:   N 
+2019-02-12 22:36:55.494829: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 2, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:19.0, compute capability: 7.0)
+2019-02-12 22:36:55.495114: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 1, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1b.0, compute capability: 7.0)
+2019-02-12 22:36:55.499042: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:36:55.499073: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      1 
+2019-02-12 22:36:55.499083: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 1:   N 
+2019-02-12 22:36:55.499433: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 1, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:18.0, compute capability: 7.0)
+TensorFlow:  1.12
+Model:       resnet50
+Dataset:     imagenet (synthetic)
+Mode:        BenchmarkMode.TRAIN
+SingleSess:  False
+Batch size:  2048 global
+             256 per device
+Num batches: 100
+Num epochs:  0.16
+Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Data format: NCHW
+Optimizer:   sgd
+Variables:   horovod
+==========
+Generating training model
+TensorFlow:  1.12
+Model:       resnet50
+Dataset:     imagenet (synthetic)
+Mode:        BenchmarkMode.TRAIN
+SingleSess:  False
+Batch size:  2048 global
+             256 per device
+Num batches: 100
+Num epochs:  0.16
+Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Data format: NCHW
+Optimizer:   sgd
+Variables:   horovod
+==========
+TensorFlow:  1.12
+Model:       resnet50
+Dataset:     imagenet (synthetic)
+Mode:        BenchmarkMode.TRAIN
+SingleSess:  False
+Batch size:  2048 global
+             256 per device
+Num batches: 100
+Num epochs:  0.16
+Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Data format: NCHW
+Optimizer:   sgd
+Variables:   horovod
+==========
+Generating training model
+Generating training model
+TensorFlow:  1.12
+Model:       resnet50
+Dataset:     imagenet (synthetic)
+Mode:        BenchmarkMode.TRAIN
+SingleSess:  False
+Batch size:  2048 global
+             256 per device
+Num batches: 100
+Num epochs:  0.16
+Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Data format: NCHW
+Optimizer:   sgd
+Variables:   horovod
+==========
+2019-02-12 22:36:55.503725: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:36:55.503759: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      3 
+2019-02-12 22:36:55.503768: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 3:   N 
+2019-02-12 22:36:55.503762: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:36:55.503789: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      0 
+2019-02-12 22:36:55.503798: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 0:   N 
+Generating training model
+2019-02-12 22:36:55.504096: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 3, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1d.0, compute capability: 7.0)
+2019-02-12 22:36:55.504401: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 0, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1a.0, compute capability: 7.0)
+2019-02-12 22:36:55.505142: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:36:55.505171: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      3 
+2019-02-12 22:36:55.505180: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 3:   N 
+2019-02-12 22:36:55.505274: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:36:55.505305: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      2 
+2019-02-12 22:36:55.505315: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 2:   N 
+2019-02-12 22:36:55.505510: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 3, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1e.0, compute capability: 7.0)
+2019-02-12 22:36:55.505767: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 2, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1c.0, compute capability: 7.0)
+TensorFlow:  1.12
+Model:       resnet50
+Dataset:     imagenet (synthetic)
+Mode:        BenchmarkMode.TRAIN
+SingleSess:  False
+Batch size:  2048 global
+             256 per device
+Num batches: 100
+Num epochs:  0.16
+Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Data format: NCHW
+Optimizer:   sgd
+Variables:   horovod
+==========
+Generating training model
+TensorFlow:  1.12
+Model:       resnet50
+Dataset:     imagenet (synthetic)
+Mode:        BenchmarkMode.TRAIN
+SingleSess:  False
+Batch size:  2048 global
+             256 per device
+Num batches: 100
+Num epochs:  0.16
+Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Data format: NCHW
+Optimizer:   sgd
+Variables:   horovod
+==========
+Generating training model
+TensorFlow:  1.12
+Model:       resnet50
+Dataset:     imagenet (synthetic)
+Mode:        BenchmarkMode.TRAIN
+SingleSess:  False
+Batch size:  2048 global
+             256 per device
+Num batches: 100
+Num epochs:  0.16
+Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Data format: NCHW
+Optimizer:   sgd
+Variables:   horovod
+==========
+Generating training model
+TensorFlow:  1.12
+Model:       resnet50
+Dataset:     imagenet (synthetic)
+Mode:        BenchmarkMode.TRAIN
+SingleSess:  False
+Batch size:  2048 global
+             256 per device
+Num batches: 100
+Num epochs:  0.16
+Devices:     ['horovod/gpu:0', 'horovod/gpu:1', 'horovod/gpu:2', 'horovod/gpu:3', 'horovod/gpu:4', 'horovod/gpu:5', 'horovod/gpu:6', 'horovod/gpu:7']
+Data format: NCHW
+Optimizer:   sgd
+Variables:   horovod
+==========
+Generating training model
+Initializing graph
+Initializing graph
+Initializing graph
+Initializing graph
+Initializing graph
+Initializing graph
+Initializing graph
+W0212 22:36:59.984549 140674326357760 tf_logging.py:125] From /tensorflow/benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:2157: __init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please switch to tf.train.MonitoredTrainingSession
+W0212 22:37:00.046591 139645589165824 tf_logging.py:125] From /tensorflow/benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:2157: __init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please switch to tf.train.MonitoredTrainingSession
+W0212 22:37:00.086150 139776016680704 tf_logging.py:125] From /tensorflow/benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:2157: __init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please switch to tf.train.MonitoredTrainingSession
+W0212 22:37:00.114815 139971293017856 tf_logging.py:125] From /tensorflow/benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:2157: __init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please switch to tf.train.MonitoredTrainingSession
+W0212 22:37:00.118561 139900828899072 tf_logging.py:125] From /tensorflow/benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:2157: __init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please switch to tf.train.MonitoredTrainingSession
+W0212 22:37:00.142103 140108063540992 tf_logging.py:125] From /tensorflow/benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:2157: __init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please switch to tf.train.MonitoredTrainingSession
+Initializing graph
+W0212 22:37:00.509107 140263710009088 tf_logging.py:125] From /tensorflow/benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:2157: __init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please switch to tf.train.MonitoredTrainingSession
+W0212 22:37:00.540169 140017450485504 tf_logging.py:125] From /tensorflow/benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py:2157: __init__ (from tensorflow.python.training.supervisor) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please switch to tf.train.MonitoredTrainingSession
+2019-02-12 22:37:00.819962: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 3
+2019-02-12 22:37:00.820031: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:37:00.820042: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      3 
+2019-02-12 22:37:00.820049: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 3:   N 
+2019-02-12 22:37:00.820398: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 3, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1e.0, compute capability: 7.0)
+2019-02-12 22:37:00.854016: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 2
+2019-02-12 22:37:00.854083: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:37:00.854093: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      2 
+2019-02-12 22:37:00.854101: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 2:   N 
+2019-02-12 22:37:00.854432: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 2, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1c.0, compute capability: 7.0)
+2019-02-12 22:37:00.881701: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 0
+2019-02-12 22:37:00.881791: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:37:00.881805: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      0 
+2019-02-12 22:37:00.881815: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 0:   N 
+2019-02-12 22:37:00.882183: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 0, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1a.0, compute capability: 7.0)
+2019-02-12 22:37:00.883960: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 1
+2019-02-12 22:37:00.884007: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:37:00.884021: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      1 
+2019-02-12 22:37:00.884030: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 1:   N 
+2019-02-12 22:37:00.884518: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 1, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:18.0, compute capability: 7.0)
+2019-02-12 22:37:00.929810: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 2
+2019-02-12 22:37:00.929881: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:37:00.929892: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      2 
+2019-02-12 22:37:00.929899: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 2:   N 
+2019-02-12 22:37:00.930249: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 2, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:19.0, compute capability: 7.0)
+2019-02-12 22:37:01.029814: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 1
+2019-02-12 22:37:01.029902: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:37:01.029917: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      1 
+2019-02-12 22:37:01.029929: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 1:   N 
+2019-02-12 22:37:01.030278: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 1, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1b.0, compute capability: 7.0)
+2019-02-12 22:37:01.361052: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 3
+2019-02-12 22:37:01.361128: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:37:01.361140: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      3 
+2019-02-12 22:37:01.361148: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 3:   N 
+2019-02-12 22:37:01.361441: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 3, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1d.0, compute capability: 7.0)
+2019-02-12 22:37:01.368518: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 0
+2019-02-12 22:37:01.368566: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-12 22:37:01.368577: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      0 
+2019-02-12 22:37:01.368584: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 0:   N 
+2019-02-12 22:37:01.368901: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14862 MB memory) -> physical GPU (device: 0, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:17.0, compute capability: 7.0)
+I0212 22:37:01.813548 139900828899072 tf_logging.py:115] Running local_init_op.
+I0212 22:37:01.859344 139776016680704 tf_logging.py:115] Running local_init_op.
+I0212 22:37:01.897456 139900828899072 tf_logging.py:115] Done running local_init_op.
+I0212 22:37:01.970411 140108063540992 tf_logging.py:115] Running local_init_op.
+I0212 22:37:01.970345 139645589165824 tf_logging.py:115] Running local_init_op.
+I0212 22:37:01.977457 139776016680704 tf_logging.py:115] Done running local_init_op.
+I0212 22:37:02.077600 139645589165824 tf_logging.py:115] Done running local_init_op.
+I0212 22:37:02.081391 140108063540992 tf_logging.py:115] Done running local_init_op.
+I0212 22:37:02.264305 140674326357760 tf_logging.py:115] Running local_init_op.
+I0212 22:37:02.377686 140674326357760 tf_logging.py:115] Done running local_init_op.
+I0212 22:37:02.420068 139971293017856 tf_logging.py:115] Running local_init_op.
+I0212 22:37:02.446032 140017450485504 tf_logging.py:115] Running local_init_op.
+I0212 22:37:02.505395 139971293017856 tf_logging.py:115] Done running local_init_op.
+I0212 22:37:02.545424 140017450485504 tf_logging.py:115] Done running local_init_op.
+I0212 22:37:02.603471 140263710009088 tf_logging.py:115] Running local_init_op.
+I0212 22:37:02.745575 140263710009088 tf_logging.py:115] Done running local_init_op.
+Running warm up
+Running warm up
+Running warm up
+Running warm up
+Running warm up
+Running warm up
+Running warm up
+Running warm up
+
+tf-resnet50-horovod-job-worker-0:17:538 [0] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+tf-resnet50-horovod-job-worker-0:17:538 [0] NCCL INFO Using internal Network Socket
+tf-resnet50-horovod-job-worker-0:17:538 [0] NCCL INFO NET : Using interface eth0:192.168.5.2<0>
+tf-resnet50-horovod-job-worker-0:17:538 [0] NCCL INFO NET/Socket : 1 interfaces found
+NCCL version 2.3.5+cuda9.0
+tf-resnet50-horovod-job-worker-0:17:538 [0] NCCL INFO rank 0 nranks 8
+
+tf-resnet50-horovod-job-worker-0:20:537 [3] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+tf-resnet50-horovod-job-worker-0:20:537 [3] NCCL INFO Using internal Network Socket
+tf-resnet50-horovod-job-worker-0:20:537 [3] NCCL INFO rank 3 nranks 8
+
+tf-resnet50-horovod-job-worker-1:17:543 [0] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+tf-resnet50-horovod-job-worker-1:17:543 [0] NCCL INFO Using internal Network Socket
+tf-resnet50-horovod-job-worker-1:17:543 [0] NCCL INFO rank 4 nranks 8
+
+tf-resnet50-horovod-job-worker-0:18:546 [1] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+tf-resnet50-horovod-job-worker-0:18:546 [1] NCCL INFO Using internal Network Socket
+tf-resnet50-horovod-job-worker-0:18:546 [1] NCCL INFO rank 1 nranks 8
+
+tf-resnet50-horovod-job-worker-1:20:538 [3] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+tf-resnet50-horovod-job-worker-1:20:538 [3] NCCL INFO Using internal Network Socket
+tf-resnet50-horovod-job-worker-1:20:538 [3] NCCL INFO rank 7 nranks 8
+
+tf-resnet50-horovod-job-worker-1:19:546 [2] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+tf-resnet50-horovod-job-worker-1:19:546 [2] NCCL INFO Using internal Network Socket
+tf-resnet50-horovod-job-worker-1:19:546 [2] NCCL INFO rank 6 nranks 8
+
+tf-resnet50-horovod-job-worker-0:19:540 [2] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+tf-resnet50-horovod-job-worker-0:19:540 [2] NCCL INFO Using internal Network Socket
+tf-resnet50-horovod-job-worker-0:19:540 [2] NCCL INFO rank 2 nranks 8
+
+tf-resnet50-horovod-job-worker-1:18:537 [1] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+tf-resnet50-horovod-job-worker-1:18:537 [1] NCCL INFO Using internal Network Socket
+tf-resnet50-horovod-job-worker-1:18:537 [1] NCCL INFO rank 5 nranks 8
+2019-02-12 22:37:14.682369: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-02-12 22:37:14.682426: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+tf-resnet50-horovod-job-worker-0:18:546 [1] NCCL INFO comm 0x7f3b98278270 rank 1 nranks 8
+tf-resnet50-horovod-job-worker-0:18:546 [1] NCCL INFO NET : Using interface eth0:192.168.5.2<0>
+tf-resnet50-horovod-job-worker-0:18:546 [1] NCCL INFO NET/Socket : 1 interfaces found
+tf-resnet50-horovod-job-worker-0:18:546 [1] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:18:546 [1] NCCL INFO CUDA Dev 1, IP Interfaces : eth0(SOC) 
+tf-resnet50-horovod-job-worker-0:17:538 [0] NCCL INFO comm 0x7f90142737f0 rank 0 nranks 8
+tf-resnet50-horovod-job-worker-0:17:538 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:17:538 [0] NCCL INFO CUDA Dev 0, IP Interfaces : eth0(SOC) 
+tf-resnet50-horovod-job-worker-0:19:540 [2] NCCL INFO comm 0x7f6bd827dda0 rank 2 nranks 8
+tf-resnet50-horovod-job-worker-0:19:540 [2] NCCL INFO NET : Using interface eth0:192.168.5.2<0>
+tf-resnet50-horovod-job-worker-0:19:540 [2] NCCL INFO NET/Socket : 1 interfaces found
+tf-resnet50-horovod-job-worker-0:20:537 [3] NCCL INFO comm 0x7f002c2887d0 rank 3 nranks 8
+tf-resnet50-horovod-job-worker-0:20:537 [3] NCCL INFO NET : Using interface eth0:192.168.5.2<0>
+tf-resnet50-horovod-job-worker-0:20:537 [3] NCCL INFO NET/Socket : 1 interfaces found
+tf-resnet50-horovod-job-worker-0:19:540 [2] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:19:540 [2] NCCL INFO CUDA Dev 2, IP Interfaces : eth0(SOC) 
+tf-resnet50-horovod-job-worker-0:20:537 [3] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:20:537 [3] NCCL INFO CUDA Dev 3, IP Interfaces : eth0(SOC) 
+tf-resnet50-horovod-job-worker-1:17:543 [0] NCCL INFO comm 0x7fefb02a2ee0 rank 4 nranks 8
+tf-resnet50-horovod-job-worker-1:17:543 [0] NCCL INFO NET : Using interface eth0:192.168.15.109<0>
+tf-resnet50-horovod-job-worker-1:17:543 [0] NCCL INFO NET/Socket : 1 interfaces found
+tf-resnet50-horovod-job-worker-1:17:543 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:17:543 [0] NCCL INFO CUDA Dev 0, IP Interfaces : eth0(SOC) 
+tf-resnet50-horovod-job-worker-1:19:546 [2] NCCL INFO comm 0x7f1e882a2ea0 rank 6 nranks 8
+tf-resnet50-horovod-job-worker-1:19:546 [2] NCCL INFO NET : Using interface eth0:192.168.15.109<0>
+tf-resnet50-horovod-job-worker-1:19:546 [2] NCCL INFO NET/Socket : 1 interfaces found
+tf-resnet50-horovod-job-worker-1:20:538 [3] NCCL INFO comm 0x7f56c0298020 rank 7 nranks 8
+tf-resnet50-horovod-job-worker-1:20:538 [3] NCCL INFO NET : Using interface eth0:192.168.15.109<0>
+tf-resnet50-horovod-job-worker-1:20:538 [3] NCCL INFO NET/Socket : 1 interfaces found
+tf-resnet50-horovod-job-worker-1:18:537 [1] NCCL INFO comm 0x7f4c002a7830 rank 5 nranks 8
+tf-resnet50-horovod-job-worker-1:19:546 [2] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:19:546 [2] NCCL INFO CUDA Dev 2, IP Interfaces : eth0(SOC) 
+tf-resnet50-horovod-job-worker-1:18:537 [1] NCCL INFO NET : Using interface eth0:192.168.15.109<0>
+tf-resnet50-horovod-job-worker-1:18:537 [1] NCCL INFO NET/Socket : 1 interfaces found
+tf-resnet50-horovod-job-worker-1:20:538 [3] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:20:538 [3] NCCL INFO CUDA Dev 3, IP Interfaces : eth0(SOC) 
+2019-02-12 22:37:14.986816: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-02-12 22:37:14.986870: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+tf-resnet50-horovod-job-worker-1:18:537 [1] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:18:537 [1] NCCL INFO CUDA Dev 1, IP Interfaces : eth0(SOC) 
+tf-resnet50-horovod-job-worker-0:17:538 [0] NCCL INFO Using 256 threads
+tf-resnet50-horovod-job-worker-0:17:538 [0] NCCL INFO Min Comp Cap 7
+tf-resnet50-horovod-job-worker-0:17:538 [0] NCCL INFO Ring 00 :    0   1   2   3   4   5   6   7
+tf-resnet50-horovod-job-worker-0:18:546 [1] NCCL INFO Ring 00 : 1[1] -> 2[2] via P2P/IPC
+tf-resnet50-horovod-job-worker-1:19:546 [2] NCCL INFO Ring 00 : 6[2] -> 7[3] via P2P/IPC
+tf-resnet50-horovod-job-worker-0:19:540 [2] NCCL INFO Ring 00 : 2[2] -> 3[3] via direct shared memory
+tf-resnet50-horovod-job-worker-1:18:537 [1] NCCL INFO Ring 00 : 5[1] -> 6[2] via P2P/IPC
+tf-resnet50-horovod-job-worker-0:17:538 [0] NCCL INFO Ring 00 : 7 -> 0 via NET/Socket/0
+tf-resnet50-horovod-job-worker-0:17:538 [0] NCCL INFO Ring 00 : 0[0] -> 1[1] via P2P/IPC
+tf-resnet50-horovod-job-worker-1:17:543 [0] NCCL INFO Ring 00 : 3 -> 4 via NET/Socket/0
+tf-resnet50-horovod-job-worker-1:17:543 [0] NCCL INFO Ring 00 : 4[0] -> 5[1] via direct shared memory
+tf-resnet50-horovod-job-worker-0:17:538 [0] NCCL INFO Launch mode Parallel
+2019-02-12 22:37:15.606702: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.34GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-02-12 22:37:15.606774: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.34GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+Done warm up
+Step	Img/sec	total_loss
+Done warm up
+Step	Img/sec	total_loss
+Done warm up
+Step	Img/sec	total_loss
+Done warm up
+Step	Img/sec	total_loss
+Done warm up
+Step	Img/sec	total_loss
+Done warm up
+Step	Img/sec	total_loss
+Done warm up
+Step	Img/sec	total_loss
+Done warm up
+Step	Img/sec	total_loss
+1	images/sec: 813.0 +/- 0.0 (jitter = 0.0)	8.019
+1	images/sec: 813.1 +/- 0.0 (jitter = 0.0)	8.054
+1	images/sec: 812.8 +/- 0.0 (jitter = 0.0)	8.010
+1	images/sec: 813.5 +/- 0.0 (jitter = 0.0)	7.970
+1	images/sec: 813.2 +/- 0.0 (jitter = 0.0)	8.102
+1	images/sec: 812.9 +/- 0.0 (jitter = 0.0)	7.992
+1	images/sec: 812.1 +/- 0.0 (jitter = 0.0)	8.073
+1	images/sec: 806.5 +/- 0.0 (jitter = 0.0)	8.073
+10	images/sec: 808.5 +/- 3.9 (jitter = 3.8)	7.922
+10	images/sec: 808.7 +/- 3.7 (jitter = 4.7)	7.912
+10	images/sec: 808.4 +/- 3.6 (jitter = 6.6)	7.901
+10	images/sec: 808.6 +/- 4.1 (jitter = 5.3)	7.941
+10	images/sec: 808.5 +/- 3.8 (jitter = 4.9)	7.927
+10	images/sec: 808.5 +/- 4.0 (jitter = 4.9)	7.852
+10	images/sec: 808.2 +/- 4.0 (jitter = 4.9)	7.929
+10	images/sec: 808.2 +/- 4.0 (jitter = 5.8)	7.878
+20	images/sec: 806.4 +/- 3.6 (jitter = 6.3)	7.873
+20	images/sec: 806.3 +/- 3.6 (jitter = 5.8)	7.867
+20	images/sec: 806.4 +/- 3.6 (jitter = 5.8)	7.851
+20	images/sec: 806.4 +/- 3.2 (jitter = 7.8)	7.871
+20	images/sec: 806.3 +/- 3.7 (jitter = 7.3)	7.862
+20	images/sec: 806.4 +/- 3.7 (jitter = 5.8)	7.860
+20	images/sec: 806.2 +/- 3.6 (jitter = 6.8)	7.851
+20	images/sec: 806.2 +/- 3.5 (jitter = 6.5)	7.862
+30	images/sec: 805.7 +/- 2.7 (jitter = 7.7)	7.898
+30	images/sec: 805.6 +/- 2.7 (jitter = 5.8)	7.860
+30	images/sec: 805.6 +/- 2.7 (jitter = 6.2)	7.877
+30	images/sec: 805.6 +/- 2.7 (jitter = 9.1)	7.845
+30	images/sec: 805.6 +/- 2.7 (jitter = 6.7)	7.861
+30	images/sec: 805.5 +/- 2.7 (jitter = 6.5)	7.867
+30	images/sec: 805.6 +/- 2.8 (jitter = 7.2)	7.834
+30	images/sec: 805.5 +/- 2.5 (jitter = 6.4)	7.838
+40	images/sec: 803.8 +/- 2.4 (jitter = 6.9)	7.839
+40	images/sec: 803.8 +/- 2.2 (jitter = 6.4)	7.845
+40	images/sec: 803.8 +/- 2.4 (jitter = 8.5)	7.848
+40	images/sec: 803.8 +/- 2.4 (jitter = 7.9)	7.863
+40	images/sec: 803.8 +/- 2.4 (jitter = 8.6)	7.896
+40	images/sec: 803.8 +/- 2.4 (jitter = 6.4)	7.864
+40	images/sec: 803.8 +/- 2.4 (jitter = 8.4)	7.872
+40	images/sec: 803.8 +/- 2.4 (jitter = 9.6)	7.902
+50	images/sec: 801.1 +/- 2.4 (jitter = 8.0)	7.892
+50	images/sec: 801.1 +/- 2.4 (jitter = 9.1)	7.833
+50	images/sec: 801.1 +/- 2.4 (jitter = 9.7)	7.858
+50	images/sec: 801.1 +/- 2.5 (jitter = 8.3)	7.831
+50	images/sec: 801.0 +/- 2.4 (jitter = 8.6)	7.886
+50	images/sec: 801.0 +/- 2.4 (jitter = 9.8)	7.878
+50	images/sec: 801.0 +/- 2.4 (jitter = 10.0)	7.868
+50	images/sec: 801.0 +/- 2.3 (jitter = 7.3)	7.865
+60	images/sec: 800.8 +/- 2.3 (jitter = 9.0)	7.845
+60	images/sec: 800.8 +/- 2.2 (jitter = 9.3)	7.880
+60	images/sec: 800.8 +/- 2.3 (jitter = 7.6)	7.876
+60	images/sec: 800.8 +/- 2.3 (jitter = 7.5)	7.886
+60	images/sec: 800.8 +/- 2.1 (jitter = 7.3)	7.869
+60	images/sec: 800.8 +/- 2.2 (jitter = 9.7)	7.920
+60	images/sec: 800.8 +/- 2.2 (jitter = 7.6)	7.883
+60	images/sec: 800.8 +/- 2.3 (jitter = 9.2)	7.869
+70	images/sec: 800.6 +/- 2.0 (jitter = 8.9)	7.902
+70	images/sec: 800.6 +/- 2.0 (jitter = 8.8)	7.855
+70	images/sec: 800.6 +/- 2.0 (jitter = 8.8)	7.869
+70	images/sec: 800.6 +/- 2.0 (jitter = 7.9)	7.869
+70	images/sec: 800.6 +/- 2.0 (jitter = 10.2)	7.881
+70	images/sec: 800.6 +/- 2.0 (jitter = 9.4)	7.851
+70	images/sec: 800.5 +/- 1.9 (jitter = 8.7)	7.880
+70	images/sec: 800.5 +/- 1.9 (jitter = 9.2)	7.897
+80	images/sec: 800.8 +/- 1.8 (jitter = 8.1)	7.964
+80	images/sec: 800.8 +/- 1.8 (jitter = 8.8)	7.919
+80	images/sec: 800.8 +/- 1.8 (jitter = 9.0)	7.839
+80	images/sec: 800.8 +/- 1.8 (jitter = 8.6)	7.893
+80	images/sec: 800.8 +/- 1.8 (jitter = 8.7)	7.912
+80	images/sec: 800.8 +/- 1.8 (jitter = 7.8)	7.917
+80	images/sec: 800.8 +/- 1.9 (jitter = 7.5)	7.899
+80	images/sec: 800.8 +/- 1.7 (jitter = 7.5)	7.955
+90	images/sec: 801.0 +/- 1.7 (jitter = 7.0)	7.928
+90	images/sec: 801.0 +/- 1.7 (jitter = 6.5)	7.899
+90	images/sec: 801.0 +/- 1.7 (jitter = 6.9)	7.919
+90	images/sec: 801.0 +/- 1.6 (jitter = 8.5)	7.897
+90	images/sec: 801.0 +/- 1.7 (jitter = 8.0)	7.894
+90	images/sec: 801.0 +/- 1.7 (jitter = 7.8)	7.913
+90	images/sec: 801.0 +/- 1.6 (jitter = 7.1)	7.954
+90	images/sec: 800.9 +/- 1.7 (jitter = 8.5)	7.903
+100	images/sec: 801.6 +/- 1.6 (jitter = 6.3)	7.952
+----------------------------------------------------------------
+total images/sec: 6410.99
+----------------------------------------------------------------
+100	images/sec: 801.5 +/- 1.5 (jitter = 6.6)	7.904
+----------------------------------------------------------------
+total images/sec: 6410.89
+----------------------------------------------------------------
+100	images/sec: 801.5 +/- 1.5 (jitter = 7.3)	7.910
+100	images/sec: 801.5 +/- 1.5 (jitter = 7.1)	7.895
+----------------------------------------------------------------
+total images/sec: 6410.81
+----------------------------------------------------------------
+----------------------------------------------------------------
+total images/sec: 6410.83
+----------------------------------------------------------------
+100	images/sec: 801.5 +/- 1.5 (jitter = 7.8)	7.904
+100	images/sec: 801.5 +/- 1.5 (jitter = 7.5)	7.893
+----------------------------------------------------------------
+100	images/sec: 801.5 +/- 1.5 (jitter = 6.6)	7.892
+total images/sec: 6410.86
+----------------------------------------------------------------
+total images/sec: 6410.83
+----------------------------------------------------------------
+----------------------------------------------------------------
+----------------------------------------------------------------
+total images/sec: 6410.83
+----------------------------------------------------------------
+100	images/sec: 801.5 +/- 1.5 (jitter = 6.9)	7.968
+----------------------------------------------------------------
+total images/sec: 6410.85
+----------------------------------------------------------------

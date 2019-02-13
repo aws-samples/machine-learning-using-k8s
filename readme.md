@@ -4,14 +4,14 @@ This repository explains how to run different Machine Learning frameworks on [Am
 
 - [Create GPU-enabled Amazon EKS cluster](eks-gpu.md)
 - [Setup KubeFlow on Amazon EKS](kubeflow.md)
-- [Jupyter notebook on Amazon EKS](jupyterhub.md)
+- [Jupyter Notebook on Amazon EKS](jupyterhub.md)
 - Single node training
   - [TensorFlow + Keras on Amazon EKS](tensorflow-keras.md)
   - [MXNet on Amazon EKS](mxnet.md)  
   - [TensorFlow on Amazon EKS](tensorflow.md)
 - Distributed training
   - [TensorFlow and Horovod on Amazon EKS with ImageNet Data](tensorflow-horovod-imagenet.md)
-  - [TensorFlow and Horovod on Amazon EKS with Synthetic Data](tensorflow-horovod.md)
+  - [TensorFlow and Horovod on Amazon EKS with Synthetic Data](tensorflow-horovod-synthetic.md)
 - Inference
   - [Image Recognition using TensorFlow on Amazon EKS](tensorflow-inference.md)
 - TensorBoard setup

@@ -12,6 +12,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
 1. Install mpi package
 
    ```
+   cd  ${KUBEFLOW_SRC}/${KFAPP}/ks_app
    ks pkg install kubeflow/mpi-job
    ```
 
@@ -31,7 +32,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
    mpijobs.kubeflow.org                         2019-02-12T22:12:32Z
    ...
 
-   kubectl -n kubeflow get deployment ${MPI_OPERATOR}
+   $ kubectl -n kubeflow get deployment ${MPI_OPERATOR}
    NAME           DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
    mpi-operator   1         1         1            1           1m
 

@@ -38,8 +38,12 @@ This document explains how to setup KubeFlow on Amazon EKS cluster. Make sure to
    ```
    # master is nightly version, you can also choose reliable version here https://github.com/kubeflow/kubeflow/releases
    export KUBEFLOW_TAG=v0.4.1
-   export KUBEFLOW_SRC=/tmp/kubeflow_src # absolute directy to download the source to
-   export KFAPP=eks-kubeflow # name for kubeflow deployment, ksonnet app will be created in ${KFAPP}/ks_app
+
+   # absolute directy to download the source to
+   export KUBEFLOW_SRC=/tmp/kubeflow_src
+
+   # name for kubeflow deployment, ksonnet app will be created in ${KFAPP}/ks_app
+   export KFAPP=eks-kubeflow
 
    mkdir ${KUBEFLOW_SRC} && cd ${KUBEFLOW_SRC}
    curl https://raw.githubusercontent.com/kubeflow/kubeflow/${KUBEFLOW_TAG}/scripts/download.sh | bash

@@ -26,6 +26,7 @@ Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a
    Right now, EKS doesn't integrate authentication solution with JupyterHub, you can type any username and password combination to bypass authentication. 
 
 4. Configure Spawner
+
    a. Choose the right framework image. if you prefer to use other framework like MXNet, PyTorch, you can also build your own image. Let's choose `gcr.io/kubeflow-images-public/tensorflow-1.12.0-notebook-gpu:v0.4.0`
 
    b. Click `Toggle Advanced` to advanced settings.
@@ -34,9 +35,7 @@ Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a
      - Add GPU resources if your cluster has accelerator nodes and GPU image is choosen.
      ![Jupyter Spawner Configuration](images/jupyter-spawner-configuration.png)
 
-5. Click `Spawn` button to create your customized Jupyter notebook. This may take few minutes.
-
-> Debug your  `kubectl -n ${NAMESPACE} describe pods jupyter-${USERNAME}`
+5. Click `Spawn` button to create your customized Jupyter notebook. This may take few minutes. Debug new spawned pod via `kubectl -n ${NAMESPACE} describe pods jupyter-${USERNAME}`
 
 6. Once your server starts up. Verify docker image working properly.
    

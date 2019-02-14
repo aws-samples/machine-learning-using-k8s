@@ -4,17 +4,15 @@ This document explains how to setup TensorBoard on [Amazon EKS](https://aws.amaz
 ## Prerequisite
 1. Create [EKS cluster using GPU](eks-gpu.md)
 2. Setup [Kubeflow](kubeflow.md)
+3. Setup [aws credential](aws-credential-secret.md) in kubernetes. Remember secret name and data fields.
 
 ## Steps 
 
-1. Manually create secret for aws credential. Please check [document](aws-credential-secret.md). Remember secret name and data fields.
-
-2. Install tensorboard jsonnet package and generate yaml files.
+1. Install tensorboard jsonnet package and generate yaml files.
 
    ```
    # Navigate to ksonnet application folder
    cd ${KUBEFLOW_SRC}/${KFAPP}/ks_app
-
 
    export TENSORBOARD_COMPONENT=tensorboard-mnist
    ks pkg install kubeflow/tensorboard

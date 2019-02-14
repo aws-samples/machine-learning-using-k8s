@@ -5,7 +5,7 @@ This document explains how to perform Tensorflow inference on [Amazon EKS](https
 1. Create [EKS cluster using GPU](eks-gpu.md)
 2. Install [Kubeflow](kubeflow.md)
 3. Basic understanding of [TensorFlow Serving](https://www.tensorflow.org/serving/)
-4. Prepare pretrained tensorflow model on [S3](#upload-pretrained-model-to-s3)
+4. Prepare [pretrained tensorflow model](#upload-pretrained-model-to-s3) on S3
 
 ## Serve the Tensorflow model
 
@@ -92,7 +92,6 @@ This document explains how to perform Tensorflow inference on [Amazon EKS](https
    ```
    Now we get model in Tensorflow SavedModel format in /tmp/saved_model on the host.
    ```
-   .
    |-- saved_model.pb
    `-- variables
        |-- variables.data-00000-of-00001

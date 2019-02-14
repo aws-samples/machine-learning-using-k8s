@@ -27,12 +27,14 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
    ```
    $ kubectl get crd
+
    NAME                                         CREATED AT
    ...
    mpijobs.kubeflow.org                         2019-02-12T22:12:32Z
    ...
 
    $ kubectl -n kubeflow get deployment ${MPI_OPERATOR}
+
    NAME           DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
    mpi-operator   1         1         1            1           1m
 
@@ -44,7 +46,6 @@ This document explains how to perform distributed training on [Amazon EKS](https
    ```
    export JOB_NAME=tf-resnet50-horovod-job
    ks generate mpi-job-custom ${JOB_NAME}
-
    ```
 
 2. Build a Docker image for Horovod using Dockerfile from `training/distributed_training/Dockerfile` and the command `docker image build -t ${YOUR_DOCKER_HUB_ID}/eks-kubeflow-horovod:latest .`. Alternatively, you can use the image `mpioperator/tensorflow-benchmarks:latest` that already exists on Docker Hub.

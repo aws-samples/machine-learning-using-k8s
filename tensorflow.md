@@ -16,7 +16,43 @@ Run TensorFlow [TfCnn example](https://github.com/tensorflow/benchmarks/tree/mas
 
    This will generate `components/${CNN_JOB_NAME}.jsonnet`. This is a JSON file that defines the manifest for TFJob.
 
-2. By default, this manifest is configured to use CPU. open `components/${CNN_JOB_NAME}.jsonnet` to customize manifest. We'll update worker to use GPUs. Please check [template]()
+2. By default, this manifest is configured to use CPU. Open `components/${CNN_JOB_NAME}.jsonnet` to customize manifest. We'll update worker to use GPUs. The diff between the generated and the updated file is shown:
+
+   ```
+   8c8,9
+   < local image = "gcr.io/kubeflow/tf-benchmarks-cpu:v20171202-bdab599-dirty-284af3";
+   ---
+   > local image = "gcr.io/kubeflow/tf-benchmarks-gpu:v20171202-bdab599-dirty-284af3";
+   >
+   32,34c33,35
+   <                   "--num_gpus=1",
+   <                   "--local_parameter_device=cpu",
+   <                   "--device=cpu",
+   ---
+   >                   "--num_gpus=2",
+   >                   "--local_parameter_device=gpu",
+   >                   "--device=gpu",
+   39a41,45
+   >                 resources: {
+   >                   limits: {
+   >                     "nvidia.com/gpu": 2
+   >                   },
+   >                 },
+   58,60c64,66
+   <                   "--num_gpus=1",
+   <                   "--local_parameter_device=cpu",
+   <                   "--device=cpu",
+   ---
+   >                   "--num_gpus=2",
+   >                   "--local_parameter_device=gpu",
+   >                   "--device=gpu",
+   65a72,76
+   >                 resources: {
+   >                   limits: {
+   >                     "nvidia.com/gpu": 2
+   >                   },
+   >                 },
+   ```
 
    This assigns two GPUs per replica to the server and the workers.
 

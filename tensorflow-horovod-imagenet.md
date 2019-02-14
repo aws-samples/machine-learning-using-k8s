@@ -8,7 +8,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
 2. Install [Kubeflow](kubeflow.md).
 
-3. Create an [EFS](https://aws.amazon.com/efs/) and mount it to any worker node as explained in [efs-on-eks-worker-nodes.md](efs-on-eks-worker-nodes.md).
+3. Create an [EFS](https://aws.amazon.com/efs/) and mount it to any worker node as explained in [Setup EFS on EKS](efs-on-eks-worker-nodes.md).
 
 4. Download and put prepare ImageNet dataset on EFS path `/imagenet`. Please check [tutorial](#download-and-preprocess-imagenet-data)
 
@@ -34,6 +34,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
       ```
       kubectl get pv -n kubeflow
+
       NAME       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                              STORAGECLASS   REASON   AGE
       nfs-data   85Gi       RWX            Retain           Bound    kubeflow/nfs-external   nfs-external            58s
       ```
@@ -44,14 +45,10 @@ This document explains how to perform distributed training on [Amazon EKS](https
    ks generate mpi-job-custom ${JOB_NAME}
 
    ks param set ${JOB_NAME} image "mpioperator/tensorflow-benchmarks:latest"
-
    ks param set ${JOB_NAME} replicas 2
    ks param set ${JOB_NAME} gpusPerReplica 4
 
-
-
    EXEC="mpirun,-mca,btl_tcp_if_exclude,lo,-mca,pml,ob1,-mca,btl,^openib,--bind-to,none,-map-by,slot,-x,LD_LIBRARY_PATH,-x,PATH,-x,NCCL_DEBUG=INFO,python,scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py,--data_format=NCHW,--batch_size=256,--model=resnet50,--optimizer=sgd,--variable_update=horovod,--data_name=imagenet,--use_fp16,--nodistortions,--gradient_repacking=8,--data_dir=/data/imagenet"
-
    ```
    > Note: Instead of using synthetic data, job will read from `--data_dir`.
 

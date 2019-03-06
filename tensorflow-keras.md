@@ -11,7 +11,7 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 1. Build a docker image with MNIST source code and installation. Use the Dockerfile in `tensorflow/mnist/Dockerfile` to use it.
 
    ```
-   docker image build tensorflow/mnist -t <tag_for_image>
+   docker image build tensorflow/mnist -t <dockerhub_username>/<repo_name>:<tag_name>
    ```
 
    This will generate a docker image which will have all the utility to run MNIST. You can push this generated image to docker hub in your personal repo. For convenience, a docker image is already pushed in the docker hub `rgaut/deeplearning-tensorflow:with_tf_keras`.

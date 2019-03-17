@@ -16,7 +16,7 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 
    This will generate a docker image which will have all the utility to run MNIST. You can push this generated image to docker hub in your personal repo.
 
-2. Create a pod that will use this docker image and run the MNIST training:
+1. Create a pod that will use this docker image and run the MNIST training:
 
    ```
    kubectl create -f samples/mxnet/mnist/mxnet.yaml
@@ -28,15 +28,17 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
    kubectl create -f samples/mxnet/mnist/mxnet-gpu.yaml
    ```
 
-   The main difference is `--gpus 0` to the MNIST script.
+   The second version includes `--gpus 0` as a command line paramter to the MNIST script.
 
-   Check status of the pod:
+1. Check status of the pod:
 
    ```
    kubectl get pods -l app=mxnet
+   NAME        READY   STATUS      RESTARTS   AGE
+   mxnet-gpu   0/1     Completed   0          6m
    ```
 
-3. Check the progress in training:
+1. Check the progress in training:
 
    ```
    kubectl logs mxnet-gpu

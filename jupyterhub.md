@@ -132,7 +132,7 @@ Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a
 6. Once your server starts up. Verify docker image working properly.
    
    Check Tensorflow version:
-   
+
    ```
    import tensorflow as tf
    tf.__version__
@@ -147,7 +147,8 @@ Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a
 
    ![Jupyter Verification](images/jupyter-verification.png)
 
-   Create a terminal to monitor nvidia device
+   Create a terminal to monitor nvidia device:
+   
    ```
    $ nvidia-smi
    Mon Feb 11 19:46:02 2019

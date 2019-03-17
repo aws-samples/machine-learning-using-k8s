@@ -51,5 +51,4 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
    INFO:root:Epoch[19] Train-accuracy=0.999578
    INFO:root:Epoch[19] Time cost=0.969
    INFO:root:Epoch[19] Validation-accuracy=0.982683
-
    ```

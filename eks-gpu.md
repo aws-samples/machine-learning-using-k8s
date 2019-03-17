@@ -1,6 +1,10 @@
 # Create Amazon EKS cluster with GPU-enabled workers
 
-This document explains how to create an Amazon EKS cluster with GPU-enabled workers.
+This document explains how to create an Amazon EKS cluster with GPU-enabled workers. This is verified using `eksctl 0.1.24.
+
+1. Subscribe to the GPU supported AMI:
+
+   https://aws.amazon.com/marketplace/pp/B07GRHFXGM
 
 1. Create EKS cluster with GPU nodes:
 
@@ -15,11 +19,10 @@ This document explains how to create an Amazon EKS cluster with GPU-enabled work
       --node-type=p3.8xlarge \
       --nodes=2 \
       --region=us-west-2 \
-      --timeout=40m \
       --ssh-access \
-      --ssh-public-key arun-us-west2
+      --ssh-public-key=arun-us-west2
    ```
-   
+
 1. Apply NVIDIA driver:
 
    ```
@@ -27,7 +30,7 @@ This document explains how to create an Amazon EKS cluster with GPU-enabled work
    ```
 
    This will be simplified after https://github.com/weaveworks/eksctl/issues/205 is fixed.
-
+   
 1. Get memory, CPU and GPU for each node in the cluster:
 
    ```

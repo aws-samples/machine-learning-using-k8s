@@ -67,32 +67,38 @@ This document explains how to setup KubeFlow on Amazon EKS cluster. Make sure to
 4. Verify kubeflow:
 
    ```
-   kubectl get pods -n kubeflow
    NAME                                                      READY   STATUS    RESTARTS   AGE
-   ambassador-5cf8cd97d5-25lgp                               1/1     Running   0          2m
-   ambassador-5cf8cd97d5-9xgmz                               1/1     Running   0          2m
-   ambassador-5cf8cd97d5-hqqnv                               1/1     Running   0          2m
-   argo-ui-7c9c69d464-mjsj7                                  1/1     Running   0          2m
-   centraldashboard-6f47d694bd-cn46v                         1/1     Running   0          2m
-   jupyter-0                                                 1/1     Running   0          2m
-   katib-ui-6bdb7d76cc-hxlbc                                 1/1     Running   0          1m
+   ambassador-5cf8cd97d5-chvzk                               1/1     Running   0          3m
+   ambassador-5cf8cd97d5-fn9kg                               1/1     Running   0          3m
+   ambassador-5cf8cd97d5-vpgjf                               1/1     Running   0          3m
+   argo-ui-7c9c69d464-b8wtn                                  1/1     Running   0          2m
+   centraldashboard-6f47d694bd-8cjpm                         1/1     Running   0          3m
+   jupyter-0                                                 1/1     Running   0          3m
+   katib-ui-6bdb7d76cc-jnm2l                                 1/1     Running   0          1m
    metacontroller-0                                          1/1     Running   0          2m
-   minio-7bfcc6c7b9-qdmhg                                    1/1     Running   0          2m
-   ml-pipeline-6fdd759597-2zllr                              1/1     Running   0          2m
-   ml-pipeline-persistenceagent-5669f69cdd-8dhms             1/1     Running   0          2m
-   ml-pipeline-scheduledworkflow-9f6d5d5b6-hzhhp             1/1     Running   0          2m
-   ml-pipeline-ui-67f79b964d-b84lt                           1/1     Running   0          2m
-   mysql-6f6b5f7b64-8cz6k                                    1/1     Running   0          2m
-   pytorch-operator-6f87db67b7-mnnwt                         1/1     Running   0          2m
-   spartakus-volunteer-847cc98fd4-zlch9                      1/1     Running   0          2m
-   studyjob-controller-774d45f695-zx8xn                      1/1     Running   0          1m
-   tf-job-dashboard-5f986cf99d-snnnf                         1/1     Running   0          2m
-   tf-job-operator-v1beta1-5876c48976-jqnz5                  1/1     Running   0          2m
-   ...
+   minio-7bfcc6c7b9-tqzms                                    1/1     Running   0          2m
+   ml-pipeline-6fdd759597-7pd7s                              1/1     Running   0          2m
+   ml-pipeline-persistenceagent-5669f69cdd-pfmq8             1/1     Running   0          2m
+   ml-pipeline-scheduledworkflow-9f6d5d5b6-bpmx5             1/1     Running   0          2m
+   ml-pipeline-ui-67f79b964d-7v4g6                           1/1     Running   0          1m
+   mysql-6f6b5f7b64-smw72                                    1/1     Running   0          2m
+   pytorch-operator-6f87db67b7-fftct                         1/1     Running   0          2m
+   spartakus-volunteer-567784fdd5-p2bkk                      1/1     Running   0          2m
+   studyjob-controller-774d45f695-65hcn                      1/1     Running   0          1m
+   tf-job-dashboard-5f986cf99d-fsd77                         1/1     Running   0          2m
+   tf-job-operator-v1beta1-5876c48976-pxg54                  1/1     Running   0          2m
+   vizier-core-fc7969897-crdtl                               1/1     Running   1          1m
+   vizier-core-rest-6fcd4665d9-kkd87                         1/1     Running   0          1m
+   vizier-db-777675b958-sbz2s                                1/1     Running   0          1m
+   vizier-suggestion-bayesianoptimization-54db8d594f-7tm92   1/1     Running   0          1m
+   vizier-suggestion-grid-6f5d9d647f-fkqp4                   1/1     Running   0          1m
+   vizier-suggestion-hyperband-59dd9bb9bc-zf8h2              1/1     Running   0          1m
+   vizier-suggestion-random-6dd597c997-bmvwg                 1/1     Running   0          1m
+   workflow-controller-5c95f95f58-v8w4q                      1/1     Running   0          2m
    ```
    > You may not need all the componets. If you want to customize components, please check [Kubeflow Customization](kubeflow-custom.md).
 
-5. Uninstall Kubeflow:
+5. Once done playing, uninstall Kubeflow:
 
    ```
    cd ${KUBEFLOW_SRC}/${KFAPP}

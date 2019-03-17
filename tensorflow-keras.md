@@ -67,7 +67,7 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 	  256/60000 [..............................] - ETA: 29s - loss: 0.0515 - acc: 0.9883	
 
 	. . .
-	
+
 	59776/60000 [============================>.] - ETA: 0s - loss: 0.0271 - acc: 0.9919
 	59904/60000 [============================>.] - ETA: 0s - loss: 0.0270 - acc: 0.9919
 	60000/60000 [==============================] - 31s 510us/step - loss: 0.0270 - acc: 0.9919 - val_loss: 0.0264 - val_acc: 0.9915
@@ -75,3 +75,4 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 	Test accuracy: 0.9915
 	```
 
+    TODO: Explain the results.

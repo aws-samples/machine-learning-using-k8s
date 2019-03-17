@@ -127,11 +127,12 @@ Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a
      Normal   Pulled                  3m6s                   kubelet, ip-192-168-17-245.us-west-2.compute.internal  Successfully pulled image "gcr.io/kubeflow-images-public/tensorflow-1.12.0-notebook-gpu:v0.4.0"
      Normal   Created                 2m46s                  kubelet, ip-192-168-17-245.us-west-2.compute.internal  Created container
      Normal   Started                 2m46s                  kubelet, ip-192-168-17-245.us-west-2.compute.internal  Started container
-  ```
+   ```
 
 6. Once your server starts up. Verify docker image working properly.
    
-   Check Tensorflow version
+   Check Tensorflow version:
+   
    ```
    import tensorflow as tf
    tf.__version__

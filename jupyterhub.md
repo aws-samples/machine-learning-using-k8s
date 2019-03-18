@@ -26,6 +26,7 @@ Kubeflow already integrates wtih JupyterHub. We only need to port forward and sp
 1. Configure Spawner
 
    a. Choose the right framework image. if you prefer to use other framework like MXNet, PyTorch, you can also build your own image. Let's choose `gcr.io/kubeflow-images-public/tensorflow-1.12.0-notebook-gpu:v0.4.0`
+   ![JupyterHub Spawner Options](images/jupyterhub-spawner-options.jpg)
 
    b. Click `Toggle Advanced` to advanced settings.
      - Add Workpace volume if you need perisist your workplace notebooks after jupyter notebook destroyed.
@@ -126,12 +127,10 @@ Kubeflow already integrates wtih JupyterHub. We only need to port forward and sp
    ```
 
 1. Verify docker image working properly:
+   Once your notebook server is ready, you can create a notebook.
+   ![Jupyter Create Notebook](images/jupyter-create-notebook.jpg)
 
-   ```
-   COMMAND HERE
-   ```
-   
-   Check Tensorflow version (where?):
+   Check Tensorflow version:
 
    ```
    import tensorflow as tf
@@ -147,7 +146,10 @@ Kubeflow already integrates wtih JupyterHub. We only need to port forward and sp
 
    ![Jupyter Verification](images/jupyter-verification.png)
 
-   Create a terminal (how?) to monitor nvidia device:
+   You can always go back to your home page by click `Control Panel` in the top right corner.
+
+   Create a terminal to monitor nvidia device:
+   ![Jupyter Create Terminal](images/jupyter-create-terminal.jpg)
    
    ```
    $ nvidia-smi
@@ -183,5 +185,5 @@ Kubeflow already integrates wtih JupyterHub. We only need to port forward and sp
 
    > Note 1: Persistent Volume won't be deleted in case you want to restore your notebooks.
 
-   > Note 2: Kubeflow community will start using Jupyter Notebook CRD to create notebook in the future. JupyterHub will > be depreciated soon.
+   > Note 2: Kubeflow community will start using Jupyter Notebook CRD to create notebook in the future. JupyterHub will be depreciated soon.
 

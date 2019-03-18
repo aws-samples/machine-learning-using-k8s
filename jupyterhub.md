@@ -6,7 +6,7 @@ This document explains how to run a Jupyter notebook for model development on [A
 
 [JupyterHub](https://jupyterhub.readthedocs.io/en/stable/), a multi-user Hub, spawns, manages, and proxies multiple instances of the single-user Jupyter notebook server. JupyterHub can be used to serve notebooks to a class of students, a corporate data science group, or a scientific research group.
 
-Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a port forwarding and spawn a Jupyter Notebook. 
+Kubeflow already integrates wtih JupyterHub. We only need to port forward and spawn a Jupyter Notebook. 
 
 1. Get access to Kubeflow UI
 
@@ -15,14 +15,15 @@ Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a
    kubectl port-forward svc/ambassador -n ${NAMESPACE} 8080:80
    ```
    
-   Now you can access the central navigation dashboard at
+   Access the central navigation dashboard:
+
    ```
    http://localhost:8080/
    ```
 
-2. Click JupyterHub tab and sign in. Right now, EKS doesn't integrate authentication solution with JupyterHub, you can type any username and password combination to bypass authentication. Use `admin` as the login name and `admin` as the password.
+1. Click JupyterHub tab and sign in. Right now, EKS doesn't integrate authentication solution with JupyterHub, you can type any username and password combination to bypass authentication. Use `admin` as the login name and `admin` as the password.
 
-3. Configure Spawner
+1. Configure Spawner
 
    a. Choose the right framework image. if you prefer to use other framework like MXNet, PyTorch, you can also build your own image. Let's choose `gcr.io/kubeflow-images-public/tensorflow-1.12.0-notebook-gpu:v0.4.0`
 
@@ -32,15 +33,10 @@ Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a
      - Add GPU resources if your cluster has accelerator nodes and GPU image is choosen.
      ![Jupyter Spawner Configuration](images/jupyter-spawner-configuration.png)
 
-4. Click `Spawn` button to create your customized Jupyter notebook. This may take few minutes. Debug new spawned pods:
+1. Click `Spawn` button to create your customized Jupyter notebook. This may take a few minutes. If you used the `admin` namespace, then check the newly spawned pod:
 
    ```
    kubectl -n ${NAMESPACE} describe pods jupyter-admin
-   ```
-
-   It will shown an output:
-
-   ```
    Name:               jupyter-admin
    Namespace:          kubeflow
    Priority:           0
@@ -129,9 +125,13 @@ Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a
      Normal   Started                 2m46s                  kubelet, ip-192-168-17-245.us-west-2.compute.internal  Started container
    ```
 
-5. Once your server starts up. Verify docker image working properly.
+1. Verify docker image working properly:
+
+   ```
+   COMMAND HERE
+   ```
    
-   Check Tensorflow version:
+   Check Tensorflow version (where?):
 
    ```
    import tensorflow as tf
@@ -147,7 +147,7 @@ Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a
 
    ![Jupyter Verification](images/jupyter-verification.png)
 
-   Create a terminal to monitor nvidia device:
+   Create a terminal (how?) to monitor nvidia device:
    
    ```
    $ nvidia-smi
@@ -169,7 +169,7 @@ Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a
    +-----------------------------------------------------------------------------+
    ```
 
-6. After done playing, destroy your notebook.
+1. After done playing, destroy your notebook.
 
    One user can only have one Jupyter Notebook running. In order to use a different notebook or destroy your notebook, you have to stop existing server first.  
    

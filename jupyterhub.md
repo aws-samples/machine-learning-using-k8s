@@ -126,29 +126,36 @@ Kubeflow already integrates wtih JupyterHub. We only need to port forward and sp
      Normal   Started                 2m46s                  kubelet, ip-192-168-17-245.us-west-2.compute.internal  Started container
    ```
 
-1. Verify docker image working properly:
-   Once your notebook server is ready, you can create a notebook.
+1. Create a new Python3 notebook to check Tensorflow version:
+
    ![Jupyter Create Notebook](images/jupyter-create-notebook.jpg)
 
-   Check Tensorflow version:
+   Copy code in the notebook:
 
    ```
    import tensorflow as tf
    tf.__version__
    ```
 
-   Check GPU allocated to Jupyter Notebook:
+   Click on `Run` to run code and see the output:
+
+   ![JupyterHub Tensorflow Version](images/jupyter-output-tensorflow-version.png)
+
+1. Copy code in the next prompt to check GPU allocated to Jupyter Notebook:
 
    ```
    from tensorflow.python.client import device_lib
    print(device_lib.list_local_devices())
    ```
 
-   ![Jupyter Verification](images/jupyter-verification.png)
+   ![JupyterHub GPU Verification](images/jupyter-output-gpu.png)
 
-   You can always go back to your home page by click `Control Panel` in the top right corner.
+   Click on `Run` to run code and see the output:
 
-   Create a terminal to monitor nvidia device:
+   You can always go back to your home page by clicking on `Control Panel` in the top right corner.
+
+1. Create a terminal to monitor nvidia device:
+
    ![Jupyter Create Terminal](images/jupyter-create-terminal.jpg)
    
    ```

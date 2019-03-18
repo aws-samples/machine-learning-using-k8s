@@ -137,7 +137,7 @@ Kubeflow already integrates wtih JupyterHub. We only need to port forward and sp
    tf.__version__
    ```
 
-   Click on `Run` to run the code and see the output:
+   Click on `Run` to run code and see the output:
 
    ![JupyterHub Tensorflow Version](images/jupyter-output-tensorflow-version.png)
 
@@ -149,6 +149,8 @@ Kubeflow already integrates wtih JupyterHub. We only need to port forward and sp
    ```
 
    ![JupyterHub GPU Verification](images/jupyter-output-gpu.png)
+
+   Click on `Run` to run code and see the output:
 
    You can always go back to your home page by clicking on `Control Panel` in the top right corner.
 

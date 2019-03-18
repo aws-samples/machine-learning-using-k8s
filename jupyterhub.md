@@ -2,9 +2,9 @@
 
 This document explains how to run a Jupyter notebook for model development on [Amazon EKS](https://aws.amazon.com/eks/). 
 
-Jupyter Notebook (previously named IPython Notebook) and JupyterLab are user interfaces for computational science and data science commonly used with Spark, Tensorflow and other big data processing frameworks. They are used by data scientists and ML engineers across a variety of organizations for interactive tasks.
+[Jupyter Notebook](https://jupyter-notebook.readthedocs.io/en/latest/) (previously named IPython Notebook) and JupyterLab are user interfaces for computational science and data science commonly used with Spark, Tensorflow and other big data processing frameworks. They are used by data scientists and ML engineers across a variety of organizations for interactive tasks.
 
-JupyterHub lets users manage authenticated access to multiple single-user Jupyter notebooks. 
+[JupyterHub](https://jupyterhub.readthedocs.io/en/stable/), a multi-user Hub, spawns, manages, and proxies multiple instances of the single-user Jupyter notebook server. JupyterHub can be used to serve notebooks to a class of students, a corporate data science group, or a scientific research group.
 
 Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a port forwarding and spawn a Jupyter Notebook. 
 
@@ -22,7 +22,7 @@ Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a
 
 2. Click JupyterHub tab and sign in. Right now, EKS doesn't integrate authentication solution with JupyterHub, you can type any username and password combination to bypass authentication. Use `admin` as the login name and `admin` as the password.
 
-4. Configure Spawner
+3. Configure Spawner
 
    a. Choose the right framework image. if you prefer to use other framework like MXNet, PyTorch, you can also build your own image. Let's choose `gcr.io/kubeflow-images-public/tensorflow-1.12.0-notebook-gpu:v0.4.0`
 
@@ -32,7 +32,7 @@ Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a
      - Add GPU resources if your cluster has accelerator nodes and GPU image is choosen.
      ![Jupyter Spawner Configuration](images/jupyter-spawner-configuration.png)
 
-5. Click `Spawn` button to create your customized Jupyter notebook. This may take few minutes. Debug new spawned pods:
+4. Click `Spawn` button to create your customized Jupyter notebook. This may take few minutes. Debug new spawned pods:
 
    ```
    kubectl -n ${NAMESPACE} describe pods jupyter-admin
@@ -129,7 +129,7 @@ Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a
      Normal   Started                 2m46s                  kubelet, ip-192-168-17-245.us-west-2.compute.internal  Started container
    ```
 
-6. Once your server starts up. Verify docker image working properly.
+5. Once your server starts up. Verify docker image working properly.
    
    Check Tensorflow version:
 
@@ -169,10 +169,19 @@ Kubeflow already integrate wtih JupyterHub and the only thing needed was to do a
    +-----------------------------------------------------------------------------+
    ```
 
-7. After done playing, destroy your notebook.
+6. After done playing, destroy your notebook.
 
    One user can only have one Jupyter Notebook running. In order to use a different notebook or destroy your notebook, you have to stop existing server first.  
-   Click `Control Panel` button on the right top of Jupyter Notebook. Click `Stop My Server` button to destroy the server.
+   
+   Click `Control Panel` button on the right top of Jupyter Notebook. 
+   ![JupyterHub Control Panel](images/jupyterhub-control-panel.jpg)
+   
+   Click `Stop My Server` button to destroy the server.
+   ![JupyterHub Stop Server](images/jupyterhub-stop-server.jpg)
 
-   > Note: Persistent Volume won't be deleted in case you want to restore your notebooks.
+   Jupyter Notebook will be destroyed and you can spawn new notebooks.
+
+   > Note 1: Persistent Volume won't be deleted in case you want to restore your notebooks.
+
+   > Note 2: Kubeflow community will start using Jupyter Notebook CRD to create notebook in the future. JupyterHub will > be depreciated soon.
 

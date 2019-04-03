@@ -8,7 +8,7 @@ This documents assumes that you have an EKS cluster available and running. Make 
 
 In this sample, we'll use MNIST database of handwritten digits and train the model to recognize any handwritten digit.
 
-1. You can use a pre-built Docker image `rgaut/deeplearning-mxnet:with_mxnet`. This image has training code and downloads data.
+1. You can use a pre-built Docker image `rgaut/deeplearning-mxnet:with_mxnet`. This image has training code and downloads training and test data sets.
 
    Alternatively, you can build a Docker image using the Dockerfile in `samples/mxnet/mnist/Dockerfile`.
 

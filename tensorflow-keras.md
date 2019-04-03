@@ -8,10 +8,10 @@ This document exaplins how to run a TensorFlow and Keras sample on Amazon EKS. I
 
 In this sample, we'll use MNIST database of handwritten digits and train the model to recognize any handwritten digit.
 
-1. You can use a pre-built Docker image `rgaut/deeplearning-tensorflow:with_tf_keras`. Alternatively, build a docker image with MNIST source code and installation. Use the Dockerfile in `tensorflow/mnist/Dockerfile` to use it.
-
+1. You can use a pre-built Docker image `rgaut/deeplearning-tensorflow:with_tf_keras`. Alternatively, build a docker image with MNIST source code and installation. Use the Dockerfile in `samples/tensorflow/mnist/Dockerfile` to build it. This Dockerfile is based on [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/). You will need to login to access the repository of [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/) by running the command `$(aws ecr get-login --no-include-email --region us-east-1 --registry-ids 763104351884)`.
+ 
    ```
-   docker image build tensorflow/mnist -t <dockerhub_username>/<repo_name>:<tag_name>
+   docker build -t <dockerhub_username>/<repo_name>:<tag_name> .
    ```
 
    This will generate a docker image which will have all the utility to run MNIST. You can push this generated image to docker hub in your personal repo.

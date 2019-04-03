@@ -1,4 +1,4 @@
-FROM uber/horovod:0.15.2-tf1.12.0-torch1.0.0-py2.7
+FROM 763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-training:1.13-horovod-gpu-py27-cu100-ubuntu16.04
 
 RUN mkdir /tensorflow
 WORKDIR "/tensorflow"

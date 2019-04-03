@@ -42,3 +42,14 @@ This document explains how to setup TensorBoard on [Amazon EKS](https://aws.amaz
    kubectl port-forward svc/${TENSORBOARD_COMPONENT} 9000:9000
    ```
    ![TensorBoard](images/tensorboard.png)
+
+4. [OPTIONAL] You can use [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/) by replacing the lines 
+   ```
+   ks param set ${TENSORBOARD_COMPONENT} defaultTbImage tensorflow/tensorflow:1.12.0
+   ```
+   to 
+   ```
+   ks param set ${TENSORBOARD_COMPONENT} defaultTbImage 763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-training:1.13-cpu-py27-ubuntu16.04 
+   ```
+   You will need to login to access the repository of [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/) by running the command `$(aws ecr get-login --no-include-email --region us-east-1 --registry-ids 763104351884)`
+   A full list of images can be found [here](https://docs.aws.amazon.com/dlami/latest/devguide/deep-learning-containers-images.html).

@@ -8,21 +8,23 @@ This documents assumes that you have an EKS cluster available and running. Make 
 
 In this sample, we'll use MNIST database of handwritten digits and train the model to recognize any handwritten digit.
 
-1. You can use a pre-built Docker image `rgaut/deeplearning-mxnet:with_mxnet`. Alternatively, duild a docker image with MNIST source code and installation. Use the Dockerfile in `mxnet/mnist/Dockerfile` to use it.
+1. You can use a pre-built Docker image `rgaut/deeplearning-mxnet:with_mxnet`. This image has training data and code.
+
+   Alternatively, you can build a Docker image using the Dockerfile in `samples/mxnet/mnist/Dockerfile`.
 
    ```
    docker image build mxnet/mnist -t <tag_for_image>
    ```
 
-   This will generate a docker image which will have all the utility to run MNIST. You can push this generated image to docker hub in your personal repo.
+   This will create a Docker image that will have all the utilities to run MNIST.
 
-1. Create a pod that will use this docker image and run the MNIST training:
+1. Create a pod that will use this Docker image and run the MNIST training:
 
    ```
    kubectl create -f samples/mxnet/mnist/mxnet.yaml
    ```
 
-   To use GPU for training you can run below command
+   To use GPU for training you can run the following command:
 
    ```
    kubectl create -f samples/mxnet/mnist/mxnet-gpu.yaml
@@ -55,4 +57,15 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
    INFO:root:Epoch[19] Validation-accuracy=0.982683
    ```
 
-   TODO: Explain the results.
+## What happened?
+
+- Runs `/root/incubator-mxnet/example/image-classification/train_mnist.py` command (specified in the Dockerfile)
+  - Downloads the MNIST data set, both training and test data
+    - Each data set has images and labels that identify the image
+  - Runs 20 epochs of training with the specified parameters (supervised learning)
+    - Reads the training data
+    - Builds the training model (neural network)
+    - Feeds the test data and matches with the expected output
+    - Reports the accuracy
+  - Accuracy is expected to improve with each run
+

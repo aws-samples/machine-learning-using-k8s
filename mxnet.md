@@ -8,21 +8,22 @@ This documents assumes that you have an EKS cluster available and running. Make 
 
 In this sample, we'll use MNIST database of handwritten digits and train the model to recognize any handwritten digit.
 
-1. You can use a pre-built Docker image `rgaut/deeplearning-mxnet:with_mxnet`. Alternatively, build a docker image with MNIST source code and installation. Use the Dockerfile in `samples/mxnet/mnist/Dockerfile` to build it. This Dockerfile is based on [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/). You will need to login to access the repository of [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/) by running the command `$(aws ecr get-login --no-include-email --region us-east-1 --registry-ids 763104351884)`.   
+1. You can use a pre-built Docker image `rgaut/deeplearning-mxnet:with_mxnet`. This image has training code and downloads training and test data sets.
+
+   Alternatively, you can build a Docker image using the Dockerfile in `samples/mxnet/mnist/Dockerfile`.
 
    ```
-   docker build -t <tag_for_image> .
-   ```
+   docker image build samples/mxnet/mnist -t <tag_for_image>
 
-   This will generate a docker image which will have all the utility to run MNIST. You can push this generated image to docker hub in your personal repo.
+   This will create a Docker image that will have all the utilities to run MNIST.
 
-1. Create a pod that will use this docker image and run the MNIST training:
+1. Create a pod that will use this Docker image and run the MNIST training:
 
    ```
    kubectl create -f samples/mxnet/mnist/mxnet.yaml
    ```
 
-   To use GPU for training you can run below command
+   To use GPU for training you can run the following command:
 
    ```
    kubectl create -f samples/mxnet/mnist/mxnet-gpu.yaml
@@ -55,4 +56,16 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
    INFO:root:Epoch[19] Validation-accuracy=0.982683
    ```
 
-   TODO: Explain the results.
+## What happened?
+
+- Runs `/root/incubator-mxnet/example/image-classification/train_mnist.py` command (specified in the Dockerfile)
+  - Downloads MNIST training and test data set
+    - Each set has images and labels that identify the image
+  - Performs supervised learning
+    - Run 20 epochs using the training data with the specified parameters
+    - For each epoch
+      - Reads the training data
+      - Builds the training model using the specified algorithm
+      - Feeds the test data and matches with the expected output
+      - Reports the accuracy, expected to improve with each run
+

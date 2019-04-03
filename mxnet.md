@@ -14,6 +14,7 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 
    ```
    docker image build samples/mxnet/mnist -t <tag_for_image>
+   ```
 
    This will create a Docker image that will have all the utilities to run MNIST.
 

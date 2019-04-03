@@ -8,10 +8,10 @@ This documents assumes that you have an EKS cluster available and running. Make 
 
 In this sample, we'll use MNIST database of handwritten digits and train the model to recognize any handwritten digit.
 
-1. You can use a pre-built Docker image `rgaut/deeplearning-mxnet:with_mxnet`. Alternatively, duild a docker image with MNIST source code and installation. Use the Dockerfile in `mxnet/mnist/Dockerfile` to use it.
+1. You can use a pre-built Docker image `rgaut/deeplearning-mxnet:with_mxnet`. Alternatively, build a docker image with MNIST source code and installation. Use the Dockerfile in `samples/mxnet/mnist/Dockerfile` to build it. This Dockerfile is based on [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/). You will need to login to access the repository of [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/) by running the command `$(aws ecr get-login --no-include-email --region us-east-1 --registry-ids 763104351884)`.   
 
    ```
-   docker image build mxnet/mnist -t <tag_for_image>
+   docker build -t <tag_for_image> .
    ```
 
    This will generate a docker image which will have all the utility to run MNIST. You can push this generated image to docker hub in your personal repo.

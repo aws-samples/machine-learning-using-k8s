@@ -48,7 +48,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
    ks generate mpi-job-custom ${JOB_NAME}
    ```
 
-2. Build a Docker image for Horovod using Dockerfile from `training/distributed_training/Dockerfile` and the command `docker image build -t ${YOUR_DOCKER_HUB_ID}/eks-kubeflow-horovod:latest .`. Alternatively, you can use the image `mpioperator/tensorflow-benchmarks:latest` that already exists on Docker Hub.
+2. You can leverage [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/) to Build a Docker image for Horovod using Dockerfile from `training/distributed_training/Dockerfile`. You will need to login to access the repository of [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/) by running the command `$(aws ecr get-login --no-include-email --region us-east-1 --registry-ids 763104351884)` and then build command `docker image build -t ${YOUR_DOCKER_HUB_ID}/eks-kubeflow-horovod:latest .`. Alternatively, you can use the image `mpioperator/tensorflow-benchmarks:latest` that already exists on Docker Hub.
 
    ```
    ks param set ${JOB_NAME} image "mpioperator/tensorflow-benchmarks:latest"

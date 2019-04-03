@@ -68,12 +68,21 @@ This document explains how to perform Tensorflow inference on [Amazon EKS](https
 ### Upload pretrained model to S3
 
 1. Download Tensorflow model and export saved model
-   If you has GPU nodes, use
+   If you has GPU nodes, use [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/)
+   ```
+   nvidia-docker run -it -v /tmp/saved_model:/model 763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:1.13-gpu-py27-cu100-ubuntu16.04 bash 
+   ``` 
+   Alternatively 
    ```
    nvidia-docker run -it -v /tmp/saved_model:/model tensorflow/tensorflow:1.12.0-gpu bash
    ```
-   If you use CPU for serving, use
 
+   If you use CPU for serving, use [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/)
+
+   ```
+   docker run -it -v /tmp/saved_model:/model 763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:1.13-cpu-py27-ubuntu16.04 bash 
+   ```
+   Alternatively 
    ```
    docker run -it -v /tmp/saved_model:/model tensorflow/tensorflow:1.12.0 bash
    ```
@@ -97,5 +106,7 @@ This document explains how to perform Tensorflow inference on [Amazon EKS](https
        |-- variables.data-00000-of-00001
        `-- variables.index
    ```
+
+   Note thatn you will need to login to access the repository of [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/) by running the command `$(aws ecr get-login --no-include-email --region us-east-1 --registry-ids 763104351884)`  
 
 2. Create S3 bucket and upload your models to `s3://eks-tensorflow-model/mnist/1`. `1` is model version number. You can also use our pretrained model [here](samples/tensorflow-serving/model). This requires your serving component has GPU.

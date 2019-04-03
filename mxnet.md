@@ -8,12 +8,12 @@ This documents assumes that you have an EKS cluster available and running. Make 
 
 In this sample, we'll use MNIST database of handwritten digits and train the model to recognize any handwritten digit.
 
-1. You can use a pre-built Docker image `rgaut/deeplearning-mxnet:with_mxnet`. This image has training data and code.
+1. You can use a pre-built Docker image `rgaut/deeplearning-mxnet:with_mxnet`. This image has training code and downloads data.
 
    Alternatively, you can build a Docker image using the Dockerfile in `samples/mxnet/mnist/Dockerfile`.
 
    ```
-   docker image build mxnet/mnist -t <tag_for_image>
+   docker image build samples/mxnet/mnist -t <tag_for_image>
    ```
 
    This will create a Docker image that will have all the utilities to run MNIST.
@@ -60,12 +60,13 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 ## What happened?
 
 - Runs `/root/incubator-mxnet/example/image-classification/train_mnist.py` command (specified in the Dockerfile)
-  - Downloads the MNIST data set, both training and test data
-    - Each data set has images and labels that identify the image
-  - Runs 20 epochs of training with the specified parameters (supervised learning)
-    - Reads the training data
-    - Builds the training model (neural network)
-    - Feeds the test data and matches with the expected output
-    - Reports the accuracy
-  - Accuracy is expected to improve with each run
+  - Downloads MNIST training and test data set
+    - Each set has images and labels that identify the image
+  - Performs supervised learning
+    - Run 20 epochs using the training data with the specified parameters
+    - For each epoch
+      - Reads the training data
+      - Builds the training model using the specified algorithm
+      - Feeds the test data and matches with the expected output
+      - Reports the accuracy, expected to improve with each run
 

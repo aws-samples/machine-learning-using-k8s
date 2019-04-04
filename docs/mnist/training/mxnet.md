@@ -1,4 +1,4 @@
-# MNIST using MXNet on Amazon EKS
+# Training MNIST using MXNet on Amazon EKS
 
 This document exaplins how to build a MNIST model using MNIST on Amazon EKS.
 

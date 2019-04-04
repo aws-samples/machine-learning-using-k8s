@@ -8,21 +8,29 @@ This document exaplins how to run a TensorFlow and Keras sample on Amazon EKS. I
 
 In this sample, we'll use MNIST database of handwritten digits and train the model to recognize any handwritten digit.
 
-1. You can use a pre-built Docker image `rgaut/deeplearning-tensorflow:with_tf_keras`. Alternatively, build a docker image with MNIST source code and installation. Use the Dockerfile in `samples/tensorflow/mnist/Dockerfile` to build it. This Dockerfile is based on [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/). You will need to login to access the repository of [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/) by running the command `$(aws ecr get-login --no-include-email --region us-east-1 --registry-ids 763104351884)`.
+1. You can use a pre-built Docker image `rgaut/deeplearning-tensorflow:with_tf_keras`. This image has training code and downloads training and test data sets.
+
+   Alternatively, you can build a Docker image using the Dockerfile in `samples/tensorflow/mnist/Dockerfile` to build it. This Dockerfile uses [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/). Accessing this image requires that you login to the ECR repository:
+
+   ```
+   $(aws ecr get-login --no-include-email --region us-east-1 --registry-ids 763104351884)
+   ```
  
+   Then the Docker image can be built:
+
    ```
    docker build -t <dockerhub_username>/<repo_name>:<tag_name> .
    ```
 
-   This will generate a docker image which will have all the utility to run MNIST. You can push this generated image to docker hub in your personal repo.
+   This will create a Docker image that will have all the utilities to run MNIST.
 
-2. Create a pod that will use this docker image and run the MNIST training. The pod file is available at `tensorflow/mnist/tensorflow.yaml`
+2. Create a pod that will use this Docker image and run the MNIST training:
 
    ```
    kubectl create -f samples/tensorflow/mnist/tensorflow.yaml
    ```
 
-   At this point you have the pod running and training will start. Check the status of pod:
+   At this point you have the pod running and training will start. Check status of the pod:
 
    ```
    kubectl get pod tensorflow

@@ -1,6 +1,8 @@
-# Image Recognition using TensorFlow on Amazon EKS
-This document explains how to perform inference on [Amazon EKS](https://aws.amazon.com/eks/) using TensorFlow. 
-There are two components needed to perform inference server and client. Following steps will explain both components in detaill
+# Inference using TensorFlow and Horovod on Amazon EKS with ImageNet Data
+
+This document explains how to perform inference on Amazon EKS using TensorFlow. 
+
+There are two components needed to perform inference server and client. Following steps will explain both components in detail.
 
 ## Prerequisite
 1. Create [EKS cluster using GPU](eks-gpu.md)

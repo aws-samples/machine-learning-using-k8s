@@ -30,7 +30,7 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
    kubectl create -f samples/tensorflow/mnist/tensorflow.yaml
    ```
 
-   At this point you have the pod running and training will start. Check status of the pod:
+   This will start the pod and start the training. Check status:
 
    ```
    kubectl get pod tensorflow

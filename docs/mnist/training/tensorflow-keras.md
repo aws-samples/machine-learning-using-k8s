@@ -1,4 +1,4 @@
-# MNIST using TensorFlow and Keras on Amazon EKS
+# Training MNIST using TensorFlow and Keras on Amazon EKS
 
 This document exaplins how to build a MNIST model using TensorFlow and Keras on Amazon EKS.
 

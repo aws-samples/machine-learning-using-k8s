@@ -1,7 +1,9 @@
-# Tensorflow Serving on Amazon EKS using Kubeflow
-This document explains how to perform Tensorflow inference on [Amazon EKS](https://aws.amazon.com/eks/) using Kubeflow
+# Inference of MNIST using TensorFlow on Amazon EKS
+
+This document explains how to perform inference using TensorFlow on Amazon EKS using KubeFlow.
 
 ## Prerequisite
+
 1. Create [EKS cluster using GPU](eks-gpu.md)
 2. Install [Kubeflow](kubeflow.md)
 3. Basic understanding of [TensorFlow Serving](https://www.tensorflow.org/serving/)
@@ -9,14 +11,16 @@ This document explains how to perform Tensorflow inference on [Amazon EKS](https
 
 ## Serve the Tensorflow model
 
-1. Install Tensorflow Serving pkg
+1. Install Tensorflow Serving pkg:
+
    ```
    ks pkg install kubeflow/tf-serving
    ```
 
 2. Prepare kubernete secret to store your AWS Credential. Please check [document](aws-credential-secret.md). Remember secret name and data fields.
 
-3. Install Tensorflow Serving AWS Component (Deployment + Service)
+3. Install Tensorflow Serving AWS Component (Deployment + Service):
+
    ```
    export TF_SERVING_SERVICE=mnist-service
    export TF_SERVING_DEPLOYMENT=mnist
@@ -36,6 +40,7 @@ This document explains how to perform Tensorflow inference on [Amazon EKS](https
 
    ks param set ${TF_SERVING_DEPLOYMENT} numGpus 1
    ```
+
 4. Deploy Tensorflow Serving components
 
    ```
@@ -64,15 +69,17 @@ This document explains how to perform Tensorflow inference on [Amazon EKS](https
    }
    ```
 
-
 ### Upload pretrained model to S3
 
 1. Download Tensorflow model and export saved model
-   If you has GPU nodes, use [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/)
+   If you have GPU nodes, use [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/):
+
    ```
    nvidia-docker run -it -v /tmp/saved_model:/model 763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:1.13-gpu-py27-cu100-ubuntu16.04 bash 
    ``` 
-   Alternatively 
+
+   Alternatively:
+
    ```
    nvidia-docker run -it -v /tmp/saved_model:/model tensorflow/tensorflow:1.12.0-gpu bash
    ```
@@ -82,7 +89,9 @@ This document explains how to perform Tensorflow inference on [Amazon EKS](https
    ```
    docker run -it -v /tmp/saved_model:/model 763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:1.13-cpu-py27-ubuntu16.04 bash 
    ```
-   Alternatively 
+
+   Alternatively:
+
    ```
    docker run -it -v /tmp/saved_model:/model tensorflow/tensorflow:1.12.0 bash
    ```
@@ -100,6 +109,7 @@ This document explains how to perform Tensorflow inference on [Amazon EKS](https
    exit
    ```
    Now we get model in Tensorflow SavedModel format in /tmp/saved_model on the host.
+
    ```
    |-- saved_model.pb
    `-- variables

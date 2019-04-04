@@ -59,7 +59,7 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 
 ## What happened?
 
-- Runs `/root/incubator-mxnet/example/image-classification/train_mnist.py` command (specified in the Dockerfile)
+- Runs `/root/incubator-mxnet/example/image-classification/train_mnist.py` command (specified in the Dockerfile and available at https://github.com/apache/incubator-mxnet/blob/master/example/image-classification/train_mnist.py)
   - Downloads MNIST training and test data set
     - Each set has images and labels that identify the image
   - Performs supervised learning

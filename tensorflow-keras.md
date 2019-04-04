@@ -1,14 +1,14 @@
 # MNIST using TensorFlow and Keras on Amazon EKS
 
-This document exaplins how to train a MNIST model using TensorFlow and Keras on Amazon EKS. It requires to setup KubeFlow as explained in [KubeFlow on Amazon EKS](kubeflow.md).
+This document exaplins how to build a MNIST model using TensorFlow and Keras on Amazon EKS.
 
-[Keras](https://keras.io/) is a high-level API with readymade networks that can run on TensorFlow.
+This documents assumes that you have an EKS cluster available and running. Make sure to have a [GPU-enabled Amazon EKS cluster](eks-gpu.md) ready.
 
 ## MNIST training using TensorFlow on EKS
 
 In this sample, we'll use MNIST database of handwritten digits and train the model to recognize any handwritten digit.
 
-1. You can use a pre-built Docker image `rgaut/deeplearning-tensorflow:with_tf_keras`. This image has training code and downloads training and test data sets.
+1. You can use a pre-built Docker image `rgaut/deeplearning-tensorflow:with_tf_keras`. This image uses `763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-training:1.13-horovod-gpu-py27-cu100-ubuntu16.04` as the base image. It comes bundled with TensorFlow and Keras. It also has training code and downloads training and test data sets.
 
    Alternatively, you can build a Docker image using the Dockerfile in `samples/tensorflow/mnist/Dockerfile` to build it. This Dockerfile uses [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/). Accessing this image requires that you login to the ECR repository:
 

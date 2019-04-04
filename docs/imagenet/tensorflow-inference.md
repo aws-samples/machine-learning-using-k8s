@@ -107,14 +107,14 @@ Server is responsible to run the TensorFlow Model Server. It will load the train
      kubectl get service inception-client-service -o wide
    ```
    goto your browser and type the EXTERNAL-IP:PORT, you should see below page
-   ![Upload Page](images/inference-upload.png)
+   ![Upload Page](inference-upload.png)
    
    feel free to upload an image, once you hit on `upload`, you should see page like below.
-   ![Output Page](images/inference-output.png)
+   ![Output Page](inference-output.png)
 
    In case if the page is not accessible due to VPN issue, use port forwarding
    ```
-     kubectl port-forward deployment/inception-client-deployment 5000:5000 
+   kubectl port-forward deployment/inception-client-deployment 5000:5000 
    ```
    
 

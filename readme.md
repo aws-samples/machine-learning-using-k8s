@@ -14,6 +14,6 @@ This repository explains how to run different Machine Learning frameworks on [Am
     - [TensorFlow and Horovod on Amazon EKS with Synthetic Data](docs/tensorflow-horovod-synthetic.md)
 - Inference
   - [MNIST using TensorFlow Serving Component](docs/mnist/inference/tensorflow.md)
-  - [Image Recognition using TensorFlow on Amazon EKS](docs/imagenet/inference/tensorflow.md)
+  - [ImageNet using TensorFlow on Amazon EKS](docs/imagenet/inference/tensorflow.md)
 - TensorBoard setup
   - [TensorBoard on Amazon EKS](docs/tensorboard.md)

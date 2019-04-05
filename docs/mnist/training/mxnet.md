@@ -1,6 +1,6 @@
 # Training MNIST using MXNet on Amazon EKS
 
-This document exaplins how to build a MNIST model using MNIST on Amazon EKS.
+This document explains how to build a MNIST model using MXNet on Amazon EKS.
 
 This documents assumes that you have an EKS cluster available and running. Make sure to have a [GPU-enabled Amazon EKS cluster](eks-gpu.md) ready.
 

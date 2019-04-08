@@ -99,40 +99,53 @@ This document explains how to perform inference of MNIST model using TensorFlow 
 
 ### Login to the Docker container
 
+You can login to the container using [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/) or `tensorflow/tensorflow` containers. Pick one of the sections below.
+
+#### Using AWS Deep Learning Containers
+
 1. Login to the ECR:
 
    ```
    $(aws ecr get-login --no-include-email --region us-east-1 --registry-ids 763104351884)
    ```
 
-   This is required to download [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/).
+1. If you have GPU nodes in the cluster:
 
-   1. If you have GPU nodes in the cluster:
+   ```
+   nvidia-docker run -it \
+   -v /tmp/saved_model:/model \
+   763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:1.13-gpu-py27-cu100-ubuntu16.04 bash 
+   ``` 
 
-      ```
-      nvidia-docker run -it -v /tmp/saved_model:/model 763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:1.13-gpu-py27-cu100-ubuntu16.04 bash 
-      ``` 
+   If `nvidia-docker` CLI is not available, use `docker run --runtime=nvidia` command instead.
 
-      Alternatively:
+1. If you have CPU nodes in the cluster:
 
-      ```
-      nvidia-docker run -it -v /tmp/saved_model:/model tensorflow/tensorflow:1.12.0-gpu bash
-      ```
+   ```
+   docker run -it \
+   -v /tmp/saved_model:/model \
+   763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:1.13-cpu-py27-ubuntu16.04 bash 
+   ```
 
-      If `nvidia-docker` CLI is not available, use `docker run --runtime=nvidia` instead.
+#### Using `tensorflow/tensorflow` containers
 
+1. If you have GPU nodes in the cluster:
 
-   1. If you have CPU nodes in the cluster:
+   ```
+   nvidia-docker run -it \
+   -v /tmp/saved_model:/model \
+   tensorflow/tensorflow:1.12.0-gpu bash
+   ```
 
-      ```
-      docker run -it -v /tmp/saved_model:/model 763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:1.13-cpu-py27-ubuntu16.04 bash 
-      ```
+   If `nvidia-docker` CLI is not available, use `docker run --runtime=nvidia` command instead.
 
-      Alternatively:
+1. If you have CPU nodes in the cluster:
 
-      ```
-      docker run -it -v /tmp/saved_model:/model tensorflow/tensorflow:1.12.0 bash
-      ```
+   ```
+   docker run -it \
+   -v /tmp/saved_model:/model \
+   tensorflow/tensorflow:1.12.0 bash
+   ```
 
 ### Export and upload your model
 

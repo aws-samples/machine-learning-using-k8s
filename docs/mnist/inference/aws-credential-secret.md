@@ -1,4 +1,4 @@
-# Store AWS Credential in Kubernetes Secret
+# Store AWS Credentials in Kubernetes Secret
 
 Users may store machine learning trained model and training events on S3. 
 

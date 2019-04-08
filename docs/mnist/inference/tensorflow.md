@@ -69,9 +69,33 @@ This document explains how to perform inference of MNIST model using TensorFlow 
    }
    ```
 
-### Upload pretrained model to S3
+## Upload pretrained model to S3
 
-1. Login to ECR by running the command:
+1. Get list of the nodes:
+
+   ```
+   kubectl get nodes
+   NAME                                           STATUS   ROLES    AGE   VERSION
+   ip-192-168-40-127.us-west-2.compute.internal   Ready    <none>   10m   v1.11.9
+   ip-192-168-72-76.us-west-2.compute.internal    Ready    <none>   10m   v1.11.9
+   ```
+
+1. Get IP address of one of the worker nodes:
+
+   ```
+   aws ec2 describe-instances \
+   --filters Name=private-dns-name,Values=ip-192-168-40-127.us-west-2.compute.internal \
+   --query "Reservations[0].Instances[0].PublicDnsName" \
+   --output text
+   ```
+
+1. Login to worker nodes:
+
+   ```
+   ssh -i ~/.ssh/arun-us-west2.pem ec2-user@<worker-ip>
+   ```
+
+1. Login to ECR:
 
    ```
    $(aws ecr get-login --no-include-email --region us-east-1 --registry-ids 763104351884)
@@ -79,7 +103,9 @@ This document explains how to perform inference of MNIST model using TensorFlow 
 
    This is required to download [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/).
 
-1. Login to the Docker container. If you have GPU nodes in the cluster, use:
+1. Login to the Docker container.
+
+   If you have GPU nodes in the cluster:
 
    ```
    nvidia-docker run -it -v /tmp/saved_model:/model 763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:1.13-gpu-py27-cu100-ubuntu16.04 bash 

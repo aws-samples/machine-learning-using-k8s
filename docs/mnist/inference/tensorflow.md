@@ -117,7 +117,7 @@ You can login to the container using [AWS Deep Learning Containers](https://aws.
    763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:1.13-gpu-py27-cu100-ubuntu16.04 bash 
    ``` 
 
-   If `nvidia-docker` CLI is not available, use `docker run --runtime=nvidia` command instead.
+   If `nvidia-docker` CLI is not available, then replace `nvidia-docker run` command with `docker run --runtime=nvidia` instead.
 
 1. If you have CPU nodes in the cluster:
 
@@ -137,7 +137,7 @@ You can login to the container using [AWS Deep Learning Containers](https://aws.
    tensorflow/tensorflow:1.12.0-gpu bash
    ```
 
-   If `nvidia-docker` CLI is not available, use `docker run --runtime=nvidia` command instead.
+   If `nvidia-docker` CLI is not available, then replace `nvidia-docker run` command with `docker run --runtime=nvidia` instead.
 
 1. If you have CPU nodes in the cluster:
 

@@ -29,8 +29,8 @@ This document explains how to setup TensorBoard on Amazon EKS.
    # configure region and bucket
    ks param set ${TENSORBOARD_COMPONENT} s3AwsRegion us-west-2
    ks param set ${TENSORBOARD_COMPONENT} s3Endpoint s3.us-west-2.amazonaws.com
-   ks param set ${TENSORBOARD_COMPONENT} s3UseHttps true
-   ks param set ${TENSORBOARD_COMPONENT} s3VerifySsl true
+   ks param set ${TENSORBOARD_COMPONENT} s3UseHttps "true"
+   ks param set ${TENSORBOARD_COMPONENT} s3VerifySsl "true"
 
    # configure aws credential
    ks param set ${TENSORBOARD_COMPONENT} s3SecretName aws-s3-secret

@@ -40,5 +40,5 @@ Users may store machine learning trained model and training events on S3.
 4. Apply to EKS cluster:
 
    ```
-   kubectl -n kubeflow apply secret.yaml
+   kubectl -n kubeflow apply -f secret.yaml
    ```

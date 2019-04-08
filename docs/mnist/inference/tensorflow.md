@@ -1,23 +1,23 @@
 # Inference of MNIST using TensorFlow on Amazon EKS
 
-This document explains how to perform inference using TensorFlow on Amazon EKS using KubeFlow.
+This document explains how to perform inference of MNIST model using TensorFlow on Amazon EKS.
 
-## Prerequisite
+## Pre-requisite
 
-1. Create [EKS cluster using GPU](eks-gpu.md)
-2. Install [Kubeflow](kubeflow.md)
+1. Create [EKS cluster using GPU](../../eks-gpu.md)
+2. Install [Kubeflow](../../kubeflow.md)
 3. Basic understanding of [TensorFlow Serving](https://www.tensorflow.org/serving/)
 4. Prepare [pretrained tensorflow model](#upload-pretrained-model-to-s3) on S3
 
-## Serve the Tensorflow model
+## Serve the TensorFlow model
 
-1. Install Tensorflow Serving pkg:
+1. Install TensorFlow Serving pkg:
 
    ```
    ks pkg install kubeflow/tf-serving
    ```
 
-2. Prepare kubernete secret to store your AWS Credential. Please check [document](aws-credential-secret.md). Remember secret name and data fields.
+2. Prepare kubernete secret to store your AWS Credential. Please check [Store AWS Credentials in Kubernetes Secret](aws-credential-secret.md). Remember secret name and data fields.
 
 3. Install Tensorflow Serving AWS Component (Deployment + Service):
 
@@ -69,34 +69,74 @@ This document explains how to perform inference using TensorFlow on Amazon EKS u
    }
    ```
 
-### Upload pretrained model to S3
+## Upload pre-trained model to S3
 
-1. Download Tensorflow model and export saved model
-   If you have GPU nodes, use [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/):
+### Login to EKS Worker node
 
-   ```
-   nvidia-docker run -it -v /tmp/saved_model:/model 763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:1.13-gpu-py27-cu100-ubuntu16.04 bash 
-   ``` 
-
-   Alternatively:
+1. Get list of the nodes:
 
    ```
-   nvidia-docker run -it -v /tmp/saved_model:/model tensorflow/tensorflow:1.12.0-gpu bash
+   kubectl get nodes
+   NAME                                           STATUS   ROLES    AGE   VERSION
+   ip-192-168-40-127.us-west-2.compute.internal   Ready    <none>   10m   v1.11.9
+   ip-192-168-72-76.us-west-2.compute.internal    Ready    <none>   10m   v1.11.9
    ```
 
-   If you use CPU for serving, use [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/)
+1. Get IP address of one of the worker nodes:
 
    ```
-   docker run -it -v /tmp/saved_model:/model 763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:1.13-cpu-py27-ubuntu16.04 bash 
+   aws ec2 describe-instances \
+   --filters Name=private-dns-name,Values=ip-192-168-40-127.us-west-2.compute.internal \
+   --query "Reservations[0].Instances[0].PublicDnsName" \
+   --output text
    ```
 
-   Alternatively:
+1. Login to worker nodes:
 
    ```
-   docker run -it -v /tmp/saved_model:/model tensorflow/tensorflow:1.12.0 bash
+   ssh -i ~/.ssh/arun-us-west2.pem ec2-user@<worker-ip>
    ```
 
-   Then you will get into container, follow steps to dump your model.
+### Login to the Docker container
+
+1. Login to the ECR:
+
+   ```
+   $(aws ecr get-login --no-include-email --region us-east-1 --registry-ids 763104351884)
+   ```
+
+   This is required to download [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/).
+
+   1. If you have GPU nodes in the cluster:
+
+      ```
+      nvidia-docker run -it -v /tmp/saved_model:/model 763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:1.13-gpu-py27-cu100-ubuntu16.04 bash 
+      ``` 
+
+      Alternatively:
+
+      ```
+      nvidia-docker run -it -v /tmp/saved_model:/model tensorflow/tensorflow:1.12.0-gpu bash
+      ```
+
+      If `nvidia-docker` CLI is not available, use `docker run --runtime=nvidia` instead.
+
+
+   1. If you have CPU nodes in the cluster:
+
+      ```
+      docker run -it -v /tmp/saved_model:/model 763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:1.13-cpu-py27-ubuntu16.04 bash 
+      ```
+
+      Alternatively:
+
+      ```
+      docker run -it -v /tmp/saved_model:/model tensorflow/tensorflow:1.12.0 bash
+      ```
+
+### Export and upload your model
+
+1. Export your model:
 
    ```
    apt update && apt install git
@@ -108,7 +148,8 @@ This document explains how to perform inference using TensorFlow on Amazon EKS u
    python /tmp/models/official/mnist/mnist.py --export_dir /model/
    exit
    ```
-   Now we get model in Tensorflow SavedModel format in /tmp/saved_model on the host.
+
+   Now we get the model in Tensorflow's `SavedModel` format in `/tmp/saved_model` on the host.
 
    ```
    |-- saved_model.pb
@@ -117,6 +158,6 @@ This document explains how to perform inference using TensorFlow on Amazon EKS u
        `-- variables.index
    ```
 
-   Note thatn you will need to login to access the repository of [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/) by running the command `$(aws ecr get-login --no-include-email --region us-east-1 --registry-ids 763104351884)`  
+1. Create S3 bucket and upload your models to `s3://eks-tensorflow-model/mnist/1`. `1` is the model version number. You can also use our pretrained model [here](samples/tensorflow-serving/model). This requires your serving component has GPU.
 
-2. Create S3 bucket and upload your models to `s3://eks-tensorflow-model/mnist/1`. `1` is model version number. You can also use our pretrained model [here](samples/tensorflow-serving/model). This requires your serving component has GPU.
+

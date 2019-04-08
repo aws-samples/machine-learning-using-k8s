@@ -1,18 +1,12 @@
 # Create Amazon EKS cluster with GPU-enabled workers
 
-This document explains how to create an Amazon EKS cluster with GPU-enabled workers. This is verified using `eksctl 0.1.24.
+This document explains how to create an Amazon EKS cluster with GPU-enabled workers. This is verified using `eksctl 0.1.24`.
 
 1. Subscribe to the GPU supported AMI:
 
    https://aws.amazon.com/marketplace/pp/B07GRHFXGM
 
 1. Create EKS cluster with GPU nodes:
-
-   ```
-   eksctl create cluster eks-gpu --node-type=p3.8xlarge --timeout=40m --nodes=2 --region=us-west-2
-   ```
-
-   By default, ssh access is not enabled. Here is how it can be done:
 
    ```
    eksctl create cluster eks-gpu \

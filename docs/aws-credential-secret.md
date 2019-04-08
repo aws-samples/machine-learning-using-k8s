@@ -1,9 +1,11 @@
 # Store AWS Credential in Kubernetes Secret
-Users may store machine learning trained model and training events on S3. In order for service like Tensorboard, Tensorflow Serving to get access to files on S3, aws credential is required. Kubernetes secret is intended to hold sensitive informatio, such as aws credentials.
 
-## Steps
+Users may store machine learning trained model and training events on S3. 
 
-1. Check your AWS credentails.
+[TensorBoard](https://github.com/tensorflow/tensorboard) is a suite of web applications for inspecting and understanding your TensorFlow runs and graphs. [TensorFlow Serving](https://www.tensorflow.org/tfx/guide/serving) is a flexible, high-performance serving system for machine learning models, designed for production environments. These models are stores on S2. In order for TensorBoard and TensorFlow Serving to get access to files on S3, AWS credentials are required. These credentials are stored in Kubernetes secrets.
+
+1. Check your AWS credentials:
+
    ```
    $ cat ~/.aws/credentials
 
@@ -11,7 +13,8 @@ Users may store machine learning trained model and training events on S3. In ord
    aws_access_key_id = FAKEAWSACCESSKEYID
    aws_secret_access_key = FAKEAWSSECRETACCESSKEY
    ```
-2. Manually encode credentials using base 64.
+
+2. Manually encode credentials using base 64:
 
    ```
    $ echo -n 'FAKEAWSACCESSKEYID' | base64
@@ -21,7 +24,7 @@ Users may store machine learning trained model and training events on S3. In ord
    RkFLRUFXU1NFQ1JFVEFDQ0VTU0tFWQ==
    ```
 
-3. Create a secret yaml file.
+3. Create a secret yaml file:
 
    ```
    apiVersion: v1
@@ -34,7 +37,8 @@ Users may store machine learning trained model and training events on S3. In ord
      AWS_SECRET_ACCESS_KEY: RkFLRUFXU1NFQ1JFVEFDQ0VTU0tFWQ==
    ```
 
-4. Apply to kubernetes.
+4. Apply to EKS cluster:
+
    ```
    kubectl -n kubeflow apply secret.yaml
    ```

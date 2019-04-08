@@ -9,13 +9,16 @@ This document explains how to create an Amazon EKS cluster with GPU-enabled work
 1. Create EKS cluster with GPU nodes:
 
    ```
-   eksctl create cluster eks-gpu \
+   eksctl create cluster eks-gpu2 \
       --node-type=p3.8xlarge \
       --nodes=2 \
       --region=us-west-2 \
       --ssh-access \
       --ssh-public-key=arun-us-west2
+      --node-ami=ami-0bebf2322fd52a42e
    ```
+
+   `--node-ami=ami-0bebf2322fd52a42e` is required to ensure `nvidia-docker` CLI is bundled in the AMI. This might be an issue with how eksctl is picking up the latest GPU AMI.
 
 1. Apply NVIDIA driver:
 

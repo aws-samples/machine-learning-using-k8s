@@ -1,6 +1,6 @@
 # Inference of MNIST using TensorFlow on Amazon EKS
 
-This document explains how to perform inference using TensorFlow on Amazon EKS using KubeFlow.
+This document explains how to perform inference of MNIST model using TensorFlow on Amazon EKS.
 
 ## Pre-requisite
 
@@ -9,15 +9,15 @@ This document explains how to perform inference using TensorFlow on Amazon EKS u
 3. Basic understanding of [TensorFlow Serving](https://www.tensorflow.org/serving/)
 4. Prepare [pretrained tensorflow model](#upload-pretrained-model-to-s3) on S3
 
-## Serve the Tensorflow model
+## Serve the TensorFlow model
 
-1. Install Tensorflow Serving pkg:
+1. Install TensorFlow Serving pkg:
 
    ```
    ks pkg install kubeflow/tf-serving
    ```
 
-2. Prepare kubernete secret to store your AWS Credential. Please check [document](aws-credential-secret.md). Remember secret name and data fields.
+2. Prepare kubernete secret to store your AWS Credential. Please check [Store AWS Credentials in Kubernetes Secret](aws-credential-secret.md). Remember secret name and data fields.
 
 3. Install Tensorflow Serving AWS Component (Deployment + Service):
 

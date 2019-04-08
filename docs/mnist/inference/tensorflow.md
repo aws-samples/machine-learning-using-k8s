@@ -7,9 +7,19 @@ This document explains how to perform inference of MNIST model using TensorFlow 
 1. Create [EKS cluster using GPU](../../eks-gpu.md)
 2. Install [Kubeflow](../../kubeflow.md)
 3. Basic understanding of [TensorFlow Serving](https://www.tensorflow.org/serving/)
-4. Prepare [pretrained TensorFlow model](#upload-pretrained-model-to-s3) on S3
 
-## Serve the TensorFlow model
+## Upload model
+
+1. A pre-trained model is already available at `mnist/serving/tensorflow/model`. This model requires your serving component has GPU. 
+
+   Use an S3 bucket in your region and upload this model:
+
+   ```
+   cd mnist/serving/tensorflow
+   aws s3 sync model/ s3://eks-tf-model/mnist/1
+   ```
+
+## Install the TensorFlow Serving component
 
 1. Install TensorFlow Serving pkg:
 
@@ -17,9 +27,9 @@ This document explains how to perform inference of MNIST model using TensorFlow 
    ks pkg install kubeflow/tf-serving
    ```
 
-2. Prepare kubernete secret to store your AWS Credential. Please check [Store AWS Credentials in Kubernetes Secret](aws-credential-secret.md). Remember secret name and data fields.
+2. Use [Store AWS Credentials in Kubernetes Secret](aws-credential-secret.md) to configure AWS credentials in your Kubernetes cluster. Remember secret name and data fields.
 
-3. Install Tensorflow Serving AWS Component (Deployment + Service):
+3. Update `modelBasePath` below to match the S3 bucket name where the model is uploaded. Install Tensorflow Serving AWS Component (Deployment + Service):
 
    ```
    export TF_SERVING_SERVICE=mnist-service
@@ -32,6 +42,7 @@ This document explains how to perform inference of MNIST model using TensorFlow 
    ks param set ${TF_SERVING_SERVICE} serviceType ClusterIP    
 
    ks generate tf-serving-deployment-aws ${TF_SERVING_DEPLOYMENT}
+   # make sure to match the bucket name used for model
    ks param set ${TF_SERVING_DEPLOYMENT} modelBasePath s3://eks-tf-model/mnist
    ks param set ${TF_SERVING_DEPLOYMENT} s3Enable true
    ks param set ${TF_SERVING_DEPLOYMENT} s3SecretName aws-s3-secret
@@ -50,13 +61,13 @@ This document explains how to perform inference of MNIST model using TensorFlow 
    ks apply default -c ${TF_SERVING_DEPLOYMENT}
    ```
 
-5. If you use ClusterIP, forward port so you can test it locally
+5. Port forward serving endpoint for local testing:
 
    ```
-   kubectl port-forward -n kubeflow `kubectl get pods -n kubeflow --selector=app=mnist -o jsonpath='{.items[0].metadata.name}'` 8500:8500
+   kubectl port-forward -n kubeflow `kubectl get pods -n kubeflow --selector=app=mnist -o jsonpath='{.items[0].metadata.name}' --field-selector=status.phase=Running` 8500:8500
    ```
 
-6. Make prediction request. Check sample [mnist_input.json](samples/tensorflow-serving/mnist_input.json)
+6. Make prediction request. Check sample [mnist_input.json](samples/mnist/serving/tensorflow/mnist_input.json)
 
    ```
    $ curl -d @mnist_input.json   -X POST http://localhost:8500/v1/models/mnist:predict
@@ -71,7 +82,23 @@ This document explains how to perform inference of MNIST model using TensorFlow 
    }
    ```
 
-## Upload pre-trained model to S3
+   The input is a vector of an image with number 5. The output indicates that the sixth index (starting from 0) has the highest probability.
+
+1. Get serving pod:
+
+   ```
+   kubectl get pods -n kubeflow --selector=app=mnist --field-selector=status.phase=Running
+   NAME                     READY   STATUS    RESTARTS   AGE
+   mnist-7cc4468bc5-wm8kx   1/1     Running   0          2h
+   ```
+
+   And then check the logs:
+
+   ```
+   kubectl logs mnist-7cc4468bc5-wm8kx -n kubeflow
+   ```
+
+## Extract model
 
 ### Login to EKS Worker node
 
@@ -99,7 +126,7 @@ This document explains how to perform inference of MNIST model using TensorFlow 
    ssh -i ~/.ssh/arun-us-west2.pem ec2-user@<worker-ip>
    ```
 
-### Login to the Docker container
+### Login to Docker container
 
 You can login to the container using [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/) or `tensorflow/tensorflow` containers. Pick one of the sections below.
 
@@ -161,9 +188,7 @@ You can login to the container using [AWS Deep Learning Containers](https://aws.
    tensorflow/tensorflow:1.12.0 bash
    ```
 
-### Export and upload your model
-
-
+### Export model
 
 1. Export your model:
 
@@ -186,6 +211,3 @@ You can login to the container using [AWS Deep Learning Containers](https://aws.
        |-- variables.data-00000-of-00001
        `-- variables.index
    ```
-
-1. Create S3 bucket and upload your models to `s3://eks-tensorflow-model/mnist/1`. `1` is the model version number. You can also use our pretrained model [here](samples/tensorflow-serving/model). This requires your serving component has GPU.
-

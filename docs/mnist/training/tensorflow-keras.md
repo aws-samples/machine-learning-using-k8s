@@ -8,9 +8,9 @@ This documents assumes that you have an EKS cluster available and running. Make 
 
 In this sample, we'll use MNIST database of handwritten digits and train the model to recognize any handwritten digit.
 
-1. You can use a pre-built Docker image `rgaut/deeplearning-tensorflow:with_tf_keras`. This image uses `763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-training:1.13-horovod-gpu-py27-cu100-ubuntu16.04` as the base image. It comes bundled with TensorFlow and Keras. It also has training code and downloads training and test data sets.
+1. You can use a pre-built Docker image `rgaut/deeplearning-tensorflow:with_model`. This image uses `tensorflow/tensorflow` as the base image. It comes bundled with TensorFlow and Keras. It also has training code and downloads training and test data sets. It also stores the model at `/model` directory.
 
-   Alternatively, you can build a Docker image using the Dockerfile in `samples/tensorflow/mnist/Dockerfile` to build it. This Dockerfile uses [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/). Accessing this image requires that you login to the ECR repository:
+   Alternatively, you can build a Docker image using the Dockerfile in `samples/mnist/training/tensorflow/Dockerfile` to build it. This Dockerfile uses [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/). Accessing this image requires that you login to the ECR repository:
 
    ```
    $(aws ecr get-login --no-include-email --region us-east-1 --registry-ids 763104351884)
@@ -27,7 +27,7 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 2. Create a pod that will use this Docker image and run the MNIST training:
 
    ```
-   kubectl create -f samples/tensorflow/mnist/tensorflow.yaml
+   kubectl create -f samples/mnist/training/tensorflow/tensorflow.yaml
    ```
 
    This will start the pod and start the training. Check status:
@@ -35,6 +35,8 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
    ```
    kubectl get pod tensorflow
    ```
+
+   This will also dump the generated model at `/model` on the worker node. This is causing https://github.com/aws-samples/machine-learning-using-k8s/issues/53.
 
 3. Check the progress in training:
 

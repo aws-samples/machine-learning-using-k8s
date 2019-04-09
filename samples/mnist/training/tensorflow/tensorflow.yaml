@@ -6,8 +6,8 @@ spec:
   restartPolicy: OnFailure
   containers:
   - name: tensorflow 
-    image: rgaut/deeplearning-tensorflow:with_tf_keras
+    image: rgaut/deeplearning-tensorflow:with_model 
     command:
       - "python"
-      - "/root/keras/examples/mnist_cnn.py" 
+      - "/tmp/models/official/mnist/mnist.py --export_dir /model/"
        

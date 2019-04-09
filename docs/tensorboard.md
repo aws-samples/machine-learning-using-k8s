@@ -44,7 +44,7 @@ This document explains how to setup TensorBoard on Amazon EKS.
 3. It will create a deployment which runs the TensorBoard on event files. A service is also being created so that user can access tensorboard via browser:
 
    ```
-   kubectl port-forward svc/${TENSORBOARD_COMPONENT} 9000:9000
+   kubectl port-forward svc/${TENSORBOARD_COMPONENT} 9000:9000 -n kubeflow
    ```
 
    ![TensorBoard](images/tensorboard.png)

@@ -2,35 +2,35 @@
 
 This document explains how to perform distributed training on [Amazon EKS](https://aws.amazon.com/eks/) using TensorFlow and [Horovod](https://github.com/uber/horovod) with [ImageNet dataset](http://www.image-net.org/). The following steps can be ued for any data set though.
 
-## Prerequisite
+## Pre-requisite
 
-1. Create [EKS cluster using GPU](eks-gpu.md).
+1. Create [EKS cluster using GPU](../../eks-gpu.md).
 
-2. Install [Kubeflow](kubeflow.md).
+1. Install [Kubeflow](../../kubeflow.md).
 
-3. Create an [EFS](https://aws.amazon.com/efs/) and mount it to any worker node as explained in [Setup EFS on EKS](efs-on-eks-worker-nodes.md).
+1. Create an [EFS](https://aws.amazon.com/efs/) and mount it to any worker node as explained in [Setup EFS on EKS](../../efs-on-eks-worker-nodes.md).
 
-4. Download and put prepare ImageNet dataset on EFS path `/imagenet`. Please check [tutorial](#download-and-preprocess-imagenet-data)
+1. Download and put prepare ImageNet dataset on EFS path `/imagenet`. Please check [tutorial](#download-and-preprocess-imagenet-data)
 
 ## Steps
 
 1. Follow [steps](tensorflow-horovod-synthetic.md#install-mpi-operator) to install mpi-operator 
 
-2. Prepare Persistent Volumne (PV) and Persistent Volume Claim (PVC)
+1. Prepare Persistent Volumne (PV) and Persistent Volume Claim (PVC)
 
    - Create the Persistent Volume (PV) based on EFS. You need to update the name of EFS server in the Kubernetes manifest file. Storage capacity based on dataset size and other requirements can be updated as well.
 
       ```
-      kubectl create -f ../training/distributed_training/dist_pv.yaml
+      kubectl create -f training/distributed_training/dist_pv.yaml
       ```
 
     - Create the Persistent Volume Claim (PVC) based on EFS. The storage capacity based on PV's capacity may adjusted in the manifest. The storage capacity of PVC should be the at most storage capacity of PV.
 
       ```
-      kubectl create -f ../training/distributed_training/dist_pvc.yaml
+      kubectl create -f training/distributed_training/dist_pvc.yaml
       ```
 
-    - Make sure that PV has been claimed by PVC under same namespace. You can verify that by running the command:
+    - Make sure that PV has been claimed by PVC under same namespace:
 
       ```
       kubectl get pv -n kubeflow
@@ -38,7 +38,8 @@ This document explains how to perform distributed training on [Amazon EKS](https
       NAME       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                              STORAGECLASS   REASON   AGE
       nfs-data   85Gi       RWX            Retain           Bound    kubeflow/nfs-external   nfs-external            58s
       ```
-3. Prepare training job. Check [here](tensorflow-horovod-synthetic.md#launch-mpi-training-job) for more details
+
+1. Prepare training job. Check [here](tensorflow-horovod-synthetic.md#launch-mpi-training-job) for more details
 
    ```
    export JOB_NAME=tf-resnet50-horovod-job
@@ -52,9 +53,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
    ```
    > Note: Instead of using synthetic data, job will read from `--data_dir`.
 
-
-
-4. Right now, `mpi-job-custom` doesn't support volume in jsonnet, we can manually mount volumes.
+1. Right now, `mpi-job-custom` doesn't support volume in jsonnet, we can manually mount volumes.
 
    ```
    ks show default -c ${JOB_NAME} > /tmp/training_job.yaml
@@ -62,12 +61,12 @@ This document explains how to perform distributed training on [Amazon EKS](https
    ```
    Please check [template](training/distributed_training/mpi-job-template-nfs.yaml)
 
-5. Deploy training job
+1. Deploy training job
    ```
    ks apply default -c ${JOB_NAME}
    ```
 
-6. Check pod status and logs
+1. Check pod status and logs
     ```
     POD_NAME=$(kubectl -n kubeflow get pods -l mpi_job_name=${JOB_NAME},mpi_role_type=launcher -o name)
 
@@ -78,7 +77,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
 ## Appendix 
 
-### Download and Preprocess ImageNet Data
+### Download and Pre-process ImageNet Data
 
 If you work for Amazon, then reach out to the authors of this document to have access to the data. Otherwise, follow the instructions below.
 

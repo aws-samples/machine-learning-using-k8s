@@ -11,7 +11,7 @@ This repository explains how to run different Machine Learning frameworks on [Am
     - [MXNet on Amazon EKS](docs/mnist/training/mxnet.md)  
   - Distributed training
     - [TensorFlow and Horovod on Amazon EKS with ImageNet Data](docs/imagenet/training/tensorflow-horovod.md)
-    - [TensorFlow and Horovod on Amazon EKS with Synthetic Data](docs/tensorflow-horovod-synthetic.md)
+    - [TensorFlow and Horovod on Amazon EKS with Synthetic Data](docs/imagenet/training/tensorflow-horovod-synthetic.md)
 - Inference
   - MNIST
   	- [TensorFlow Serving Component](docs/mnist/inference/tensorflow.md)

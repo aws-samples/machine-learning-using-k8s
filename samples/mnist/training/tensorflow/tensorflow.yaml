@@ -12,4 +12,14 @@ spec:
     image: rgaut/deeplearning-tensorflow:with_model 
     command:
       - "python"
-      - "/tmp/models/official/mnist/mnist.py --export_dir /model/"
+      - "/tmp/models/official/mnist/mnist.py"
+      - "--export_dir"
+      - "/model"
+    volumeMounts:
+    - mountPath: /model
+      name: test-volume
+  volumes:
+  - name: test-volume
+    hostPath:
+      # directory location on host
+      path: /tmp

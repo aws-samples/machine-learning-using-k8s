@@ -1,6 +1,6 @@
-# Training MNIST using TensorFlow and Keras on Amazon EKS
+# Training MNIST using TensorFlow on Amazon EKS
 
-This document exaplins how to build a MNIST model using TensorFlow and Keras on Amazon EKS.
+This document exaplins how to build a MNIST model using TensorFlow on Amazon EKS.
 
 This documents assumes that you have an EKS cluster available and running. Make sure to have a [GPU-enabled Amazon EKS cluster](eks-gpu.md) ready.
 
@@ -88,7 +88,7 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 
 ## What happened?
 
-- Runs `/root/keras/examples/mnist_cnn.py` command (specified in the Dockerfile and available at https://github.com/keras-team/keras/blob/master/examples/mnist_cnn.py)
+- Runs `/tmp/models/official/mnist/mnist.py` command (specified in the Dockerfile and available at https://github.com/tensorflow/models/blob/master/official/mnist/mnist.py)
   - Downloads MNIST training and test data set from S3 bucket
     - Each set has images and labels that identify the image
   - Performs supervised learning

@@ -122,5 +122,12 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
       - Feeds the test data and matches with the expected output
       - Reports the accuracy, expected to improve with each run
   	- A checkpoint is saved every 600 seconds
-  - Generated model is persisted using a volume mount `/mount`. This maps to `/tmp` directory on the worker node. The output shows the model is saved to `/model/temp-1554929937/saved_model.pb`. This would map to `/tmp/1554929937` directory. You need to look at the worker node to get the data out.
+  - Generated model is persisted using a volume mount `/mount`. This maps to `/tmp` directory on the worker node. The output shows the model is saved to `/model/temp-1554929937/saved_model.pb`. This would map to `/tmp/1554929937` directory. Copy this model from the worker node:
+
+  ```
+  scp -i ~/.ssh/arun-us-west2.pem -r ec2-user@ec2-54-149-89-246.us-west-2.compute.amazonaws.com:/tmp/1554929937 .
+  ```
+
+  Note, you may have to try this command on different worker nodes as the training pod might have run on any of the worker nodes. More details about logging in to the EKS worker nodes is at http://arun-gupta.github.io/login-eks-worker/.
+  
 

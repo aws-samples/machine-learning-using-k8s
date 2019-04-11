@@ -122,4 +122,5 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
       - Feeds the test data and matches with the expected output
       - Reports the accuracy, expected to improve with each run
   	- A checkpoint is saved every 600 seconds
+  - Generated model is persisted using a volume mount `/mount`. This maps to `/tmp` directory on the worker node. The output shows the model is saved to `/model/temp-1554929937/saved_model.pb`. This would map to `/tmp/1554929937` directory. You need to look at the worker node to get the data out.
 

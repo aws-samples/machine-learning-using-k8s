@@ -10,13 +10,13 @@ This document explains how to perform inference of MNIST model using TensorFlow 
 
 ## Upload model
 
-1. A pre-trained model is already available at `mnist/serving/tensorflow/model`. This model requires your serving component has GPU. 
+1. A pre-trained model is already available at `mnist/serving/tensorflow/model`. This model requires your serving component has GPU. Alternatively, you can generate a model as explained at [Training MNIST using TensorFlow and Keras on Amazon EKS](../training/tensorflow.md).
 
-   Use an S3 bucket in your region and upload this model:
+1. Use an S3 bucket in your region and upload this model:
 
    ```
-   cd mnist/serving/tensorflow
-   aws s3 sync model/ s3://eks-tf-model/mnist/1
+   cd mnist/serving/tensorflow/model
+   aws s3 sync . s3://eks-tf-model/mnist/1
    ```
 
 ## Install the TensorFlow Serving component
@@ -99,6 +99,8 @@ This document explains how to perform inference of MNIST model using TensorFlow 
    ```
 
 ## Extract model
+
+The purpose of this section is not clear at this time and is mostly kept for historic reasons. The instructions in this section may not work and does not not need to be followed.
 
 ### Login to EKS Worker node
 

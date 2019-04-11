@@ -7,7 +7,7 @@ This repository explains how to run different Machine Learning frameworks on [Am
 - [Jupyter Notebook on Amazon EKS](docs/jupyterhub.md)
 - Training
   - Single node training for MNIST
-    - [TensorFlow on Amazon EKS](docs/mnist/training/tensorflow.md)
+    - [TensorFlow and Keras on Amazon EKS](docs/mnist/training/tensorflow.md)
     - [MXNet on Amazon EKS](docs/mnist/training/mxnet.md)  
   - Distributed training
     - [TensorFlow and Horovod on Amazon EKS with ImageNet Data](docs/imagenet/training/tensorflow-horovod.md)

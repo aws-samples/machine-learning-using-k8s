@@ -1,6 +1,6 @@
-# Training MNIST using TensorFlow on Amazon EKS
+# Training MNIST using TensorFlow and Keras on Amazon EKS
 
-This document exaplins how to build a MNIST model using TensorFlow on Amazon EKS.
+This document exaplins how to build a MNIST model using TensorFlow and Keras on Amazon EKS.
 
 This documents assumes that you have an EKS cluster available and running. Make sure to have a [GPU-enabled Amazon EKS cluster](eks-gpu.md) ready.
 
@@ -8,7 +8,7 @@ This documents assumes that you have an EKS cluster available and running. Make 
 
 In this sample, we'll use MNIST database of handwritten digits and train the model to recognize any handwritten digit.
 
-1. You can use a pre-built Docker image `rgaut/deeplearning-tensorflow:with_model`. This image uses `tensorflow/tensorflow` as the base image. It comes bundled with TensorFlow and Keras. It also has training code and downloads training and test data sets. It also stores the model at `/model` directory.
+1. You can use a pre-built Docker image `rgaut/deeplearning-tensorflow:with_model`. This image uses `tensorflow/tensorflow` as the base image. It comes bundled with TensorFlow. It also has training code and downloads training and test data sets. It also stores the model using a volume mount `/mount`. This maps to `/tmp` directory on the worker node.
 
    Alternatively, you can build a Docker image using the Dockerfile in `samples/mnist/training/tensorflow/Dockerfile` to build it. This Dockerfile uses [AWS Deep Learning Containers](https://aws.amazon.com/machine-learning/containers/). Accessing this image requires that you login to the ECR repository:
 
@@ -33,7 +33,9 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
    This will start the pod and start the training. Check status:
 
    ```
-   kubectl get pod tensorflow
+   kubectl get pod tensorflow -w
+   NAME         READY   STATUS    RESTARTS   AGE
+   tensorflow   1/1     Running   0          25s
    ```
 
    This will also dump the generated model at `/model` on the worker node. This is causing https://github.com/aws-samples/machine-learning-using-k8s/issues/53.
@@ -41,61 +43,83 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 3. Check the progress in training:
 
 	```
-	kubectl logs tensorflow
-	Using TensorFlow backend.
-	Downloading data from https://s3.amazonaws.com/img-datasets/mnist.npz
-
-	   16384/11490434 [..............................] - ETA: 0s
-	   24576/11490434 [..............................] - ETA: 36s
-	   57344/11490434 [..............................] - ETA: 31s
-	  122880/11490434 [..............................] - ETA: 21s
-	  262144/11490434 [..............................] - ETA: 13s
-	  557056/11490434 [>.............................] - ETA: 7s 
-	 1171456/11490434 [==>...........................] - ETA: 4s
-	 2301952/11490434 [=====>........................] - ETA: 2s
-	 3874816/11490434 [=========>....................] - ETA: 1s
-	 5464064/11490434 [=============>................] - ETA: 0s
-	 7036928/11490434 [=================>............] - ETA: 0s
-	 8609792/11490434 [=====================>........] - ETA: 0s
-	10182656/11490434 [=========================>....] - ETA: 0s
-	11493376/11490434 [==============================] - 1s 0us/step
-
-	11501568/11490434 [==============================] - 1s 0us/step
-	2019-03-17 20:48:25.236771: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
-	x_train shape: (60000, 28, 28, 1)
-	60000 train samples
-	10000 test samples
-	Train on 60000 samples, validate on 10000 samples
-	Epoch 1/12
+	2019-04-10 20:33:56.216636: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+	2019-04-10 20:33:56.234259: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2300065000 Hz
+	2019-04-10 20:33:56.236236: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x4f82540 executing computations on platform Host. Devices:
+	2019-04-10 20:33:56.236262: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): <undefined>, <undefined>
+	I0410 20:33:56.678050 140629992953600 run_config.py:532] Initializing RunConfig with distribution strategies.
+	I0410 20:33:56.678266 140629992953600 estimator_training.py:166] Not using Distribute Coordinator.
+	I0410 20:33:56.678631 140629992953600 estimator.py:201] Using config: {'_save_checkpoints_secs': 600, '_session_config': allow_soft_placement: true
+	, '_keep_checkpoint_max': 5, '_task_type': 'worker', '_train_distribute': <tensorflow.contrib.distribute.python.one_device_strategy.OneDeviceStrategy object at 0x7fe6901f3650>, '_is_chief': True, '_cluster_spec': <tensorflow.python.training.server_lib.ClusterSpec object at 0x7fe6901f3610>, '_model_dir': '/tmp/mnist_model', '_protocol': None, '_save_checkpoints_steps': None, '_keep_checkpoint_every_n_hours': 10000, '_service': None, '_num_ps_replicas': 0, '_tf_random_seed': None, '_save_summary_steps': 100, '_device_fn': None, '_experimental_distribute': None, '_num_worker_replicas': 1, '_task_id': 0, '_log_step_count_steps': 100, '_evaluation_master': '', '_eval_distribute': None, '_global_id_in_cluster': 0, '_master': '', '_distribute_coordinator_mode': None}
+	W0410 20:33:57.322146 140629992953600 deprecation.py:323] From /tmp/models/official/mnist/dataset.py:100: to_int32 (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+	Instructions for updating:
+	Use tf.cast instead.
 
 	. . .
 
-	59904/60000 [============================>.] - ETA: 0s - loss: 0.0274 - acc: 0.9918
-	60000/60000 [==============================] - 31s 509us/step - loss: 0.0274 - acc: 0.9918 - val_loss: 0.0306 - val_acc: 0.9903
-	Epoch 12/12
-
-	  128/60000 [..............................] - ETA: 29s - loss: 0.0588 - acc: 0.9922
-	  256/60000 [..............................] - ETA: 29s - loss: 0.0515 - acc: 0.9883	
+	I0410 20:34:27.340025 140629992953600 basic_session_run_hooks.py:247] loss = 0.17755193, step = 500 (4.791 sec)
+	I0410 20:34:32.069824 140629992953600 basic_session_run_hooks.py:594] Saving checkpoints for 600 into /tmp/mnist_model/model.ckpt.
+	I0410 20:34:32.147376 140629992953600 util.py:168] Finalize strategy.
+	I0410 20:34:32.215636 140629992953600 estimator.py:359] Loss for final step: 0.20872988.
+	I0410 20:34:32.445682 140629992953600 estimator.py:1111] Calling model_fn.
+	I0410 20:34:32.593489 140629992953600 estimator.py:1113] Done calling model_fn.
+	I0410 20:34:32.611218 140629992953600 evaluation.py:257] Starting evaluation at 2019-04-10T20:34:32Z
 
 	. . .
 
-	59776/60000 [============================>.] - ETA: 0s - loss: 0.0271 - acc: 0.9919
-	59904/60000 [============================>.] - ETA: 0s - loss: 0.0270 - acc: 0.9919
-	60000/60000 [==============================] - 31s 510us/step - loss: 0.0270 - acc: 0.9919 - val_loss: 0.0264 - val_acc: 0.9915
-	Test loss: 0.02641349581825889
-	Test accuracy: 0.9915
+	I0410 20:58:12.440040 140629992953600 basic_session_run_hooks.py:247] loss = 0.0003796204, step = 23300 (4.807 sec)
+	I0410 20:58:17.192491 140629992953600 basic_session_run_hooks.py:594] Saving checkpoints for 23400 into /tmp/mnist_model/model.ckpt.
+	I0410 20:58:17.276602 140629992953600 util.py:168] Finalize strategy.
+	I0410 20:58:17.342698 140629992953600 estimator.py:359] Loss for final step: 0.00014415917.
+	I0410 20:58:17.382083 140629992953600 estimator.py:1111] Calling model_fn.
+	I0410 20:58:17.536731 140629992953600 estimator.py:1113] Done calling model_fn.
+	I0410 20:58:17.555907 140629992953600 evaluation.py:257] Starting evaluation at 2019-04-10T20:58:17Z
+	I0410 20:58:17.634746 140629992953600 monitored_session.py:222] Graph was finalized.
+
+	. . .
+
+	Downloading https://storage.googleapis.com/cvdf-datasets/mnist/train-images-idx3-ubyte.gz to /tmp/tmpZ7F4sN.gz
+	Downloading https://storage.googleapis.com/cvdf-datasets/mnist/train-labels-idx1-ubyte.gz to /tmp/tmpT_nF_V.gz
+	Downloading https://storage.googleapis.com/cvdf-datasets/mnist/t10k-images-idx3-ubyte.gz to /tmp/tmpBTphwd.gz
+	Downloading https://storage.googleapis.com/cvdf-datasets/mnist/t10k-labels-idx1-ubyte.gz to /tmp/tmp1qgKBN.gz
+
+	Evaluation results:
+		{'loss': 0.10796012, 'global_step': 600, 'accuracy': 0.9674}
+
+
+	. . .
+
+	Evaluation results:
+		{'loss': 0.027667878, 'global_step': 22200, 'accuracy': 0.9923}
+
+
+	Evaluation results:
+		{'loss': 0.026092911, 'global_step': 22800, 'accuracy': 0.9928}
+
+	. . .
+
+	I0410 20:58:57.740638 140629992953600 saver.py:1270] Restoring parameters from /tmp/mnist_model/model.ckpt-24000
+	I0410 20:58:57.759921 140629992953600 builder_impl.py:654] Assets added to graph.
+	I0410 20:58:57.760041 140629992953600 builder_impl.py:449] No assets to write.
+	I0410 20:58:57.806967 140629992953600 builder_impl.py:414] SavedModel written to: /model/temp-1554929937/saved_model.pb
+		{'loss': 0.025196994, 'global_step': 23400, 'accuracy': 0.9936}
+
+
+	Evaluation results:
+		{'loss': 0.031494826, 'global_step': 24000, 'accuracy': 0.9923}
 	```
 
 ## What happened?
 
 - Runs `/tmp/models/official/mnist/mnist.py` command (specified in the Dockerfile and available at https://github.com/tensorflow/models/blob/master/official/mnist/mnist.py)
-  - Downloads MNIST training and test data set from S3 bucket
+  - Downloads MNIST training and test data set
     - Each set has images and labels that identify the image
   - Performs supervised learning
-    - Run 12 epochs using the training data with the specified parameters
+    - Run 40 epochs using the training data with the specified parameters
     - For each epoch
       - Reads the training data
       - Builds the training model using the specified algorithm
       - Feeds the test data and matches with the expected output
       - Reports the accuracy, expected to improve with each run
+  	- A checkpoint is saved every 600 seconds
 

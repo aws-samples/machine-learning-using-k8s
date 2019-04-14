@@ -1,94 +1,89 @@
 from __future__ import print_function
 
 import tensorflow as tf
+from tensorflow import keras
+
+# Helper libraries
+import numpy as np
 import os
-
-# Import MNIST data
-from tensorflow.examples.tutorials.mnist import input_data
-mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
-
-# Parameters
-learning_rate = 0.01
-training_epochs = 25
-batch_size = 100
-display_epoch = 1
-logs_path = 's3://eks-kubeflow-example/tensorflow_logs/mnist/'
+import subprocess
+import argparse
 
 
-os.environ["AWS_ACCESS_KEY_ID"] = "REPLACE_WITH_YOUR_CREDENTIAL"
-os.environ["AWS_SECRET_ACCESS_KEY"] = "REPLACE_WITH_YOUR_CREDENTIAL"
-os.environ["S3_ENDPOINT"] = "s3.us-west-2.amazonaws.com"
-os.environ["AWS_REGION"] = "us-west-2"
-os.environ["S3_USE_HTTPS"] = "1"
-os.environ["S3_VERIFY_SSL"] = "1"
+def preprocessing():
+  fashion_mnist = keras.datasets.fashion_mnist
+  (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
+
+  # scale the values to 0.0 to 1.0
+  train_images = train_images / 255.0
+  test_images = test_images / 255.0
+
+  # reshape for feeding into the model
+  train_images = train_images.reshape(train_images.shape[0], 28, 28, 1)
+  test_images = test_images.reshape(test_images.shape[0], 28, 28, 1)
+
+  class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
+                'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+
+  print('\ntrain_images.shape: {}, of {}'.format(train_images.shape, train_images.dtype))
+  print('test_images.shape: {}, of {}'.format(test_images.shape, test_images.dtype))
+
+  return train_images, train_labels, test_images, test_labels
+
+def train(train_images, train_labels, epochs, model_summary_path):
+  if model_summary_path:
+    logdir=model_summary_path # + datetime.now().strftime("%Y%m%d-%H%M%S")
+    tensorboard_callback = keras.callbacks.TensorBoard(log_dir=logdir)
+
+  model = keras.Sequential([
+    keras.layers.Conv2D(input_shape=(28,28,1), filters=8, kernel_size=3,
+                        strides=2, activation='relu', name='Conv1'),
+    keras.layers.Flatten(),
+    keras.layers.Dense(10, activation=tf.nn.softmax, name='Softmax')
+  ])
+  model.summary()
+
+  model.compile(optimizer=tf.train.AdamOptimizer(),
+                loss='sparse_categorical_crossentropy',
+                metrics=['accuracy']
+                )
+  if model_summary_path:
+    model.fit(train_images, train_labels, epochs=epochs, callbacks=[tensorboard_callback])
+  else:
+    model.fit(train_images, train_labels, epochs=epochs)
+
+  return model
+
+def eval(model, test_images, test_labels):
+  test_loss, test_acc = model.evaluate(test_images, test_labels)
+  print('\nTest accuracy: {}'.format(test_acc))
+
+def export_model(model, model_export_path):
+  version = 1
+  export_path = os.path.join(model_export_path, str(version))
+
+  tf.saved_model.simple_save(
+    keras.backend.get_session(),
+    export_path,
+    inputs={'input_image': model.input},
+    outputs={t.name:t for t in model.outputs})
+
+  print('\nSaved model: {}'.format(export_path))
 
 
-# tf Graph Input
-# mnist data image of shape 28*28=784
-x = tf.placeholder(tf.float32, [None, 784], name='InputData')
-# 0-9 digits recognition => 10 classes
-y = tf.placeholder(tf.float32, [None, 10], name='LabelData')
+def main(argv=None):
+  parser = argparse.ArgumentParser(description='Fashion MNIST Tensorflow Example')
+  parser.add_argument('--model_export_path', type=str, help='Model export path')
+  parser.add_argument('--model_summary_path', type=str,  help='Model summry files for Tensorboard visualization')
+  parser.add_argument('--epochs', type=int, default=5, help='Training epochs')
+  args = parser.parse_args()
 
-# Set model weights
-W = tf.Variable(tf.zeros([784, 10]), name='Weights')
-b = tf.Variable(tf.zeros([10]), name='Bias')
+  train_images, train_labels, test_images, test_labels = preprocessing()
+  model = train(train_images, train_labels, args.epochs, args.model_summary_path)
+  eval(model, test_images, test_labels)
 
-# Construct model and encapsulating all ops into scopes, making
-# Tensorboard's Graph visualization more convenient
-with tf.name_scope('Model'):
-    # Model
-    pred = tf.nn.softmax(tf.matmul(x, W) + b) # Softmax
-with tf.name_scope('Loss'):
-    # Minimize error using cross entropy
-    cost = tf.reduce_mean(-tf.reduce_sum(y*tf.log(pred), reduction_indices=1))
-with tf.name_scope('SGD'):
-    # Gradient Descent
-    optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
-with tf.name_scope('Accuracy'):
-    # Accuracy
-    acc = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
-    acc = tf.reduce_mean(tf.cast(acc, tf.float32))
+  if args.model_export_path:
+    export_model(model, args.model_export_path)
 
-# Initialize the variables (i.e. assign their default value)
-init = tf.global_variables_initializer()
-
-# Create a summary to monitor cost tensor
-tf.summary.scalar("loss", cost)
-# Create a summary to monitor accuracy tensor
-tf.summary.scalar("accuracy", acc)
-# Merge all summaries into a single op
-merged_summary_op = tf.summary.merge_all()
-
-# Start training
-with tf.Session() as sess:
-
-    # Run the initializer
-    sess.run(init)
-
-    # op to write logs to Tensorboard
-    summary_writer = tf.summary.FileWriter(logs_path, graph=tf.get_default_graph())
-
-    # Training cycle
-    for epoch in range(training_epochs):
-        avg_cost = 0.
-        total_batch = int(mnist.train.num_examples/batch_size)
-        # Loop over all batches
-        for i in range(total_batch):
-            batch_xs, batch_ys = mnist.train.next_batch(batch_size)
-            # Run optimization op (backprop), cost op (to get loss value)
-            # and summary nodes
-            _, c, summary = sess.run([optimizer, cost, merged_summary_op],
-                                     feed_dict={x: batch_xs, y: batch_ys})
-            # Write logs at every iteration
-            summary_writer.add_summary(summary, epoch * total_batch + i)
-            # Compute average loss
-            avg_cost += c / total_batch
-        # Display logs per epoch step
-        if (epoch+1) % display_epoch == 0:
-            print("Epoch:", '%04d' % (epoch+1), "cost=", "{:.9f}".format(avg_cost))
-
-    print("Optimization Finished!")
-
-    # Test model
-    # Calculate accuracy
-    print("Accuracy:", acc.eval({x: mnist.test.images, y: mnist.test.labels}))
+if __name__ == "__main__":
+  main()

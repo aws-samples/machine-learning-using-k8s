@@ -44,41 +44,36 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 
 3. Check the progress in training:
 
-	```
-  train_images.shape: (60000, 28, 28, 1), of float64
-  test_images.shape: (10000, 28, 28, 1), of float64
-  _________________________________________________________________
-  Layer (type)                 Output Shape              Param #
-  =================================================================
-  Conv1 (Conv2D)               (None, 13, 13, 8)         80
-  _________________________________________________________________
-  flatten (Flatten)            (None, 1352)              0
-  _________________________________________________________________
-  Softmax (Dense)              (None, 10)                13530
-  =================================================================
-  Total params: 13,610
-  Trainable params: 13,610
-  Non-trainable params: 0
-  _________________________________________________________________
-  Epoch 1/10
+  ```
+    train_images.shape: (60000, 28, 28, 1), of float64
+    test_images.shape: (10000, 28, 28, 1), of float64
 
-  60000/60000 [==============================] - 5s 90us/sample - loss: 0.5394 - acc: 0.8131
-  Epoch 2/10
-  60000/60000 [==============================] - 5s 89us/sample - loss: 0.3892 - acc: 0.8617
-  Epoch 3/10
-  60000/60000 [==============================] - 5s 89us/sample - loss: 0.3571 - acc: 0.8724
-  Epoch 4/10
+    Layer (type)                 Output Shape              Param
+    Conv1 (Conv2D)               (None, 13, 13, 8)         80
+    flatten (Flatten)            (None, 1352)              0
+    Softmax (Dense)              (None, 10)                13530
 
-	. . .
+    Total params: 13,610
+    Trainable params: 13,610
+    Non-trainable params: 0
 
-	Test accuracy: 0.880800008774
-  Saved model: s3://kubeflow-pipeline-data/mnist/export/1
-	```
+    Epoch 1/10
+
+    60000/60000 [==============================] - 5s 90us/sample - loss: 0.5394 - acc: 0.8131
+    Epoch 2/10
+    60000/60000 [==============================] - 5s 89us/sample - loss: 0.3892 - acc: 0.8617
+    Epoch 3/10
+    60000/60000 [==============================] - 5s 89us/sample - loss: 0.3571 - acc: 0.8724
+    Epoch 4/10
+
+    ....
+
+    Test accuracy: 0.880800008774
+    Saved model: s3://kubeflow-pipeline-data/mnist/export/1
+
+  ```
 
 ## What happened?
-
-TODO:(@arun-gupta) Can you help update this section? Users can pass summary and saved model path, epochs is also configurable.
-source: https://www.tensorflow.org/tfx/serving/tutorials/Serving_REST_simple
 
 - Runs `/tmp/models/official/mnist/mnist.py` command (specified in the Dockerfile and available at https://github.com/tensorflow/models/blob/master/official/mnist/mnist.py)
   - Downloads MNIST training and test data set

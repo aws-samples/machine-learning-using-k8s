@@ -1,12 +1,16 @@
 # Training MNIST using TensorFlow and Keras on Amazon EKS
 
-This document exaplins how to build a MNIST model using TensorFlow and Keras on Amazon EKS.
+This document exaplins how to build a Fashion MNIST model using TensorFlow and Keras on Amazon EKS.
 
 This documents assumes that you have an EKS cluster available and running. Make sure to have a [GPU-enabled Amazon EKS cluster](eks-gpu.md) ready.
 
 ## MNIST training using TensorFlow on EKS
 
-In this sample, we'll use MNIST database of handwritten digits and train the model to recognize any handwritten digit.
+This guide uses the Fashion MNIST dataset which contains 70,000 grayscale images in 10 categories. The images show individual articles of clothing at low resolution (28 by 28 pixels), as seen here:
+
+![FASHION MNIST](https://tensorflow.org/images/fashion-mnist-sprite.png)
+
+[Fashion-MNIST samples](https://github.com/zalandoresearch/fashion-mnist) (by Zalando, MIT License).
 
 1. You can use a pre-built Docker image `rgaut/deeplearning-tensorflow:with_model`. This image uses `tensorflow/tensorflow` as the base image. It comes bundled with TensorFlow. It also has training code and downloads training and test data sets. It also stores the model using a volume mount `/mount`. This maps to `/tmp` directory on the worker node.
 

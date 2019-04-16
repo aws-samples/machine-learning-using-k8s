@@ -15,8 +15,8 @@ This document explains how to perform inference of MNIST model using TensorFlow 
 1. Use an S3 bucket in your region and upload this model:
 
    ```
-   cd mnist/serving/tensorflow/model
-   aws s3 sync . s3://eks-tf-model/mnist/1
+   cd samples/mnist/serving/tensorflow/saved_model
+   aws s3 sync . s3://your_bucket/mnist/saved_model/
    ```
 
 ## Install the TensorFlow Serving component
@@ -39,13 +39,13 @@ This document explains how to perform inference of MNIST model using TensorFlow 
    # match your deployment mode name
    ks param set ${TF_SERVING_SERVICE} modelName ${TF_SERVING_DEPLOYMENT}
    # optional, change type to LoadBalancer to expose external IP.
-   ks param set ${TF_SERVING_SERVICE} serviceType ClusterIP    
+   ks param set ${TF_SERVING_SERVICE} serviceType ClusterIP
 
    ks generate tf-serving-deployment-aws ${TF_SERVING_DEPLOYMENT}
    # make sure to match the bucket name used for model
-   ks param set ${TF_SERVING_DEPLOYMENT} modelBasePath s3://eks-tf-model/mnist
+   ks param set ${TF_SERVING_DEPLOYMENT} modelBasePath s3://your_bucket/mnist/export
    ks param set ${TF_SERVING_DEPLOYMENT} s3Enable true
-   ks param set ${TF_SERVING_DEPLOYMENT} s3SecretName aws-s3-secret
+   ks param set ${TF_SERVING_DEPLOYMENT} s3SecretName aws-secret
    ks param set ${TF_SERVING_DEPLOYMENT} s3UseHttps true
    ks param set ${TF_SERVING_DEPLOYMENT} s3VerifySsl true
    ks param set ${TF_SERVING_DEPLOYMENT} s3AwsRegion us-west-2
@@ -67,20 +67,17 @@ This document explains how to perform inference of MNIST model using TensorFlow 
    kubectl port-forward -n kubeflow `kubectl get pods -n kubeflow --selector=app=mnist -o jsonpath='{.items[0].metadata.name}' --field-selector=status.phase=Running` 8500:8500
    ```
 
-6. Make prediction request. Check sample [mnist_input.json](samples/mnist/serving/tensorflow/mnist_input.json)
+6. Make prediction request. Check serving python client [serving_client.py](../../../samples/mnist/serving/tensorflow/serving_client.py). It will randomly pick one image from test dataset and make prediction. Original datasets are feature vectors and we use `matplotlib` to draw picture to compare results. To run client, please make sure your python client install `tensorflow` and `matplotlib`.
 
    ```
-   $ curl -d @mnist_input.json   -X POST http://localhost:8500/v1/models/mnist:predict
+   $ python serving_client.py --endpoint http://localhost:8500/v1/models/mnist:predic
 
-   {
-    "predictions": [
-        {
-            "classes": 5,
-            "probabilities": [2.34393e-22, 1.37861e-16, 9.06871e-20, 2.48256e-05, 3.94171e-23, 0.999975, 3.54938e-20, 2.2284e-15, 1.07518e-12, 4.44746e-12]
-        }
-    ]
-   }
+    Data: {"instances": [[[[0.0], [0.0], [0.0], [0.0], [0.0] ... 0.0], [0.0]]]], "signature_name": "serving_default"}
+    The model thought this was a Ankle boot (class 9), and it was actually a Ankle boot (class 9)
    ```
+
+  ![serving-random-example](serving-random-example.png)
+
 
    The input is a vector of an image with number 5. The output indicates that the sixth index (starting from 0) has the highest probability.
 

@@ -1,6 +1,6 @@
 # Inference of MNIST using TensorFlow on Amazon EKS
 
-This document explains how to perform inference of MNIST model using TensorFlow on Amazon EKS.
+This document explains how to perform inference of [Fashion-MNIST](https://github.com/zalandoresearch/fashion-mnist) model using TensorFlow and Keras on Amazon EKS.
 
 ## Pre-requisite
 
@@ -10,28 +10,34 @@ This document explains how to perform inference of MNIST model using TensorFlow 
 
 ## Upload model
 
-1. A pre-trained model is already available at `mnist/serving/tensorflow/model`. This model requires your serving component has GPU. Alternatively, you can generate a model as explained at [Training MNIST using TensorFlow and Keras on Amazon EKS](../training/tensorflow.md).
+1. If you've gone through the [Training MNIST using TensorFlow and Keras on Amazon EKS](../training/tensorflow.md), a model is already stored in the identified S3 bucket. If so, then you can skip rest of this section.
 
-1. Use an S3 bucket in your region and upload this model:
+1. If you've not done the training, a pre-trained model is already available at `mnist/serving/tensorflow/saved_model`. This model requires your serving component has GPU. Use an S3 bucket in your region and upload this model:
 
    ```
    cd samples/mnist/serving/tensorflow/saved_model
    aws s3 sync . s3://your_bucket/mnist/saved_model/
    ```
 
-## Install the TensorFlow Serving component
+## Install TensorFlow Serving component
 
-1. Install TensorFlow Serving pkg:
+1. Install TensorFlow Serving package:
 
    ```
+   cd ${KUBEFLOW_SRC}/${KFAPP}/ks_app
    ks pkg install kubeflow/tf-serving
    ```
 
-2. Use [Store AWS Credentials in Kubernetes Secret](../../aws-creds-secret.md) to configure AWS credentials in your Kubernetes cluster with the name `aws-secret`. Remember secret name and data fields.
-
-3. Update `modelBasePath` below to match the S3 bucket name where the model is uploaded. Install Tensorflow Serving AWS Component (Deployment + Service):
+1. Use [Store AWS Credentials in Kubernetes Secret](../../aws-creds-secret.md) to configure AWS credentials in your Kubernetes cluster with the name `aws-secret`. This needs to be created in the `kubeflow` namespace. So the command may look like:
 
    ```
+   kubectl create -f secret.yaml -n kubeflow
+   ```
+
+1. Update `modelBasePath` below to match the S3 bucket name where the model is uploaded. Install Tensorflow Serving AWS Component (Deployment + Service):
+
+   ```
+   cd $KUBEFLOW_SRC/$KFAPP/ks_app
    export TF_SERVING_SERVICE=mnist-service
    export TF_SERVING_DEPLOYMENT=mnist
 
@@ -54,23 +60,29 @@ This document explains how to perform inference of MNIST model using TensorFlow 
    ks param set ${TF_SERVING_DEPLOYMENT} numGpus 1
    ```
 
-4. Deploy Tensorflow Serving components
+1. Deploy Tensorflow Serving components
 
    ```
    ks apply default -c ${TF_SERVING_SERVICE}
    ks apply default -c ${TF_SERVING_DEPLOYMENT}
    ```
 
-5. Port forward serving endpoint for local testing:
+1. Port forward serving endpoint for local testing:
 
    ```
    kubectl port-forward -n kubeflow `kubectl get pods -n kubeflow --selector=app=mnist -o jsonpath='{.items[0].metadata.name}' --field-selector=status.phase=Running` 8500:8500
    ```
 
-6. Make prediction request. Check serving python client [serving_client.py](../../../samples/mnist/serving/tensorflow/serving_client.py). It will randomly pick one image from test dataset and make prediction. Original datasets are feature vectors and we use `matplotlib` to draw picture to compare results. To run client, please make sure your python client install `tensorflow` and `matplotlib`.
+1. Original datasets are feature vectors and we use `matplotlib` to draw picture to compare results. Install the following TensorFlow client-side components:
 
    ```
-   $ python serving_client.py --endpoint http://localhost:8500/v1/models/mnist:predic
+   pip install tensorflow matplotlib --user
+   ```
+
+1. Use the script [serving_client.py](../../../samples/mnist/serving/tensorflow/serving_client.py) to make prediction request. It will randomly pick one image from test dataset and make prediction.
+
+   ```
+   $ python serving_client.py --endpoint http://localhost:8500/v1/models/mnist:predict
 
     Data: {"instances": [[[[0.0], [0.0], [0.0], [0.0], [0.0] ... 0.0], [0.0]]]], "signature_name": "serving_default"}
     The model thought this was a Ankle boot (class 9), and it was actually a Ankle boot (class 9)
@@ -78,8 +90,7 @@ This document explains how to perform inference of MNIST model using TensorFlow 
 
   ![serving-random-example](serving-random-example.png)
 
-
-   The input is a vector of an image with number 5. The output indicates that the sixth index (starting from 0) has the highest probability.
+   Running this client shows an image and the output text indicates what kind of object it is.
 
 1. Get serving pod:
 
@@ -89,7 +100,7 @@ This document explains how to perform inference of MNIST model using TensorFlow 
    mnist-7cc4468bc5-wm8kx   1/1     Running   0          2h
    ```
 
-   And then check the logs:
+   Check the logs:
 
    ```
    kubectl logs mnist-7cc4468bc5-wm8kx -n kubeflow

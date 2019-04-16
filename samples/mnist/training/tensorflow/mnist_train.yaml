@@ -18,7 +18,7 @@ spec:
       - "--model_summary_path"
       - "s3://eks-ml-example/mnist/summary"
       - "--epochs"
-      - "10"
+      - "40"
     env:
       - name: AWS_ACCESS_KEY_ID
         valueFrom:

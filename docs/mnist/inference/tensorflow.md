@@ -27,7 +27,7 @@ This document explains how to perform inference of MNIST model using TensorFlow 
    ks pkg install kubeflow/tf-serving
    ```
 
-2. Use [Store AWS Credentials in Kubernetes Secret](aws-credential-secret.md) to configure AWS credentials in your Kubernetes cluster. Remember secret name and data fields.
+2. Use [Store AWS Credentials in Kubernetes Secret](../../aws-creds-secret.md) to configure AWS credentials in your Kubernetes cluster with the name `aws-secret`. Remember secret name and data fields.
 
 3. Update `modelBasePath` below to match the S3 bucket name where the model is uploaded. Install Tensorflow Serving AWS Component (Deployment + Service):
 

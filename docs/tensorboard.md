@@ -53,6 +53,8 @@ This document explains how to setup TensorBoard on Amazon EKS.
    kubectl port-forward svc/${TENSORBOARD_COMPONENT} 9000:9000 -n kubeflow
    ```
 
+1. Access TensorBoard at http://localhost:9000.
+
    This image shows that the accuracy is improving and loss is reducing as the number of epochs increase.
 
    ![TensorBoard-scalar](images/tensorboard-scalars.png)

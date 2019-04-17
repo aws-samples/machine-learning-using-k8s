@@ -57,9 +57,9 @@ This document explains how to setup TensorBoard on Amazon EKS.
 
    This image shows that the accuracy is improving and loss is reducing as the number of epochs increase.
 
-   ![TensorBoard-scalar](images/tensorboard-scalars.png)
+   ![TensorBoard-scalar](tensorboard-scalars.png)
 
    This image shows TensorBoard computational graphs.
 
-   ![TensorBoard-graph](images/tensorboard-graph.png)
+   ![TensorBoard-graph](tensorboard-graph.png)
 

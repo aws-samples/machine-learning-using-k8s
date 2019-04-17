@@ -21,13 +21,13 @@ This document explains how to perform distributed training on [Amazon EKS](https
    - Create the Persistent Volume (PV) based on EFS. You need to update the name of EFS server in the Kubernetes manifest file. Storage capacity based on dataset size and other requirements can be updated as well.
 
       ```
-      kubectl create -f training/distributed_training/dist_pv.yaml
+      kubectl create -f samples/imagenet/distributed_training/dist_pv.yaml
       ```
 
     - Create the Persistent Volume Claim (PVC) based on EFS. The storage capacity based on PV's capacity may adjusted in the manifest. The storage capacity of PVC should be the at most storage capacity of PV.
 
       ```
-      kubectl create -f training/distributed_training/dist_pvc.yaml
+      kubectl create -f samples/imagenet/distributed_training/dist_pvc.yaml
       ```
 
     - Make sure that PV has been claimed by PVC under same namespace:
@@ -59,7 +59,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
    ks show default -c ${JOB_NAME} > /tmp/training_job.yaml
    vim  /tmp/training_job.yaml # add volumes
    ```
-   Please check [template](training/distributed_training/mpi-job-template-nfs.yaml)
+   Please check [template](../../samples/imagenet/distributed_training/mpi-job-template-nfs.yaml)
 
 1. Deploy training job
    ```

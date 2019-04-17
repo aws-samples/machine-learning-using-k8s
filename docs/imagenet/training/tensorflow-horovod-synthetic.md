@@ -72,7 +72,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
     If more than one GPU is used, then you may have to replace `NCCL_SOCKET_IFNAME=eth0` with `NCCL_SOCKET_IFNAME=^docker0`.
 
-1. Verify your job configuration, it will look like [mpi-job-template.yaml](training/distributed_training/mpi-job-template.yaml)
+1. Verify your job configuration, it will look like [mpi-job-template.yaml](../../samples/imagenet/distributed_training/mpi-job-template.yaml)
 
     ```
     ks show default -c ${JOB_NAME}

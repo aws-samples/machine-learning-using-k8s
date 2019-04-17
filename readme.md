@@ -11,11 +11,11 @@ This repository explains how to run different Machine Learning frameworks on [Am
   - [TensorFlow Serving Component](docs/mnist/inference/tensorflow.md)
   - [MXNet Model Server](docs/mnist/inference/mxnet.md)
 - TensorBoard setup
-  - [TensorBoard on Amazon EKS](docs/tensorboard.md)
+  - [TensorBoard on Amazon EKS](docs/tensorboard/readme.md)
 
 ## Other Notes
 
-- [Jupyter Notebook on Amazon EKS](docs/jupyterhub.md)
+- [Jupyter Notebook on Amazon EKS](docs/jupyterhub/readme.md)
 - Distributed training
   - [TensorFlow and Horovod on Amazon EKS with ImageNet Data](docs/imagenet/training/tensorflow-horovod.md)
   - [TensorFlow and Horovod on Amazon EKS with Synthetic Data](docs/imagenet/training/tensorflow-horovod-synthetic.md)

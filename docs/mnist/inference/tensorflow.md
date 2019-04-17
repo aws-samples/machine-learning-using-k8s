@@ -12,10 +12,10 @@ This document explains how to perform inference of [Fashion-MNIST](https://githu
 
 1. If you've gone through the [Training MNIST using TensorFlow and Keras on Amazon EKS](../training/tensorflow.md), a model is already stored in the identified S3 bucket. If so, then you can skip rest of this section.
 
-1. If you've not done the training, a pre-trained model is already available at `mnist/serving/tensorflow/saved_model`. This model requires your serving component has GPU. Use an S3 bucket in your region and upload this model:
+1. If you've not done the training, a pre-trained model is already available at `mnist/inference/tensorflow/saved_model`. This model requires your inference cluster has GPU. Use an S3 bucket in your region and upload this model:
 
    ```
-   cd samples/mnist/serving/tensorflow/saved_model
+   cd samples/mnist/inference/tensorflow/saved_model
    aws s3 sync . s3://your_bucket/mnist/saved_model/
    ```
 
@@ -67,7 +67,7 @@ This document explains how to perform inference of [Fashion-MNIST](https://githu
    ks apply default -c ${TF_SERVING_DEPLOYMENT}
    ```
 
-1. Port forward serving endpoint for local testing:
+1. Port forward inference endpoint for local testing:
 
    ```
    kubectl port-forward -n kubeflow `kubectl get pods -n kubeflow --selector=app=mnist -o jsonpath='{.items[0].metadata.name}' --field-selector=status.phase=Running` 8500:8500
@@ -79,16 +79,16 @@ This document explains how to perform inference of [Fashion-MNIST](https://githu
    pip install tensorflow matplotlib --user
    ```
 
-1. Use the script [serving_client.py](../../../samples/mnist/serving/tensorflow/serving_client.py) to make prediction request. It will randomly pick one image from test dataset and make prediction.
+1. Use the script [inference_client.py](../../../samples/mnist/inference/tensorflow/inference_client.py) to make prediction request. It will randomly pick one image from test dataset and make prediction.
 
    ```
-   $ python serving_client.py --endpoint http://localhost:8500/v1/models/mnist:predict
+   $ python inference_client.py --endpoint http://localhost:8500/v1/models/mnist:predict
 
     Data: {"instances": [[[[0.0], [0.0], [0.0], [0.0], [0.0] ... 0.0], [0.0]]]], "signature_name": "serving_default"}
     The model thought this was a Ankle boot (class 9), and it was actually a Ankle boot (class 9)
    ```
 
-  ![serving-random-example](serving-random-example.png)
+  ![inference-random-example](inference-random-example.png)
 
    Running this client shows an image and the output text indicates what kind of object it is.
 

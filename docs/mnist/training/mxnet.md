@@ -98,6 +98,8 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
    You can change the batch_size for binding the module based on your inference batch_size.
    ```
 
+   Complete [detailed logs](mxnet_logs.txt).
+
 ## What happened?
 
 - Runs `python /tmp/mnist_cnn.py` command (specified in the Dockerfile and available at samples/mnist/training/mxnet/mnist_cnn.py)

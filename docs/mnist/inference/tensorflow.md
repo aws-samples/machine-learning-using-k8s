@@ -49,7 +49,7 @@ This document explains how to perform inference of [Fashion-MNIST](https://githu
 
    ks generate tf-serving-deployment-aws ${TF_SERVING_DEPLOYMENT}
    # make sure to match the bucket name used for model
-   ks param set ${TF_SERVING_DEPLOYMENT} modelBasePath s3://your_bucket/mnist/export
+   ks param set ${TF_SERVING_DEPLOYMENT} modelBasePath s3://your_bucket/mnist/tf_saved_model
    ks param set ${TF_SERVING_DEPLOYMENT} s3Enable true
    ks param set ${TF_SERVING_DEPLOYMENT} s3SecretName aws-secret
    ks param set ${TF_SERVING_DEPLOYMENT} s3UseHttps true

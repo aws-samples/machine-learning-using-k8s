@@ -14,9 +14,9 @@ spec:
       - "python"
       - "mnist.py"
       - "--model_export_path"
-      - "s3://eks-ml-example/mnist/export"
+      - "s3://eks-ml-example/mnist/tf_saved_model"
       - "--model_summary_path"
-      - "s3://eks-ml-example/mnist/summary"
+      - "s3://eks-ml-example/mnist/tf_summary"
       - "--epochs"
       - "40"
     env:

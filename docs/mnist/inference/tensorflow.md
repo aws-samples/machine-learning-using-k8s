@@ -12,11 +12,11 @@ This document explains how to perform inference of [Fashion-MNIST](https://githu
 
 1. If you've gone through the [Training MNIST using TensorFlow and Keras on Amazon EKS](../training/tensorflow.md), a model is already stored in the identified S3 bucket. If so, then you can skip rest of this section.
 
-1. If you've not done the training, a pre-trained model is already available at `mnist/inference/tensorflow/saved_model`. This model requires your inference cluster has GPU. Use an S3 bucket in your region and upload this model:
+1. If you've not done the training, a pre-trained model is already available at `samples/mnist/training/tensorflow/saved_model`. This model requires your inference cluster has GPU. Use an S3 bucket in your region and upload this model:
 
    ```
-   cd samples/mnist/inference/tensorflow/saved_model
-   aws s3 sync . s3://your_bucket/mnist/saved_model/
+   cd samples/mnist/training/tensorflow/saved_model
+   aws s3 sync . s3://your_bucket/mnist/tf_saved_model/
    ```
 
 ## Install TensorFlow Serving component
@@ -49,7 +49,7 @@ This document explains how to perform inference of [Fashion-MNIST](https://githu
 
    ks generate tf-serving-deployment-aws ${TF_SERVING_DEPLOYMENT}
    # make sure to match the bucket name used for model
-   ks param set ${TF_SERVING_DEPLOYMENT} modelBasePath s3://your_bucket/mnist/export
+   ks param set ${TF_SERVING_DEPLOYMENT} modelBasePath s3://your_bucket/mnist/tf_saved_model
    ks param set ${TF_SERVING_DEPLOYMENT} s3Enable true
    ks param set ${TF_SERVING_DEPLOYMENT} s3SecretName aws-secret
    ks param set ${TF_SERVING_DEPLOYMENT} s3UseHttps true

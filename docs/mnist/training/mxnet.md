@@ -58,10 +58,9 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
    11501568/11490434 [==============================] - 1s 0us/step
    /usr/local/lib/python2.7/dist-packages/keras/backend/mxnet_backend.py:96: UserWarning: MXNet Backend performs best with `channels_first` format. Using `channels_last` will significantly reduce performance due to the Transpose operations. For performance improvement, please use this API`keras.utils.to_channels_first(x_input)`to transform `channels_last` data to `channels_first` format and also please change the `image_data_format` in `keras.json` to `channels_first`.Note: `x_input` is a Numpy tensor or a list of Numpy tensorRefer to: https://github.com/awslabs/keras-apache-mxnet/tree/master/docs/mxnet_backend/performance_guide.md
      train_symbol = func(*args, **kwargs)
-   /usr/local/lib/python2.7/dist-packages/keras/backend/mxnet_backend.py:99: UserWarning: MXNet Backend performs best with `channels_first` format. Using `channels_last` will significantly reduce performance due to the Transpose operations. For performance improvement, please use this API`keras.utils.to_channels_first(x_input)`to transform `channels_last` data to `channels_first` format and also please change the `image_data_format` in `keras.json` to `channels_first`.Note: `x_input` is a Numpy tensor or a list of Numpy tensorRefer to: https://github.com/awslabs/keras-apache-mxnet/tree/master/docs/mxnet_backend/performance_guide.md
-     test_symbol = func(*args, **kwargs)
-   /usr/local/lib/python2.7/dist-packages/mxnet/module/bucketing_module.py:408: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (1.0 vs. 0.0078125). Is this intended?
-     force_init=force_init)
+
+   . . .
+
    [23:25:30] src/operator/nn/./cudnn/./cudnn_algoreg-inl.h:97: Running performance tests to find the best convolution algorithm, this can take a while... (setting env variable MXNET_CUDNN_AUTOTUNE_DEFAULT to 0 to disable)
    x_train shape: (60000, 28, 28, 1)
    60000 train samples
@@ -87,11 +86,13 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
    MXNet symbol file -  mnist_cnn-symbol.json
    MXNet params file -  mnist_cnn-0000.params
    
-   
+   . . .
+
    Model input data_names and data_shapes are: 
    data_names :  ['/conv2d_1_input1']
    data_shapes :  [DataDesc[/conv2d_1_input1,(128L, 28L, 28L, 1L),float32,NCHW]]
    
+   . . .
    
    Note: In the above data_shapes, the first dimension represent the batch_size used for model training. 
    You can change the batch_size for binding the module based on your inference batch_size.
@@ -100,7 +101,7 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 ## What happened?
 
 - Runs `python /tmp/mnist_cnn.py` command (specified in the Dockerfile and available at samples/mnist/training/mxnet/mnist_cnn.py)
-  - Downloads MNIST training and test data setA from S3.
+  - Downloads MNIST training and test data set from S3.
     - Each set has images and labels that identify the image
   - Performs supervised learning
     - Run 12 epochs using the training data with the specified parameters
@@ -109,9 +110,7 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
       - Builds the training model using the specified algorithm
       - Feeds the test data and matches with the expected output
       - Reports the accuracy, expected to improve with each run
-    - It also exports the trained model in /mnist_model directory at worker nodes.
-    - you should expect following files which are necessary to run the inference in mxnet
-      - mnist_cnn-0000.params  
-      - mnist_cnn-symbol.json 
-    - you will need to construct the input/output signature to run inference. As described a similar example in https://github.com/awslabs/mxnet-model-server/tree/master/examples/mxnet_vision
+    - Exports the trained model in `/mnist_model` directory at a worker node. The model consists of `mnist_cnn-0000.params` and `mnist_cnn-symbol.json` files. These are needed for inference.
+
+      A copy of the model is also saved at `samples/mnist/training/mxnet/saved_model`.
 

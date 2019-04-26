@@ -35,4 +35,26 @@ Create [EKS cluster using GPU](../../eks-gpu.md).
    pip install mxnet-mkl --user
    ```
 
+1. Install MXNet Model Server:
+
+	```
+	pip install mxnet-model-server --user
+	```
+
+1. Run MXNet Model Server:
+
+	```
+	mxnet-model-server \
+		-—start \
+		-—model-store ../../../samples/mnist/training/mxnet \
+		-—models mnist=mnist_cnn.mar
+	```
+
+1. Run inference:
+
+	```
+	curl -X POST localhost:8080/predictions/mnist_cnn -T 9.png
+	```
+
 1. WHAT NEXT?
+

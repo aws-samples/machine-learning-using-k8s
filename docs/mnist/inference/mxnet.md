@@ -79,16 +79,16 @@ Create [EKS cluster using GPU](../../eks-gpu.md).
 1. Run inference server:
 
 	```
-	curl -X POST localhost:8080/predictions/mnist -T 9.png
+	curl -X POST localhost:8080/predictions/mnist -T ../../../samples/mnist/inference/mxnet/utils/9.png
 	```
 
 1. In a new terminal, run the inference:
 
 	```
-	curl -X POST localhost:8080/predictions/mnist -T 9.png
+	curl -X POST localhost:8080/predictions/mnist -T ../../../samples/mnist/inference/mxnet/utils/9.png
     % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-    100  8042  100    56  100  7986    747   104k --:--:-- --:--:-- --:--:--  103k
-    Prediction is [9] with probability of 92.52161383628845%
+    100  8042  100    56  100  7986   3105   432k --:--:-- --:--:-- --:--:--  458k
+    Prediction is [9] with probability of 92.52161979675293%
 	```
 

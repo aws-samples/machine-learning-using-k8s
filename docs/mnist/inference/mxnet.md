@@ -72,7 +72,7 @@ Create [EKS cluster using GPU](../../eks-gpu.md).
 	```
 	mxnet-model-server \
 	--start \
-	--model-store ../../../samples/mnist/training/mxnet \
+	--model-store ../../../samples/mnist/inference/mxnet/archived_model \
 	--models mnist=mnist_cnn.mar
 	```
 
@@ -86,29 +86,9 @@ Create [EKS cluster using GPU](../../eks-gpu.md).
 
 	```
 	curl -X POST localhost:8080/predictions/mnist -T 9.png
-	% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-	                             Dload  Upload   Total   Spent    Left  Speed
-	0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0[
-	[0.09883178]
-	<NDArray 1 @cpu(0)>, 
-	[0.11237921]
-	<NDArray 1 @cpu(0)>, 
-	[0.09912284]
-	<NDArray 1 @cpu(0)>, 
-	[0.10201503]
-	<NDArray 1 @cpu(0)>, 
-	[0.09776018]
-	<NDArray 1 @cpu(0)>, 
-	[0.09064902]
-	<NDArray 1 @cpu(0)>, 
-	[0.09856223]
-	<NDArray 1 @cpu(0)>, 
-	[0.10443253]
-	<NDArray 1 @cpu(0)>, 
-	[0.09724495]
-	<NDArray 1 @cpu(0)>, 
-	[0.09900217]
-	100  8336  100   350  100  7986  13555   302k --:--:-- --:--:-- --:--:--  311k
-	<NDArray 1 @cpu(0)>
+    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+    100  8042  100    56  100  7986    747   104k --:--:-- --:--:-- --:--:--  103k
+    Prediction is [9] with probability of 92.52161383628845%
 	```
 

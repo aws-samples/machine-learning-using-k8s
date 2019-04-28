@@ -88,7 +88,7 @@ This document explains how to perform inference of [Fashion-MNIST](https://githu
     The model thought this was a Ankle boot (class 9), and it was actually a Ankle boot (class 9)
    ```
 
-  ![inference-random-example](inference-random-example.png)
+   ![inference-random-example](inference-random-example.png)
 
    Running this client shows an image and the output text indicates what kind of object it is.
 

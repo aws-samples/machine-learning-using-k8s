@@ -75,4 +75,3 @@ print('Test accuracy:', score[1])
 # Step 2: Save the model in MXNet model format.
 # data_names and data_shapes are values of the parameters to be used when loading the Model in MXNet.
 data_names, data_shapes = save_mxnet_model(model=model, prefix='mnist_cnn', epoch=0)
-~                                                                                             

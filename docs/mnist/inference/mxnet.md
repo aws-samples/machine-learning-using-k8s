@@ -1,10 +1,8 @@
 # Inference of MNIST using MXNet on Amazon EKS
 
-This document explains how to perform inference of MNIST model using [Apache MXNet Model Server](https://github.com/awslabs/mxnet-model-server) (MMS). MMS is a flexible and easy to use tool for serving deep learning models trained by MXNet.
+This document explains how to perform inference of MNIST model using [Apache MXNet Model Server](https://github.com/awslabs/mxnet-model-server) (MMS) on Amazon EKS. MMS is a flexible and easy to use tool for serving deep learning models trained by MXNet.
 
-TODO: Convert these steps to use Amazon EKS. [#88](https://github.com/aws-samples/machine-learning-using-k8s/issues/88)
-
-## Pre-requisite (TODO)
+## Pre-requisite
 
 Create [EKS cluster using GPU](../../eks-gpu.md).
 
@@ -135,40 +133,43 @@ Skip rest of the section if you are using the pre-generated archive. This sectio
 	```
 
 ## Run inference on EKS
-In order to run MNIST inferene on EKS, we need to have Docker image and k8s yaml file to create infernece service backed by deployment. 
+
+In order to run MNIST inferene on EKS, we need to have Docker image and k8s manifest to create infernece service backed by deployment.
 
 1. You can either create a docker image from file `samples/mnist/inference/mxnet/Dockerfile` or use an existing image `rgaut/deeplearning-mxnet:inference`. 
 
 1. We have provided a yaml file which encapsulates launching the deployment and service. So user can make the request for prediction. 
 
-        ```
-        kubectl create -f samples/mnist/inference/mxnet/mxnet_eks.yaml
-        ``` 
+    ```
+    kubectl create -f samples/mnist/inference/mxnet/mxnet_eks.yaml
+    ```
    
-        This should create the deployments and service.
+    This should create the deployments and service.
 
 1. There are multiple type of k8s services. We have used the default which is clusterIP. We have to do port forwarding for client to access this service.
-         ```
-         kubectl port-forward -n ${NAMESPACE} `kubectl get pods -n ${NAMESPACE} --selector=app=mnist-service -o jsonpath='{.items[0].metadata.name}'` 8080:8080 & 
-         ```
 
+     ```
+     kubectl port-forward \
+		`kubectl get pods --selector=app=mnist-service -o jsonpath='{.items[0].metadata.name}'` \
+		8080:8080 &
+     ```
 
 1. Lets run the inference:
 
-        ```
-        curl -X POST localhost:8080/predictions/mnist -T samples/mnist/inference/mxnet/utils/9.png
-    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-    100  8042  100    56  100  7986   3105   432k --:--:-- --:--:-- --:--:--  458k
-    Prediction is [9] with probability of 92.52161979675293%
-        ```
+    ```
+    curl -X POST localhost:8080/predictions/mnist -T samples/mnist/inference/mxnet/utils/9.png
+	% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+	                             Dload  Upload   Total   Spent    Left  Speed
+	100  8042  100    56  100  7986   3105   432k --:--:-- --:--:-- --:--:--  458k
+	Prediction is [9] with probability of 92.52161979675293%
+    ```
 
-        Run another inference:
+    Run another inference:
 
-        ```
-        curl -X POST localhost:8080/predictions/mnist -T samples/mnist/inference/mxnet/utils/7.jpg
-          % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                         Dload  Upload   Total   Spent    Left  Speed
-        100   608  100    52  100   556    568   6081 --:--:-- --:--:-- --:--:--  6109
-        Prediction is [7] with probability of 99.9999761581%
-        ```
+    ```
+    curl -X POST localhost:8080/predictions/mnist -T samples/mnist/inference/mxnet/utils/7.jpg
+      % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                     Dload  Upload   Total   Spent    Left  Speed
+    100   608  100    52  100   556    568   6081 --:--:-- --:--:-- --:--:--  6109
+    Prediction is [7] with probability of 99.9999761581%
+    ```

@@ -1,0 +1,55 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mnist-service
+  labels:
+    app: mnist-service
+spec:
+  ports:
+  - port: 8080
+    targetPort: mms
+  selector:
+    app: mnist-service
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mnist-service
+  labels:
+    app: mnist-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mnist-service
+  template:
+    metadata:
+      labels:
+        app: mnist-service
+    spec:
+      containers:
+      - name: mnist-service
+        image: rgaut/deeplearning-mxnet:inference
+        args:
+        - mxnet-model-server
+          --start
+          --model-store /home/model-server/archived_model
+          --models mnist=mnist_cnn.mar
+        ports:
+        - name: mms
+          containerPort: 8080
+        - name: mms-management
+          containerPort: 8081
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: AWS_REGION
+          value: us-east-1
+        - name: S3_USE_HTTPS
+          value: "true"
+        - name: S3_VERIFY_SSL
+          value: "true"
+        - name: S3_ENDPOINT
+          value: s3.us-east-1.amazonaws.com
+
+

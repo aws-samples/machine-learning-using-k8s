@@ -2,7 +2,7 @@
 
 This document explains how to perform inference of MNIST model using [Apache MXNet Model Server](https://github.com/awslabs/mxnet-model-server) (MMS). MMS is a flexible and easy to use tool for serving deep learning models trained by MXNet.
 
-TODO: Convert these steps to use Amazon EKS. [https://github.com/aws-samples/machine-learning-using-k8s/issues/88](#88)
+TODO: Convert these steps to use Amazon EKS. [#88](https://github.com/aws-samples/machine-learning-using-k8s/issues/88)
 
 ## Pre-requisite (TODO)
 

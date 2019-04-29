@@ -100,6 +100,8 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
 
    Complete [detailed logs](mxnet_logs.txt).
 
+   A copy of the model is also saved at `samples/mnist/training/mxnet/saved_model`.
+
 ## What happened?
 
 - Runs `python /tmp/mnist_cnn.py` command (specified in the Dockerfile and available at samples/mnist/training/mxnet/mnist_cnn.py)
@@ -113,6 +115,4 @@ In this sample, we'll use MNIST database of handwritten digits and train the mod
       - Feeds the test data and matches with the expected output
       - Reports the accuracy, expected to improve with each run
     - Exports the trained model in `/mnist_model` directory at a worker node. The model consists of `mnist_cnn-0000.params` and `mnist_cnn-symbol.json` files. These are needed for inference.
-
-      A copy of the model is also saved at `samples/mnist/training/mxnet/saved_model`.
 

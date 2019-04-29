@@ -6,8 +6,7 @@ This document explains how to setup TensorBoard on Amazon EKS.
 
 ## Pre-requisite
 
-1. Create [EKS cluster using GPU](eks-gpu.md)
-1. Setup [Kubeflow](kubeflow.md)
+1. Create [EKS cluster using GPU with Kubeflow](eks-gpu.md)
 1. Setup [AWS credential](aws-creds-secret.md) in Kubernetes cluster in `kubeflow` namespace. The exact command would be:
 
    ```

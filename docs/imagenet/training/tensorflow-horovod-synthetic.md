@@ -4,8 +4,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
 ## Pre-requisite
 
-1. Create [EKS cluster using GPU](../../eks-gpu.md)
-1. Install [Kubeflow](../../kubeflow.md)
+1. Create [EKS cluster using GPU with Kubeflow](../../eks-gpu.md)
 
 ## Install MPI Operator
 

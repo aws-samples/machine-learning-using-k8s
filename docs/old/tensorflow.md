@@ -1,6 +1,6 @@
 # TensorFlow on Amazon EKS
 
-This document explains how to run TensorFlow jobs on [Amazon EKS](https://aws.amazon.com/eks/). It requires to setup KubeFlow as explained in [KubeFlow on Amazon EKS](kubeflow.md).
+This document explains how to run TensorFlow jobs on [Amazon EKS](https://aws.amazon.com/eks/). It requires to setup KubeFlow as explained in [Amazon EKS Setup with Kubeflow](eks-gpu.md).
 
 KubeFlow installation creates a `TFJob` custom resource. This makes it easy to run TensorFlow training jobs on Kubernetes. `tf-*` pods from the output of `kubectl get pods` verifies that.
 

@@ -2,11 +2,10 @@
 
 This repository explains how to run different Machine Learning frameworks on [Amazon EKS](https://aws.amazon.com/eks).
 
-- [Create GPU-enabled Amazon EKS cluster](docs/eks-gpu.md)
-- [Setup KubeFlow on Amazon EKS](docs/kubeflow.md)
+- [Create GPU-enabled Amazon EKS cluster with Kubeflow](docs/eks-gpu.md)
 - Single node training for MNIST
   - [TensorFlow and Keras on Amazon EKS](docs/mnist/training/tensorflow.md)
-  - [MXNet on Amazon EKS](docs/mnist/training/mxnet.md)  
+  - [MXNet on Amazon EKS](docs/mnist/training/mxnet.md)
 - Inference for MNIST
   - [TensorFlow Serving Component](docs/mnist/inference/tensorflow.md)
   - [MXNet Model Server](docs/mnist/inference/mxnet.md)

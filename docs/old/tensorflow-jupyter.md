@@ -1,6 +1,6 @@
 # TensorFlow Training in Jupyter Notebook
 
-This document explains how to train TensorFlow model in JupyterNotebook on [Amazon EKS](https://aws.amazon.com/eks/). It requires to setup KubeFlow as explained in [KubeFlow on Amazon EKS](kubeflow.md) and [Jupyter](jupyterhub.md)
+This document explains how to train TensorFlow model in JupyterNotebook on [Amazon EKS](https://aws.amazon.com/eks/). It requires to setup KubeFlow as explained in [Amazon EKS setup with Kubeflow](eks-gpu.md) and [Jupyter](jupyterhub.md)
 
 In this example, we will train a convolutional neural network for recognizing MNIST digits. We also like to record how the learning rate varies over time, and how the objective function is changing. Summaries will be generated during the training and it will be used to observe model in Tensorboard.
 
@@ -13,4 +13,4 @@ In this example, we will train a convolutional neural network for recognizing MN
 
 3. Create TensorBoard to look at Tensorflow Graph. [TensorBoard](tensorboard.md)
 
-> If you encounter issue like `Kernel Restarting: The kernel appears to have died. It will restart automatically.`, please increase your notebook memory. 
+> If you encounter issue like `Kernel Restarting: The kernel appears to have died. It will restart automatically.`, please increase your notebook memory.

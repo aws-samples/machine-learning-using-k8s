@@ -4,9 +4,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
 ## Pre-requisite
 
-1. Create [EKS cluster using GPU](../../eks-gpu.md).
-
-1. Install [Kubeflow](../../kubeflow.md).
+1. Create [EKS cluster using GPU with Kubeflow](../../eks-gpu.md).
 
 1. Create an [EFS](https://aws.amazon.com/efs/) and mount it to any worker node as explained in [Setup EFS on EKS](../../efs-on-eks-worker-nodes.md).
 
@@ -14,7 +12,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
 ## Steps
 
-1. Follow [steps](tensorflow-horovod-synthetic.md#install-mpi-operator) to install mpi-operator 
+1. Follow [steps](tensorflow-horovod-synthetic.md#install-mpi-operator) to install mpi-operator
 
 1. Prepare Persistent Volumne (PV) and Persistent Volume Claim (PVC)
 
@@ -75,7 +73,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
     Here is a [sample output](logs/tensorflow-horovod-imagenet-log.txt).
 
-## Appendix 
+## Appendix
 
 ### Download and Pre-process ImageNet Data
 

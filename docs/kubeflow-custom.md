@@ -9,7 +9,7 @@ If you are not familiar with [ksonnet](https://ksonnet.io/), please check out [t
 
    ```
    export APPLICATION=eks-kubeflow-test
-   export KUBEFLOW_VERSION=v0.4-branch  # use master if you want to try nightly version
+   export KUBEFLOW_VERSION=v0.5-branch  # use master if you want to try nightly version
 
    ks init ${APPLICATION}
    cd ${APPLICATION}
@@ -98,7 +98,7 @@ If you are not familiar with [ksonnet](https://ksonnet.io/), please check out [t
 
 
    $ ks component list
-   
+
    COMPONENT          TYPE    APIVERSION KIND NAME
    =========          ====    ========== ==== ====
    my-tf-job-operator jsonnet

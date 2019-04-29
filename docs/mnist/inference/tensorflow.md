@@ -4,9 +4,8 @@ This document explains how to perform inference of [Fashion-MNIST](https://githu
 
 ## Pre-requisite
 
-1. Create [EKS cluster using GPU](../../eks-gpu.md)
-2. Install [Kubeflow](../../kubeflow.md)
-3. Basic understanding of [TensorFlow Serving](https://www.tensorflow.org/serving/)
+1. Create [EKS cluster using GPU with Kubeflow(../../eks-gpu.md)
+2. Basic understanding of [TensorFlow Serving](https://www.tensorflow.org/serving/)
 
 ## Upload model
 

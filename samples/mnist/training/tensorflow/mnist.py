@@ -9,6 +9,8 @@ import os
 import subprocess
 import argparse
 
+# Reduce spam logs from s3 client
+os.environ['TF_CPP_MIN_LOG_LEVEL']='3'
 
 def preprocessing():
   fashion_mnist = keras.datasets.fashion_mnist

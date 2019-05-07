@@ -12,7 +12,7 @@ If you meet any problem during installation, please check [Troubleshooting Deplo
     * Configure the AWS CLI by running the following command: `aws configure`.
     * Enter your Access Keys ([Access Key ID and Secret Access Key](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys)).
     * Enter your preferred AWS Region and default output options.
-* Install [eksctl](https://github.com/weaveworks/eksctl) (version 0.1.27 or newer) and the [aws-iam-authenticator](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html).
+* Install [eksctl](https://github.com/weaveworks/eksctl) (version 0.1.27 or newer).
 * Install [jq](https://stedolan.github.io/jq/download/).
 * Install [ksonnet](https://github.com/ksonnet/ksonnet). (`brew install ksonnet/tap/ks` for mac user)
 
@@ -23,7 +23,7 @@ If you meet any problem during installation, please check [Troubleshooting Deplo
 
    https://aws.amazon.com/marketplace/pp/B07GRHFXGM
 
-1. Run the following commands to download the latest kfctl.sh
+1. Run the following commands to download the latest `kfctl.sh`:
 
    ```
    export KUBEFLOW_SRC=/tmp/kubeflow-aws
@@ -33,7 +33,7 @@ If you meet any problem during installation, please check [Troubleshooting Deplo
    curl https://raw.githubusercontent.com/kubeflow/kubeflow/${KUBEFLOW_TAG}/scripts/download.sh | bash
    ```
 
-   * KUBEFLOW_SRC - Full path to your preferred download directory. Please use the full absolute path, for example `/tmp/kubeflow-aws`
+   * `/tmp/kubeflow-aws` is full path to your preferred download directory.
 
 1. Run the following commands to set up your environment and initialize the cluster.
 
@@ -46,9 +46,10 @@ If you meet any problem during installation, please check [Troubleshooting Deplo
    --awsClusterName ${AWS_CLUSTER_NAME} \
    --awsRegion ${REGION}
    ```
-   * AWS_CLUSTER_NAME - Specify a unique name for your Amazon EKS cluster.
-   * KFAPP - Use a relative directory name here rather than absolute path, such as `kfapp`.
-   * REGION - Use the AWS Region you want to create your cluster in.
+
+   * `AWS_CLUSTER_NAME` - A unique name for your Amazon EKS cluster.
+   * `KFAPP` - Use a relative directory name here rather than absolute path, such as `kfapp`.
+   * `REGION` - Use the AWS Region you want to create your cluster in.
 
 1. Generate and apply platform changes.
 
@@ -58,7 +59,47 @@ If you meet any problem during installation, please check [Troubleshooting Deplo
    cd ${KFAPP}
    ${KUBEFLOW_SRC}/scripts/kfctl.sh generate platform
    # Customize your Amazon EKS cluster configuration before following the next step
-   # Open cluster_config.yaml and change instanceType to p3.8xlarge and change desiredCapacity and maxSize to 2.
+   ```
+
+1. Open `cluster_config.yaml` and update the file so that it looks like as shown:
+
+   ```
+   apiVersion: eksctl.io/v1alpha5
+   kind: ClusterConfig
+   metadata:
+     # AWS_CLUSTER_NAME and AWS_REGION will override `name` and `region` here.
+     name: kubeflow-aws
+     region: us-west-2
+     version: '1.12'
+   # If your region has multiple availability zones, you can specify 3 of them.
+   #availabilityZones: ["us-west-2b", "us-west-2c", "us-west-2d"]
+
+   # NodeGroup holds all configuration attributes that are specific to a nodegroup
+   # You can have several node group in your cluster.
+   nodeGroups:
+     #- name: cpu-nodegroup
+     #  instanceType: m5.2xlarge
+     #  desiredCapacity: 1
+     #  minSize: 0
+     #  maxSize: 2
+     #  volumeSize: 30
+
+     # Example of GPU node group
+     - name: Tesla-V100
+       instanceType: p3.8xlarge
+       availabilityZones: ["us-west-2b"]
+       desiredCapacity: 2
+       minSize: 0
+       maxSize: 2
+       volumeSize: 50
+       ssh:
+         allow: true
+         publicKeyPath: '~/.ssh/id_rsa.pub'
+   ```
+
+   Then apply the changes:
+
+   ```shell
    # vim ${KUBEFLOW_SRC}/${KFAPP}/aws_config/cluster_config.yaml
    ${KUBEFLOW_SRC}/scripts/kfctl.sh apply platform
    ```

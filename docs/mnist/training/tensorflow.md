@@ -2,7 +2,7 @@
 
 This document explains how to build a Fashion MNIST model using TensorFlow and Keras on Amazon EKS.
 
-This documents assumes that you have an EKS cluster available and running. Make sure to have a [GPU-enabled Amazon EKS cluster](eks-gpu.md) ready.
+This documents assumes that you have an EKS cluster available and running. Make sure to have a [GPU-enabled Amazon EKS cluster](../../eks-gpu.md) ready.
 
 ## MNIST training using TensorFlow on EKS
 

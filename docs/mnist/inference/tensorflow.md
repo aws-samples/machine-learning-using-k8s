@@ -4,18 +4,25 @@ This document explains how to perform inference of [Fashion-MNIST](https://githu
 
 ## Pre-requisite
 
-1. Create [EKS cluster using GPU with Kubeflow(../../eks-gpu.md)
+1. Create [EKS cluster using GPU with Kubeflow](../../eks-gpu.md)
 2. Basic understanding of [TensorFlow Serving](https://www.tensorflow.org/serving/)
 
 ## Upload model
 
-1. If you've gone through the [Training MNIST using TensorFlow and Keras on Amazon EKS](../training/tensorflow.md), a model is already stored in the identified S3 bucket. If so, then you can skip rest of this section.
+1. If you've gone through the [Training MNIST using TensorFlow and Keras on Amazon EKS](../training/tensorflow.md), a model is already stored in the identified S3 bucket. Initialize `S3_BUCKET` variable with the bucket:
+
+   ```
+   export S3_BUCKET=eks-ml-example
+   ```
+
+   Skip rest of this section.
 
 1. If you've not done the training, a pre-trained model is already available at `samples/mnist/training/tensorflow/saved_model`. This model requires your inference cluster has GPU. Use an S3 bucket in your region and upload this model:
 
    ```
+   export S3_BUCKET=eks-ml-example
    cd samples/mnist/training/tensorflow/saved_model
-   aws s3 sync . s3://your_bucket/mnist/tf_saved_model/
+   aws s3 sync . s3://$S3_BUCKET/mnist/tf_saved_model/
    ```
 
 ## Install TensorFlow Serving component
@@ -33,7 +40,7 @@ This document explains how to perform inference of [Fashion-MNIST](https://githu
    kubectl create -f secret.yaml -n kubeflow
    ```
 
-1. Update `modelBasePath` below to match the S3 bucket name where the model is uploaded. Install Tensorflow Serving AWS Component (Deployment + Service):
+1. Install Tensorflow Serving AWS Component (Deployment + Service):
 
    ```
    cd $KUBEFLOW_SRC/$KFAPP/ks_app
@@ -48,7 +55,7 @@ This document explains how to perform inference of [Fashion-MNIST](https://githu
 
    ks generate tf-serving-deployment-aws ${TF_SERVING_DEPLOYMENT}
    # make sure to match the bucket name used for model
-   ks param set ${TF_SERVING_DEPLOYMENT} modelBasePath s3://your_bucket/mnist/tf_saved_model
+   ks param set ${TF_SERVING_DEPLOYMENT} modelBasePath s3://$S3_BUCKET/mnist/tf_saved_model
    ks param set ${TF_SERVING_DEPLOYMENT} s3Enable true
    ks param set ${TF_SERVING_DEPLOYMENT} s3SecretName aws-secret
    ks param set ${TF_SERVING_DEPLOYMENT} s3UseHttps true
@@ -64,6 +71,15 @@ This document explains how to perform inference of [Fashion-MNIST](https://githu
    ```
    ks apply default -c ${TF_SERVING_SERVICE}
    ks apply default -c ${TF_SERVING_DEPLOYMENT}
+   ```
+
+   Wait for the containers to start:
+
+   ```
+   kubectl get pods -n kubeflow --selector=app=mnist -w
+   NAME                    READY   STATUS              RESTARTS   AGE
+   mnist-cfdb9c99b-fgbz2   0/1     ContainerCreating   0          38s
+   mnist-cfdb9c99b-fgbz2   1/1     Running             0          41s
    ```
 
 1. Port forward inference endpoint for local testing:
@@ -91,10 +107,10 @@ This document explains how to perform inference of [Fashion-MNIST](https://githu
 
    Running this client shows an image and the output text indicates what kind of object it is.
 
-1. Get serving pod:
+1. Get serving pod name:
 
    ```
-   kubectl get pods -n kubeflow --selector=app=mnist --field-selector=status.phase=Running
+   TF_MNIST_POD=$(kubectl get pods -n kubeflow --selector=app=mnist --field-selector=status.phase=Running -o jsonpath={'.items[0].metadata.name'})
    NAME                     READY   STATUS    RESTARTS   AGE
    mnist-7cc4468bc5-wm8kx   1/1     Running   0          2h
    ```
@@ -102,5 +118,5 @@ This document explains how to perform inference of [Fashion-MNIST](https://githu
    Check the logs:
 
    ```
-   kubectl logs mnist-7cc4468bc5-wm8kx -n kubeflow
+   kubectl logs $TF_MNIST_POD -n kubeflow
    ```

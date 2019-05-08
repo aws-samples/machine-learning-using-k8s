@@ -6,7 +6,60 @@ This document explains how to perform inference of MNIST model using [Apache MXN
 
 Create [EKS cluster using GPU](../../eks-gpu.md).
 
-## Install MXNet Model Server
+## Run inference using EKS
+
+In order to run MNIST inferene on EKS, we need to have Docker image and k8s manifest to create inference service backed by deployment.
+
+1. You can either create a docker image from file `samples/mnist/inference/mxnet/Dockerfile` or use an existing image `rgaut/deeplearning-mxnet:inference`. 
+
+	The MXNet model is bundled with the Docker image.
+
+1. Create deployment and service for inference:
+
+    ```
+    kubectl create -f samples/mnist/inference/mxnet/mxnet_eks.yaml
+    ```
+
+    Check for the deployment to run:
+
+    ```
+    kubectl get pods --selector=app=mnist-service -w
+	NAME                             READY   STATUS              RESTARTS   AGE
+	mnist-service-7df4759f74-xhj5x   0/1     ContainerCreating   0          29s
+	mnist-service-7df4759f74-xhj5x   1/1     Running             0          46s
+    ```
+
+1. Service is exposed as `clusterIP`. Use port forwarding so that the service can be accessed locally:
+
+     ```
+     kubectl port-forward \
+		`kubectl get pods --selector=app=mnist-service -o jsonpath='{.items[0].metadata.name}'` \
+		8080:8080 &
+     ```
+
+1. Run the inference:
+
+    ```
+    curl -X POST localhost:8080/predictions/mnist -T samples/mnist/inference/mxnet/utils/9.png
+	% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+	                             Dload  Upload   Total   Spent    Left  Speed
+	100  8042  100    56  100  7986   3105   432k --:--:-- --:--:-- --:--:--  458k
+	Prediction is [9] with probability of 92.52161979675293%
+    ```
+
+    Run another inference:
+
+    ```
+    curl -X POST localhost:8080/predictions/mnist -T samples/mnist/inference/mxnet/utils/7.jpg
+      % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                     Dload  Upload   Total   Spent    Left  Speed
+    100   608  100    52  100   556    568   6081 --:--:-- --:--:-- --:--:--  6109
+    Prediction is [7] with probability of 99.9999761581%
+    ```
+
+## Run inference using MXNet Model Server locally
+
+### Install MXNet Model Server
 
 1. Install Java:
 
@@ -41,7 +94,7 @@ Create [EKS cluster using GPU](../../eks-gpu.md).
 	pip install mxnet-model-server
 	```
 
-## Prepare model archive
+### Prepare model archive
 
 Model Archive is an artifact that MMS can consume natively. This archive package can be easily created with the trained artifacts. A copy of this archive is available at `samples/mnist/inference/archived_model/mnist_cnn.mar`.
 
@@ -84,7 +137,7 @@ Skip rest of the section if you are using the pre-generated archive. This sectio
 
 	This command creates an model archive called `mnist_cnn.mar` under `/tmp/model-store`.
 
-## Run inference
+### Run inference
 
 1. Update `~/.keras/keras.json` so that it looks like:
 
@@ -132,44 +185,3 @@ Skip rest of the section if you are using the pre-generated archive. This sectio
 	Prediction is [7] with probability of 99.9999761581%
 	```
 
-## Run inference on EKS
-
-In order to run MNIST inferene on EKS, we need to have Docker image and k8s manifest to create infernece service backed by deployment.
-
-1. You can either create a docker image from file `samples/mnist/inference/mxnet/Dockerfile` or use an existing image `rgaut/deeplearning-mxnet:inference`. 
-
-1. We have provided a yaml file which encapsulates launching the deployment and service. So user can make the request for prediction. 
-
-    ```
-    kubectl create -f samples/mnist/inference/mxnet/mxnet_eks.yaml
-    ```
-   
-    This should create the deployments and service.
-
-1. There are multiple type of k8s services. We have used the default which is clusterIP. We have to do port forwarding for client to access this service.
-
-     ```
-     kubectl port-forward \
-		`kubectl get pods --selector=app=mnist-service -o jsonpath='{.items[0].metadata.name}'` \
-		8080:8080 &
-     ```
-
-1. Lets run the inference:
-
-    ```
-    curl -X POST localhost:8080/predictions/mnist -T samples/mnist/inference/mxnet/utils/9.png
-	% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-	                             Dload  Upload   Total   Spent    Left  Speed
-	100  8042  100    56  100  7986   3105   432k --:--:-- --:--:-- --:--:--  458k
-	Prediction is [9] with probability of 92.52161979675293%
-    ```
-
-    Run another inference:
-
-    ```
-    curl -X POST localhost:8080/predictions/mnist -T samples/mnist/inference/mxnet/utils/7.jpg
-      % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                     Dload  Upload   Total   Spent    Left  Speed
-    100   608  100    52  100   556    568   6081 --:--:-- --:--:-- --:--:--  6109
-    Prediction is [7] with probability of 99.9999761581%
-    ```

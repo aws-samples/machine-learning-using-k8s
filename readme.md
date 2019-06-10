@@ -11,6 +11,8 @@ This repository explains how to run different Machine Learning frameworks on [Am
   - [MXNet Model Server](docs/mnist/inference/mxnet.md)
 - TensorBoard setup
   - [TensorBoard on Amazon EKS](docs/tensorboard/readme.md)
+- Serverless Inference
+  - [Serverless inference on AWS Fargate](docs/serverlss/inference/readme.md)
 
 ## Other Notes
 

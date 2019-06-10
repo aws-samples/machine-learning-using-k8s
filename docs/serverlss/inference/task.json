@@ -1,0 +1,52 @@
+{
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "executionRoleArn": "arn:aws:iam::<aws_account_id>:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+"command": [
+            "apt-get update && apt-get install -y --no-install-recommends git && mkdir -p /test && cd /test && git clone -b r1.13 https://github.com/tensorflow/serving.git && tensorflow_model_server --port=8500 --rest_api_port=8501 --model_name=saved_model_half_plus_two --model_base_path=/test/serving/tensorflow_serving/servables/tensorflow/testdata/saved_model_half_plus_two_cpu"
+         ],
+         "entryPoint": [
+            "sh",
+            "-c"
+         ],
+      "name": "FargateTFInference",
+      "image": "tensorflow/serving",
+      "memory": 10240,
+      "cpu": 0,
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 8500,
+          "protocol": "tcp",
+          "containerPort": 8500
+        },
+        {
+          "hostPort": 8501,
+          "protocol": "tcp",
+          "containerPort": 8501
+        },
+        {
+          "containerPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+             "awslogs-group": "/ecs/TFInference",
+             "awslogs-region": "us-west-2",
+             "awslogs-stream-prefix": "ecs"
+          }
+      }
+    }
+  ],
+  "volumes": [],
+  "networkMode": "awsvpc",
+  "cpu": "4096",
+  "memory": "10240",
+  "placementConstraints": [],
+  "family": "FargateTFInference"
+}

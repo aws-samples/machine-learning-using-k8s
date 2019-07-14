@@ -1,0 +1,55 @@
+---
+apiVersion: kubeflow.org/v1alpha1
+kind: MPIJob
+metadata:
+  labels:
+    ksonnet.io/component: tf-resnet50-horovod-job-fsx
+  name: tf-resnet50-horovod-job-fsx
+  namespace: kubeflow
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+      - command:
+        - mpirun
+        - -mca
+        - btl_tcp_if_exclude
+        - lo
+        - -mca
+        - pml
+        - ob1
+        - -mca
+        - btl
+        - ^openib
+        - --bind-to
+        - none
+        - -map-by
+        - slot
+        - -x
+        - LD_LIBRARY_PATH
+        - -x
+        - PATH
+        - -x
+        - NCCL_DEBUG=INFO
+        - python
+        - models/resnet/tensorflow/train_imagenet_resnet_hvd.py
+        - --batch_size=256
+        - --model=resnet50
+        - --num_batches=300
+        - --fp16
+        - --display_every=50
+        - --lr_decay_mode=poly
+        - --data_dir=/data/imagenet/train
+        image: seedjeffwan/eks-dl-benchmark:cuda10-tf1.13.1-hvd0.16.0-py3.5
+        name: tf-resnet50-horovod-job
+        resources:
+          limits:
+            nvidia.com/gpu: 4
+        volumeMounts:
+        - name: persistent-storage
+          mountPath: /data/
+      volumes:
+      - name: persistent-storage
+        persistentVolumeClaim:
+          claimName: fsx-static-storage

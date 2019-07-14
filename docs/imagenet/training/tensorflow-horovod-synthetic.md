@@ -20,6 +20,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
    ```
    export MPI_OPERATOR=mpi-operator
    ks generate mpi-operator ${MPI_OPERATOR}
+   ks param set image mpioperator/mpi-operator:0.1.0
    ks apply default -c ${MPI_OPERATOR}
    ```
 

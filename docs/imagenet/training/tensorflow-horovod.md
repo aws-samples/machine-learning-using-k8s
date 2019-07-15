@@ -23,15 +23,15 @@ This document explains how to perform distributed training on [Amazon EKS](https
     2019-02-28 12:14:10   20063161 validation-00128-of-00128
     ```
 
-  The bucket name can be different but all data needs to be in the `imagenet` folder. The training data needs to be in the `train` sub folder and validation data in the `validation` sub folder.
+    The bucket name can be different but all data needs to be in the `imagenet` folder. The training data needs to be in the `train` sub folder and validation data in the `validation` sub folder.
 
 1. Create an [FSX For Lustre](https://aws.amazon.com/fsx/lustre) filesystem and enable data integration with S3. Use the VPC info of the GPU-powered EKS cluster created in the first step to create FSX. Note down the file system id after FSX for Lustre is created.
 
-  > Note: FSX can only mount to one AZ. Make sure to create a single-AZ EKS cluster. This is specified in the `aws_config/cluster_config.yaml` file during cluster creation.
+   > Note: FSX can only mount to one AZ. Make sure to create a single-AZ EKS cluster. This is specified in the `aws_config/cluster_config.yaml` file during cluster creation.
 
-  ![VPC setup](./fsx-vpc-setup.jpg)
+   ![VPC setup](./fsx-vpc-setup.jpg)
 
-  ![fsx for lustrue](./fsx-s3-integration.png)
+   ![fsx for lustrue](./fsx-s3-integration.png)
 
 ## Steps
 

@@ -1,0 +1,707 @@
++ POD_NAME=tf-resnet50-horovod-job-worker-0
++ shift
++ /opt/kube/kubectl exec tf-resnet50-horovod-job-worker-0 -- /bin/sh -c     PATH=/usr/local/bin:$PATH ; export PATH ; LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH ; export LD_LIBRARY_PATH ; DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH ; export DYLD_LIBRARY_PATH ;   /usr/local/bin/orted -mca ess "env" -mca ess_base_jobid "300417024" -mca ess_base_vpid 1 -mca ess_base_num_procs "3" -mca orte_node_regex "tf-resnet[2:50]-horovod-job-launcher-qkqc4,tf-resnet[2:50]-horovod-job-worker-0,tf-resnet[2:50]-horovod-job-worker-1@0(3)" -mca orte_hnp_uri "300417024.0;tcp://192.168.24.125:33923" -mca plm "rsh" --tree-spawn -mca orte_parent_uri "300417024.0;tcp://192.168.24.125:33923" -mca plm_rsh_agent "/etc/mpi/kubexec.sh" -mca orte_default_hostfile "/etc/mpi/hostfile" -mca pmix "^s1,s2,cray,isolated"
++ POD_NAME=tf-resnet50-horovod-job-worker-1
++ shift
++ /opt/kube/kubectl exec tf-resnet50-horovod-job-worker-1 -- /bin/sh -c     PATH=/usr/local/bin:$PATH ; export PATH ; LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH ; export LD_LIBRARY_PATH ; DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH ; export DYLD_LIBRARY_PATH ;   /usr/local/bin/orted -mca ess "env" -mca ess_base_jobid "300417024" -mca ess_base_vpid 2 -mca ess_base_num_procs "3" -mca orte_node_regex "tf-resnet[2:50]-horovod-job-launcher-qkqc4,tf-resnet[2:50]-horovod-job-worker-0,tf-resnet[2:50]-horovod-job-worker-1@0(3)" -mca orte_hnp_uri "300417024.0;tcp://192.168.24.125:33923" -mca plm "rsh" --tree-spawn -mca orte_parent_uri "300417024.0;tcp://192.168.24.125:33923" -mca plm_rsh_agent "/etc/mpi/kubexec.sh" -mca orte_default_hostfile "/etc/mpi/hostfile" -mca pmix "^s1,s2,cray,isolated"
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/horovod/tensorflow/__init__.py:91: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/horovod/tensorflow/__init__.py:91: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/horovod/tensorflow/__init__.py:91: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/horovod/tensorflow/__init__.py:91: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/horovod/tensorflow/__init__.py:91: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/horovod/tensorflow/__init__.py:91: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/horovod/tensorflow/__init__.py:91: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/horovod/tensorflow/__init__.py:91: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+2019-07-15 02:16:25.182578: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-07-15 02:16:25.182607: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-07-15 02:16:25.182763: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-07-15 02:16:25.183014: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-07-15 02:16:25.182964: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-07-15 02:16:25.182964: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-07-15 02:16:25.183024: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-07-15 02:16:25.183242: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-07-15 02:16:26.649049: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.656817: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.659803: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.665367: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.681387: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.686103: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.702480: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.712511: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.720818: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.727555: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.732274: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x5f88db0 executing computations on platform CUDA. Devices:
+2019-07-15 02:16:26.732308: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.732318: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (1): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.732325: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (2): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.732332: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (3): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.734300: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.748481: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.749097: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.750450: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.753362: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x503d050 executing computations on platform CUDA. Devices:
+2019-07-15 02:16:26.753411: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.753429: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (1): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.753442: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (2): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.753455: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (3): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.753778: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2300065000 Hz
+2019-07-15 02:16:26.755697: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x60878f0 executing computations on platform Host. Devices:
+2019-07-15 02:16:26.755726: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): <undefined>, <undefined>
+2019-07-15 02:16:26.756831: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1433] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:1d.0
+totalMemory: 15.75GiB freeMemory: 14.55GiB
+2019-07-15 02:16:26.756859: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 2
+2019-07-15 02:16:26.758441: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2300065000 Hz
+2019-07-15 02:16:26.758690: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.760531: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x513bc00 executing computations on platform Host. Devices:
+2019-07-15 02:16:26.760582: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): <undefined>, <undefined>
+2019-07-15 02:16:26.762432: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1433] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:1c.0
+totalMemory: 15.75GiB freeMemory: 14.55GiB
+2019-07-15 02:16:26.762479: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 1
+2019-07-15 02:16:26.763394: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x4770190 executing computations on platform CUDA. Devices:
+2019-07-15 02:16:26.763426: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.763435: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (1): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.763442: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (2): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.763449: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (3): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.767606: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2300065000 Hz
+2019-07-15 02:16:26.769394: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x486ed20 executing computations on platform Host. Devices:
+2019-07-15 02:16:26.769423: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): <undefined>, <undefined>
+2019-07-15 02:16:26.770777: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1433] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:1e.0
+totalMemory: 15.75GiB freeMemory: 14.55GiB
+2019-07-15 02:16:26.770817: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 3
+2019-07-15 02:16:26.784090: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.785797: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x6179800 executing computations on platform CUDA. Devices:
+2019-07-15 02:16:26.785824: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.785834: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (1): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.785841: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (2): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.785849: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (3): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.788521: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2300065000 Hz
+2019-07-15 02:16:26.790761: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x6278370 executing computations on platform Host. Devices:
+2019-07-15 02:16:26.790801: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): <undefined>, <undefined>
+2019-07-15 02:16:26.791705: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1433] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:1b.0
+totalMemory: 15.75GiB freeMemory: 14.55GiB
+2019-07-15 02:16:26.791749: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 0
+2019-07-15 02:16:26.798427: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.798578: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.798649: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.798960: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.822279: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.822855: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.823008: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.823590: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.848462: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.848951: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.850006: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.850126: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.882715: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.883228: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.883916: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.884077: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:998] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-15 02:16:26.888299: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x534fbb0 executing computations on platform CUDA. Devices:
+2019-07-15 02:16:26.888333: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.888342: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (1): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.888350: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (2): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.888356: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (3): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.888550: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x4cece50 executing computations on platform CUDA. Devices:
+2019-07-15 02:16:26.888581: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.888590: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (1): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.888598: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (2): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.888604: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (3): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.888817: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x5de59d0 executing computations on platform CUDA. Devices:
+2019-07-15 02:16:26.888847: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.888857: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (1): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.888864: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (2): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.888871: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (3): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.888982: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x584a2f0 executing computations on platform CUDA. Devices:
+2019-07-15 02:16:26.889014: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.889028: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (1): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.889040: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (2): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.889052: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (3): Tesla V100-SXM2-16GB, Compute Capability 7.0
+2019-07-15 02:16:26.891266: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2300070000 Hz
+2019-07-15 02:16:26.891267: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2300070000 Hz
+2019-07-15 02:16:26.891356: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2300070000 Hz
+2019-07-15 02:16:26.891658: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2300070000 Hz
+2019-07-15 02:16:26.893516: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x544e760 executing computations on platform Host. Devices:
+2019-07-15 02:16:26.893544: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): <undefined>, <undefined>
+2019-07-15 02:16:26.893579: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x5ee4590 executing computations on platform Host. Devices:
+2019-07-15 02:16:26.893603: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): <undefined>, <undefined>
+2019-07-15 02:16:26.893611: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x4deba40 executing computations on platform Host. Devices:
+2019-07-15 02:16:26.893645: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): <undefined>, <undefined>
+2019-07-15 02:16:26.893770: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0x5948e70 executing computations on platform Host. Devices:
+2019-07-15 02:16:26.893798: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): <undefined>, <undefined>
+2019-07-15 02:16:26.894375: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1433] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:1b.0
+totalMemory: 15.75GiB freeMemory: 14.55GiB
+2019-07-15 02:16:26.894404: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 0
+2019-07-15 02:16:26.895155: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1433] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:1e.0
+totalMemory: 15.75GiB freeMemory: 14.55GiB
+2019-07-15 02:16:26.895186: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 3
+2019-07-15 02:16:26.895929: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1433] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:1c.0
+totalMemory: 15.75GiB freeMemory: 14.55GiB
+2019-07-15 02:16:26.895973: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 1
+2019-07-15 02:16:26.896580: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1433] Found device 0 with properties: 
+name: Tesla V100-SXM2-16GB major: 7 minor: 0 memoryClockRate(GHz): 1.53
+pciBusID: 0000:00:1d.0
+totalMemory: 15.75GiB freeMemory: 14.55GiB
+2019-07-15 02:16:26.896612: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 2
+2019-07-15 02:16:26.903910: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:26.903957: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      2 
+2019-07-15 02:16:26.903967: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 2:   N 
+2019-07-15 02:16:26.904766: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 2, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1d.0, compute capability: 7.0)
+2019-07-15 02:16:26.913364: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:26.913408: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      3 
+2019-07-15 02:16:26.913423: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 3:   N 
+2019-07-15 02:16:26.914284: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 3, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1e.0, compute capability: 7.0)
+2019-07-15 02:16:26.925790: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:26.925828: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      0 
+2019-07-15 02:16:26.925838: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 0:   N 
+2019-07-15 02:16:26.927228: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 0, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1b.0, compute capability: 7.0)
+2019-07-15 02:16:26.951385: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:26.951423: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      1 
+2019-07-15 02:16:26.951433: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 1:   N 
+2019-07-15 02:16:26.952200: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 1, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1c.0, compute capability: 7.0)
+2019-07-15 02:16:27.046108: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:27.046157: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      2 
+2019-07-15 02:16:27.046168: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 2:   N 
+2019-07-15 02:16:27.046282: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:27.046317: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      3 
+2019-07-15 02:16:27.046327: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 3:   N 
+2019-07-15 02:16:27.046972: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 2, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1d.0, compute capability: 7.0)
+2019-07-15 02:16:27.047650: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 3, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1e.0, compute capability: 7.0)
+2019-07-15 02:16:27.078044: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:27.078122: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      0 
+2019-07-15 02:16:27.078138: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 0:   N 
+2019-07-15 02:16:27.078962: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 0, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1b.0, compute capability: 7.0)
+2019-07-15 02:16:27.081282: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:27.081319: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      1 
+2019-07-15 02:16:27.081330: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 1:   N 
+2019-07-15 02:16:27.082218: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 1, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1c.0, compute capability: 7.0)
+2019-07-15 02:16:27.446613: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 1
+2019-07-15 02:16:27.446668: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:27.446679: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      1 
+2019-07-15 02:16:27.446688: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 1:   N 
+2019-07-15 02:16:27.446918: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 1, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1c.0, compute capability: 7.0)
+2019-07-15 02:16:27.447338: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 2
+2019-07-15 02:16:27.447382: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:27.447394: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      2 
+2019-07-15 02:16:27.447402: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 2:   N 
+2019-07-15 02:16:27.447624: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 2, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1d.0, compute capability: 7.0)
+2019-07-15 02:16:27.451641: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 0
+2019-07-15 02:16:27.451681: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:27.451692: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      0 
+2019-07-15 02:16:27.451700: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 0:   N 
+2019-07-15 02:16:27.451923: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 0, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1b.0, compute capability: 7.0)
+2019-07-15 02:16:27.453658: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 3
+2019-07-15 02:16:27.453715: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:27.453728: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      3 
+2019-07-15 02:16:27.453736: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 3:   N 
+2019-07-15 02:16:27.454209: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 3, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1e.0, compute capability: 7.0)
+2019-07-15 02:16:27.457611: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 0
+2019-07-15 02:16:27.457657: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:27.457668: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      0 
+2019-07-15 02:16:27.457676: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 0:   N 
+2019-07-15 02:16:27.457917: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 0, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1b.0, compute capability: 7.0)
+2019-07-15 02:16:27.460489: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 1
+2019-07-15 02:16:27.460535: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:27.460546: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      1 
+2019-07-15 02:16:27.460555: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 1:   N 
+2019-07-15 02:16:27.460957: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 1, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1c.0, compute capability: 7.0)
+2019-07-15 02:16:27.487439: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 3
+2019-07-15 02:16:27.487493: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:27.487505: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      3 
+2019-07-15 02:16:27.487513: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 3:   N 
+2019-07-15 02:16:27.487740: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 3, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1e.0, compute capability: 7.0)
+2019-07-15 02:16:27.530557: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 2
+2019-07-15 02:16:27.530648: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:27.530669: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      2 
+2019-07-15 02:16:27.530684: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 2:   N 
+2019-07-15 02:16:27.531115: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 2, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1d.0, compute capability: 7.0)
+PY3.5.2 (default, Nov 12 2018, 13:43:14) 
+[GCC 5.4.0 20160609]TF1.13.1
+Horovod size: 8
+Using a learning rate of 0.8
+Checkpointing every 1000 steps
+Saving summary every 625 steps
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/framework/op_def_library.py:263: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/framework/op_def_library.py:263: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/framework/op_def_library.py:263: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/framework/op_def_library.py:263: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/framework/op_def_library.py:263: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/framework/op_def_library.py:263: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+Using preprocessing threads per GPU: 5
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/framework/op_def_library.py:263: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/framework/op_def_library.py:263: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:87: conv2d (from tensorflow.python.layers.convolutional) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.conv2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:87: conv2d (from tensorflow.python.layers.convolutional) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.conv2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:87: conv2d (from tensorflow.python.layers.convolutional) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.conv2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:87: conv2d (from tensorflow.python.layers.convolutional) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.conv2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:87: conv2d (from tensorflow.python.layers.convolutional) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.conv2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:87: conv2d (from tensorflow.python.layers.convolutional) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.conv2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:87: conv2d (from tensorflow.python.layers.convolutional) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.conv2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:87: conv2d (from tensorflow.python.layers.convolutional) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.conv2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:136: max_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.max_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:136: max_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.max_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:136: max_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.max_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:136: max_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.max_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:136: max_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.max_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:136: max_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.max_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:136: max_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.max_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:136: max_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.max_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:168: average_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.average_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:673: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.dense instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:168: average_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.average_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:673: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.dense instead.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/ops/losses/losses_impl.py:209: to_float (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.cast instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:168: average_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.average_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:673: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.dense instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:168: average_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.average_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:673: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.dense instead.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/ops/losses/losses_impl.py:209: to_float (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.cast instead.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/ops/losses/losses_impl.py:209: to_float (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.cast instead.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/ops/losses/losses_impl.py:209: to_float (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.cast instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:168: average_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.average_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:673: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.dense instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:168: average_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.average_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:673: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.dense instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:168: average_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.average_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:673: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.dense instead.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/ops/losses/losses_impl.py:209: to_float (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.cast instead.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/ops/losses/losses_impl.py:209: to_float (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.cast instead.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/ops/losses/losses_impl.py:209: to_float (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.cast instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:168: average_pooling2d (from tensorflow.python.layers.pooling) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.average_pooling2d instead.
+WARNING:tensorflow:From models/resnet/tensorflow/train_imagenet_resnet_hvd.py:673: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.dense instead.
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/ops/losses/losses_impl.py:209: to_float (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.cast instead.
+2019-07-15 02:16:35.850031: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 3
+2019-07-15 02:16:35.850089: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:35.850100: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      3 
+2019-07-15 02:16:35.850108: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 3:   N 
+2019-07-15 02:16:35.850441: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 3, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1e.0, compute capability: 7.0)
+2019-07-15 02:16:35.869129: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 1
+2019-07-15 02:16:35.869178: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:35.869189: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      1 
+2019-07-15 02:16:35.869197: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 1:   N 
+2019-07-15 02:16:35.869434: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 1, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1c.0, compute capability: 7.0)
+2019-07-15 02:16:35.876866: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 0
+2019-07-15 02:16:35.876915: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:35.876927: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      0 
+2019-07-15 02:16:35.876936: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 0:   N 
+2019-07-15 02:16:35.877179: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 0, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1b.0, compute capability: 7.0)
+2019-07-15 02:16:35.937862: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 2
+2019-07-15 02:16:35.937919: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:35.937930: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      2 
+2019-07-15 02:16:35.937938: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 2:   N 
+2019-07-15 02:16:35.938215: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 2, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1d.0, compute capability: 7.0)
+2019-07-15 02:16:35.968125: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 2
+2019-07-15 02:16:35.968182: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:35.968194: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      2 
+2019-07-15 02:16:35.968201: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 2:   N 
+2019-07-15 02:16:35.968452: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 2, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1d.0, compute capability: 7.0)
+2019-07-15 02:16:36.016115: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 0
+2019-07-15 02:16:36.016173: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:36.016184: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      0 
+2019-07-15 02:16:36.016192: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 0:   N 
+2019-07-15 02:16:36.016444: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 0, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1b.0, compute capability: 7.0)
+2019-07-15 02:16:36.066308: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 1
+2019-07-15 02:16:36.066376: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:36.066389: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      1 
+2019-07-15 02:16:36.066398: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 1:   N 
+2019-07-15 02:16:36.066649: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 1, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1c.0, compute capability: 7.0)
+2019-07-15 02:16:36.078162: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 3
+2019-07-15 02:16:36.078210: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-15 02:16:36.078222: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      3 
+2019-07-15 02:16:36.078230: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 3:   N 
+2019-07-15 02:16:36.078503: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 14135 MB memory) -> physical GPU (device: 3, name: Tesla V100-SXM2-16GB, pci bus id: 0000:00:1e.0, compute capability: 7.0)
+  Step Epoch Speed   Loss  FinLoss   LR
+2019-07-15 02:16:51.022757: I tensorflow/stream_executor/dso_loader.cc:152] successfully opened CUDA library libcublas.so.10.0 locally
+2019-07-15 02:16:51.081849: I tensorflow/stream_executor/dso_loader.cc:152] successfully opened CUDA library libcublas.so.10.0 locally
+2019-07-15 02:16:51.120253: I tensorflow/stream_executor/dso_loader.cc:152] successfully opened CUDA library libcublas.so.10.0 locally
+2019-07-15 02:16:51.140793: I tensorflow/stream_executor/dso_loader.cc:152] successfully opened CUDA library libcublas.so.10.0 locally
+2019-07-15 02:16:51.141236: I tensorflow/stream_executor/dso_loader.cc:152] successfully opened CUDA library libcublas.so.10.0 locally
+2019-07-15 02:16:51.175727: I tensorflow/stream_executor/dso_loader.cc:152] successfully opened CUDA library libcublas.so.10.0 locally
+2019-07-15 02:16:51.190324: I tensorflow/stream_executor/dso_loader.cc:152] successfully opened CUDA library libcublas.so.10.0 locally
+2019-07-15 02:16:51.394682: I tensorflow/stream_executor/dso_loader.cc:152] successfully opened CUDA library libcublas.so.10.0 locally
+2019-07-15 02:16:54.295180: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.295254: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.335691: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.335747: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.382848: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.382914: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.409045: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.409097: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.423026: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.423082: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.441066: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.441118: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.442199: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.442254: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.484685: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.484730: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.515578: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.515630: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.528169: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.528226: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.562962: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.563006: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.572279: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.572327: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.588928: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.588973: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.665748: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.665796: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.740477: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.740532: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO NET/Socket : Using [0]eth0:192.168.16.199<0>
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so).
+
+tf-resnet50-horovod-job-worker-0:19:160 [0] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+NCCL version 2.4.2+cuda10.0
+tf-resnet50-horovod-job-worker-0:21:159 [2] NCCL INFO NET/Socket : Using [0]eth0:192.168.16.199<0>
+tf-resnet50-horovod-job-worker-0:21:159 [2] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so).
+
+tf-resnet50-horovod-job-worker-0:21:159 [2] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+tf-resnet50-horovod-job-worker-1:21:160 [2] NCCL INFO NET/Socket : Using [0]eth0:192.168.31.30<0>
+tf-resnet50-horovod-job-worker-1:21:160 [2] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so).
+
+tf-resnet50-horovod-job-worker-1:21:160 [2] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+2019-07-15 02:16:54.887693: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:54.887736: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.38GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO NET/Socket : Using [0]eth0:192.168.31.30<0>
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so).
+
+tf-resnet50-horovod-job-worker-1:19:168 [0] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+tf-resnet50-horovod-job-worker-0:20:161 [1] NCCL INFO NET/Socket : Using [0]eth0:192.168.16.199<0>
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO NET/Socket : Using [0]eth0:192.168.16.199<0>
+tf-resnet50-horovod-job-worker-1:20:159 [1] NCCL INFO NET/Socket : Using [0]eth0:192.168.31.30<0>
+tf-resnet50-horovod-job-worker-0:20:161 [1] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so).
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO NET/Socket : Using [0]eth0:192.168.31.30<0>
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so).
+tf-resnet50-horovod-job-worker-1:20:159 [1] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so).
+
+tf-resnet50-horovod-job-worker-0:22:164 [3] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so).
+
+tf-resnet50-horovod-job-worker-0:20:161 [1] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+
+tf-resnet50-horovod-job-worker-1:20:159 [1] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+
+tf-resnet50-horovod-job-worker-1:22:161 [3] misc/ibvwrap.cu:63 NCCL WARN Failed to open libibverbs.so[.1]
+tf-resnet50-horovod-job-worker-1:21:160 [2] NCCL INFO Setting affinity for GPU 2 to ffffffff
+tf-resnet50-horovod-job-worker-1:21:160 [2] NCCL INFO comm 0x7f15e031f2d0 rank 6 nranks 8 cudaDev 2 nvmlDev 2
+tf-resnet50-horovod-job-worker-0:21:159 [2] NCCL INFO Setting affinity for GPU 2 to ffffffff
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Setting affinity for GPU 0 to ffffffff
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO comm 0x7f04c8382d50 rank 0 nranks 8 cudaDev 0 nvmlDev 0
+tf-resnet50-horovod-job-worker-0:21:159 [2] NCCL INFO comm 0x7fa8b431fee0 rank 2 nranks 8 cudaDev 2 nvmlDev 2
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Setting affinity for GPU 0 to ffffffff
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO comm 0x7f0a903288f0 rank 4 nranks 8 cudaDev 0 nvmlDev 0
+tf-resnet50-horovod-job-worker-1:20:159 [1] NCCL INFO Setting affinity for GPU 1 to ffffffff
+tf-resnet50-horovod-job-worker-1:20:159 [1] NCCL INFO comm 0x7fbd34323870 rank 5 nranks 8 cudaDev 1 nvmlDev 1
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO Setting affinity for GPU 3 to ffffffff
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO comm 0x7f53d432a300 rank 7 nranks 8 cudaDev 3 nvmlDev 3
+tf-resnet50-horovod-job-worker-0:20:161 [1] NCCL INFO Setting affinity for GPU 1 to ffffffff
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO Setting affinity for GPU 3 to ffffffff
+tf-resnet50-horovod-job-worker-0:20:161 [1] NCCL INFO comm 0x7f6ce831a860 rank 1 nranks 8 cudaDev 1 nvmlDev 1
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO comm 0x7f02ac31d600 rank 3 nranks 8 cudaDev 3 nvmlDev 3
+tf-resnet50-horovod-job-worker-1:20:159 [1] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:20:159 [1] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-1:20:159 [1] NCCL INFO CUDA Dev 1[1], Socket NIC distance :  SOC
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO CUDA Dev 0[0], Socket NIC distance :  SOC
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO CUDA Dev 3[3], Socket NIC distance :  SOC
+tf-resnet50-horovod-job-worker-1:21:160 [2] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:21:160 [2] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-1:21:160 [2] NCCL INFO CUDA Dev 2[2], Socket NIC distance :  SOC
+tf-resnet50-horovod-job-worker-0:20:161 [1] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:20:161 [1] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-0:20:161 [1] NCCL INFO CUDA Dev 1[1], Socket NIC distance :  SOC
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO CUDA Dev 0[0], Socket NIC distance :  SOC
+tf-resnet50-horovod-job-worker-0:21:159 [2] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:21:159 [2] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-0:21:159 [2] NCCL INFO CUDA Dev 2[2], Socket NIC distance :  SOC
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO CUDA Dev 3[3], Socket NIC distance :  SOC
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Channel 00 :    0   1   2   3   4   5   6   7
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Channel 01 :    0   1   2   3   4   5   6   7
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Ring 00 : 3 -> 4 [receive] via NET/Socket/0
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Ring 00 : 7 -> 0 [receive] via NET/Socket/0
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Ring 00 : 4[0] -> 5[1] via P2P/IPC
+tf-resnet50-horovod-job-worker-1:20:159 [1] NCCL INFO Ring 00 : 5[1] -> 6[2] via P2P/IPC
+tf-resnet50-horovod-job-worker-1:21:160 [2] NCCL INFO Ring 00 : 6[2] -> 7[3] via P2P/IPC
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Ring 00 : 0[0] -> 1[1] via P2P/IPC
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO Ring 00 : 7 -> 0 [send] via NET/Socket/0
+tf-resnet50-horovod-job-worker-0:20:161 [1] NCCL INFO Ring 00 : 1[1] -> 2[2] via P2P/IPC
+tf-resnet50-horovod-job-worker-0:21:159 [2] NCCL INFO Ring 00 : 2[2] -> 3[3] via P2P/IPC
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO Ring 00 : 7[3] -> 6[2] via P2P/IPC
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO Ring 00 : 3 -> 4 [send] via NET/Socket/0
+tf-resnet50-horovod-job-worker-1:20:159 [1] NCCL INFO Ring 00 : 5[1] -> 4[0] via P2P/IPC
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-1:21:160 [2] NCCL INFO Ring 00 : 6[2] -> 5[1] via P2P/IPC
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Ring 00 : 4 -> 0 [receive] via NET/Socket/0
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO Ring 00 : 3[3] -> 2[2] via P2P/IPC
+tf-resnet50-horovod-job-worker-0:20:161 [1] NCCL INFO Ring 00 : 1[1] -> 0[0] via P2P/IPC
+tf-resnet50-horovod-job-worker-0:21:159 [2] NCCL INFO Ring 00 : 2[2] -> 1[1] via P2P/IPC
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Ring 00 : 4 -> 0 [send] via NET/Socket/0
+tf-resnet50-horovod-job-worker-1:21:160 [2] NCCL INFO Ring 01 : 6[2] -> 7[3] via P2P/IPC
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO Ring 01 : 7 -> 0 [send] via NET/Socket/0
+tf-resnet50-horovod-job-worker-1:20:159 [1] NCCL INFO Ring 01 : 5[1] -> 6[2] via P2P/IPC
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Ring 00 : 0 -> 4 [receive] via NET/Socket/0
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-0:20:161 [1] NCCL INFO Ring 01 : 1[1] -> 2[2] via P2P/IPC
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-1:21:160 [2] NCCL INFO Ring 01 : 6[2] -> 5[1] via P2P/IPC
+tf-resnet50-horovod-job-worker-0:21:159 [2] NCCL INFO Ring 01 : 2[2] -> 3[3] via P2P/IPC
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO Ring 01 : 3 -> 4 [send] via NET/Socket/0
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Ring 00 : 0 -> 4 [send] via NET/Socket/0
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-0:21:159 [2] NCCL INFO Ring 01 : 2[2] -> 1[1] via P2P/IPC
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Ring 01 : 3 -> 4 [receive] via NET/Socket/0
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Ring 01 : 4[0] -> 5[1] via P2P/IPC
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Ring 01 : 7 -> 0 [receive] via NET/Socket/0
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO Ring 01 : 3[3] -> 2[2] via P2P/IPC
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO Trees [0] 2->3->-1/-1/-1 [1] 2->3->-1/-1/-1
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Ring 01 : 0[0] -> 1[1] via P2P/IPC
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO Ring 01 : 7[3] -> 6[2] via P2P/IPC
+tf-resnet50-horovod-job-worker-1:21:160 [2] NCCL INFO Trees [0] 5->6->7/-1/-1 [1] 5->6->7/-1/-1
+tf-resnet50-horovod-job-worker-0:21:159 [2] NCCL INFO Trees [0] 1->2->3/-1/-1 [1] 1->2->3/-1/-1
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO Trees [0] 6->7->-1/-1/-1 [1] 6->7->-1/-1/-1
+tf-resnet50-horovod-job-worker-1:20:159 [1] NCCL INFO Ring 01 : 5[1] -> 4[0] via P2P/IPC
+tf-resnet50-horovod-job-worker-1:20:159 [1] NCCL INFO Trees [0] 4->5->6/-1/-1 [1] 4->5->6/-1/-1
+tf-resnet50-horovod-job-worker-0:20:161 [1] NCCL INFO Ring 01 : 1[1] -> 0[0] via P2P/IPC
+tf-resnet50-horovod-job-worker-0:22:164 [3] NCCL INFO comm 0x7f02ac31d600 rank 3 nranks 8 cudaDev 3 nvmlDev 3 - Init COMPLETE
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-0:20:161 [1] NCCL INFO Trees [0] 0->1->2/-1/-1 [1] 0->1->2/-1/-1
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Ring 01 : 0 -> 4 [receive] via NET/Socket/0
+tf-resnet50-horovod-job-worker-1:21:160 [2] NCCL INFO comm 0x7f15e031f2d0 rank 6 nranks 8 cudaDev 2 nvmlDev 2 - Init COMPLETE
+tf-resnet50-horovod-job-worker-0:21:159 [2] NCCL INFO comm 0x7fa8b431fee0 rank 2 nranks 8 cudaDev 2 nvmlDev 2 - Init COMPLETE
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Ring 01 : 0 -> 4 [send] via NET/Socket/0
+tf-resnet50-horovod-job-worker-0:20:161 [1] NCCL INFO comm 0x7f6ce831a860 rank 1 nranks 8 cudaDev 1 nvmlDev 1 - Init COMPLETE
+tf-resnet50-horovod-job-worker-1:22:161 [3] NCCL INFO comm 0x7f53d432a300 rank 7 nranks 8 cudaDev 3 nvmlDev 3 - Init COMPLETE
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Ring 01 : 4 -> 0 [receive] via NET/Socket/0
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Could not find real path of /sys/class/net/eth0/device
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO include/net.h:24 -> 2
+tf-resnet50-horovod-job-worker-1:20:159 [1] NCCL INFO comm 0x7fbd34323870 rank 5 nranks 8 cudaDev 1 nvmlDev 1 - Init COMPLETE
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Ring 01 : 4 -> 0 [send] via NET/Socket/0
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO Trees [0] 0->4->5/-1/-1 [1] -1->4->5/0/-1
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Trees [0] -1->0->1/4/-1 [1] 4->0->1/-1/-1
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Using 256 threads, Min Comp Cap 7, Trees enabled for all sizes
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO comm 0x7f04c8382d50 rank 0 nranks 8 cudaDev 0 nvmlDev 0 - Init COMPLETE
+tf-resnet50-horovod-job-worker-1:19:168 [0] NCCL INFO comm 0x7f0a903288f0 rank 4 nranks 8 cudaDev 0 nvmlDev 0 - Init COMPLETE
+tf-resnet50-horovod-job-worker-0:19:160 [0] NCCL INFO Launch mode Parallel
+2019-07-15 02:16:55.430474: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:55.430533: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:55.474680: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:55.474730: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:55.517135: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:55.517215: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:55.566775: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:55.566843: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:55.568613: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:55.568668: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:55.582429: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:55.582473: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:55.658881: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:55.658928: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:55.884590: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:55.884645: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.72GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.230640: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.230702: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.273938: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.273985: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.317865: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.34GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.317907: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.34GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.321648: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.321731: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.361672: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.34GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.361716: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.34GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.367432: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.367478: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.371094: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.371163: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.381692: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.381738: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.410961: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.34GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.411026: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.34GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.458073: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.458141: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.458932: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.34GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.458999: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.34GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.682505: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.682551: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.48GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.770153: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.34GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2019-07-15 02:16:56.770194: W tensorflow/core/common_runtime/bfc_allocator.cc:211] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.34GiB. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+     0   0.0   239.7  6.686  8.023 0.80000
+     1   0.0   589.7  0.000  1.379 0.79840
+    50   0.1  5371.7  0.000  2.306 0.72200
+   100   0.2  5430.7  0.000  2.161 0.64800
+   150   0.2  5468.8  0.000  2.032 0.57800
+   200   0.3  5460.4  0.000  1.924 0.51200
+   250   0.4  5412.5  0.000  1.833 0.45000
+   300   0.5  5435.5  0.000  1.757 0.39201
+   350   0.6  5424.6  0.000  1.694 0.33801
+   400   0.6  5430.3  0.000  1.641 0.28801
+   450   0.7  5504.9  0.000  1.598 0.24201
+   500   0.8  5482.8  0.000  1.563 0.20001
+   550   0.9  5462.4  0.000  1.535 0.16201
+   600   1.0  5400.1  0.000  1.513 0.12801
+   650   1.0  5422.7  0.000  1.496 0.09801
+   700   1.1  5392.7  0.000  1.483 0.07201
+   750   1.2  5479.8  0.000  1.474 0.05001
+   800   1.3  5450.0  0.000  1.468 0.03201
+   850   1.4  5428.7  0.000  1.465 0.01801
+   900   1.4  5431.5  0.000  1.463 0.00801
+   950   1.5  5444.5  0.000  1.462 0.00201
+Finished in 410.1348099708557

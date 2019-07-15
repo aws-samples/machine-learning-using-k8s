@@ -39,52 +39,52 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
 1. Deploy the [Amazon FSx CSI Plugin](https://www.kubeflow.org/docs/aws/storage/#deploy-the-amazon-fsx-csi-plugin).
 
-  ```
-  cd ${KUBEFLOW_SRC}/${KFAPP}/ks_app
-  export COMPONENT=aws-fsx-csi-driver
-  ks generate aws-fsx-csi-driver ${COMPONENT}
-  ks apply default -c ${COMPONENT}
-  ```
+    ```
+    cd ${KUBEFLOW_SRC}/${KFAPP}/ks_app
+    export COMPONENT=aws-fsx-csi-driver
+    ks generate aws-fsx-csi-driver ${COMPONENT}
+    ks apply default -c ${COMPONENT}
+    ```
 
 1. Prepare Persistent Volumne (PV), Persistent Volume Claim (PVC) and Storage Class. Go to FSX console and replace `fsxId` and `dnsName` with your FSx info.
 
-  ```
-  cd ${KUBEFLOW_SRC}/${KFAPP}/ks_app
-  export COMPONENT=fsx-static-storage
+    ```
+    cd ${KUBEFLOW_SRC}/${KFAPP}/ks_app
+    export COMPONENT=fsx-static-storage
 
-  ks generate aws-fsx-pv-static ${COMPONENT} --fsxId=fs-048xxxx7c25 --dnsName=fs-048xxxx7c25.fsx.us-west-2.amazonaws.com
+    ks generate aws-fsx-pv-static ${COMPONENT} --fsxId=fs-048xxxx7c25 --dnsName=fs-048xxxx7c25.fsx.us-west-2.amazonaws.com
 
-  ks apply default -c ${COMPONENT}
-  ```
+    ks apply default -c ${COMPONENT}
+    ```
 
 1. Prepare training job. Check [here](tensorflow-horovod-synthetic.md#launch-mpi-training-job) for more details
 
-  ```
-  export JOB_NAME=tf-resnet50-horovod-job
-  ks generate mpi-job-custom ${JOB_NAME}
+    ```
+    export JOB_NAME=tf-resnet50-horovod-job
+    ks generate mpi-job-custom ${JOB_NAME}
 
-  ks param set ${JOB_NAME} image "seedjeffwan/eks-dl-benchmark:cuda10-tf1.13.1-hvd0.16.0-py3.5"
-  ks param set ${JOB_NAME} replicas 2
-  ks param set ${JOB_NAME} gpusPerReplica 4
+    ks param set ${JOB_NAME} image "seedjeffwan/eks-dl-benchmark:cuda10-tf1.13.1-hvd0.16.0-py3.5"
+    ks param set ${JOB_NAME} replicas 2
+    ks param set ${JOB_NAME} gpusPerReplica 4
 
-  EXEC="mpirun,-mca,btl_tcp_if_exclude,lo,-mca,pml,ob1,-mca,btl,^openib,--bind-to,none,-map-by,slot,-x,LD_LIBRARY_PATH,-x,PATH,-x,NCCL_DEBUG=INFO,python,models/resnet/tensorflow/train_imagenet_resnet_hvd.py,--batch_size=256,--model=resnet50,--num_batches=300,--fp16,--display_every=50,--lr_decay_mode=poly,--data_dir=/data/imagenet/train"
-  ```
+    EXEC="mpirun,-mca,btl_tcp_if_exclude,lo,-mca,pml,ob1,-mca,btl,^openib,--bind-to,none,-map-by,slot,-x,LD_LIBRARY_PATH,-x,PATH,-x,NCCL_DEBUG=INFO,python,models/resnet/tensorflow/train_imagenet_resnet_hvd.py,--batch_size=256,--model=resnet50,--num_batches=300,--fp16,--display_every=50,--lr_decay_mode=poly,--data_dir=/data/imagenet/train"
+    ```
 
-  > NOTE: Instead of using synthetic data, job will read from `--data_dir`.
+   > NOTE: Instead of using synthetic data, job will read from `--data_dir`.
 
 1. Deploy training job
 
-  ```
-  ks apply default -c ${JOB_NAME}
-  ```
+    ```
+    ks apply default -c ${JOB_NAME}
+    ```
 
 1. Check pod status and logs
 
-  ```
-  POD_NAME=$(kubectl -n kubeflow get pods -l mpi_job_name=${JOB_NAME},mpi_role_type=launcher -o name)
+    ```
+    POD_NAME=$(kubectl -n kubeflow get pods -l mpi_job_name=${JOB_NAME},mpi_role_type=launcher -o name)
 
-  kubectl -n kubeflow logs -f ${POD_NAME}
-  ```
+    kubectl -n kubeflow logs -f ${POD_NAME}
+    ```
 
   Here is a [sample output](logs/tensorflow-horovod-imagenet-log.txt).
 

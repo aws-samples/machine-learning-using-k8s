@@ -86,7 +86,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
     kubectl -n kubeflow logs -f ${POD_NAME}
     ```
 
-  Here is a [sample output](logs/tensorflow-horovod-imagenet-log.txt).
+    Here is a [sample output](logs/tensorflow-horovod-imagenet-log.txt).
 
 ## Appendix
 

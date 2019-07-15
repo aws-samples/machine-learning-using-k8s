@@ -23,19 +23,19 @@ This document explains how to perform distributed training on [Amazon EKS](https
   2019-02-28 12:14:10   20063161 validation-00128-of-00128
   ```
 
-1. Create an [FSX For Lustre](https://aws.amazon.com/fsx/lustre) and enable data integration with S3. Use the VPC info of the new cluster you created in the first step to create FSX. After you create a FSX for Lustre, you will get a File System Id.
+  The bucket name can be different but all data needs to be in the `imagenet` folder. The training data needs to be in the `train` sub folder and validation data in the `validation` sub folder.
 
-  > Note: FSX can only mount to one availability zone, normally we also put all GPU machines in one availability zone. You have to use single availability when you create EKS cluster. Make sure AZ here match with your eksctl worker nodes AZ.
+1. Create an [FSX For Lustre](https://aws.amazon.com/fsx/lustre) filesystem and enable data integration with S3. Use the VPC info of the GPU-powered EKS cluster created in the first step to create FSX. Note down the file system id after FSX for Lustre is created.
 
+  > Note: FSX can only mount to one AZ. Make sure to create a single-AZ EKS cluster. This is specified in the `aws_config/cluster_config.yaml` file during cluster creation.
 
   ![VPC setup](./fsx-vpc-setup.jpg)
 
-  ![fsx for lustrue](./fsx-s3-integration.png).
-
+  ![fsx for lustrue](./fsx-s3-integration.png)
 
 ## Steps
 
-1. Follow [steps](tensorflow-horovod-synthetic.md#install-mpi-operator) to install mpi-operator
+1. Follow [steps](tensorflow-horovod-synthetic.md#install-mpi-operator) to install mpi-operator.
 
 1. Deploy the [Amazon FSx CSI Plugin](https://www.kubeflow.org/docs/aws/storage/#deploy-the-amazon-fsx-csi-plugin).
 
@@ -46,7 +46,7 @@ This document explains how to perform distributed training on [Amazon EKS](https
   ks apply default -c ${COMPONENT}
   ```
 
-1. Prepare Persistent Volumne (PV), Persistent Volume Claim (PVC) and Storage Class. Go to FSX console and replace `fsxId` and `dnsName` with your FSX info.
+1. Prepare Persistent Volumne (PV), Persistent Volume Claim (PVC) and Storage Class. Go to FSX console and replace `fsxId` and `dnsName` with your FSx info.
 
   ```
   cd ${KUBEFLOW_SRC}/${KFAPP}/ks_app
@@ -69,15 +69,8 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
   EXEC="mpirun,-mca,btl_tcp_if_exclude,lo,-mca,pml,ob1,-mca,btl,^openib,--bind-to,none,-map-by,slot,-x,LD_LIBRARY_PATH,-x,PATH,-x,NCCL_DEBUG=INFO,python,models/resnet/tensorflow/train_imagenet_resnet_hvd.py,--batch_size=256,--model=resnet50,--num_batches=300,--fp16,--display_every=50,--lr_decay_mode=poly,--data_dir=/data/imagenet/train"
   ```
-  > Note: Instead of using synthetic data, job will read from `--data_dir`.
 
-1. Right now, `mpi-job-custom` doesn't support volume in jsonnet, we can manually mount volumes.
-
-  ```
-  ks show default -c ${JOB_NAME} > /tmp/training_job.yaml
-  vim  /tmp/training_job.yaml # add volumes
-  ```
-  Please check [template](../../samples/imagenet/distributed_training/mpi-job-template-fsx.yaml)
+  > NOTE: Instead of using synthetic data, job will read from `--data_dir`.
 
 1. Deploy training job
 

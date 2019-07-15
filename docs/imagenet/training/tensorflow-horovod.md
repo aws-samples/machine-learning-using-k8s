@@ -8,20 +8,20 @@ This document explains how to perform distributed training on [Amazon EKS](https
 
 1. Download and put prepare ImageNet dataset in your S3 bucket like this.
 
-  ```
-  ➜ aws s3 ls s3://eks-dl-benchmark/imagenet/train/
-  2019-02-28 12:03:46   56755552 train-00001-of-01024
-  2019-02-28 12:03:45   56365180 train-00002-of-01024
-  ......
-  2019-02-28 12:03:45   56365180 train-01024-of-01024
+    ```
+    ➜ aws s3 ls s3://eks-dl-benchmark/imagenet/train/
+    2019-02-28 12:03:46   56755552 train-00001-of-01024
+    2019-02-28 12:03:45   56365180 train-00002-of-01024
+    ......
+    2019-02-28 12:03:45   56365180 train-01024-of-01024
 
 
-  ➜ aws s3 ls s3://eks-dl-benchmark/imagenet/validation/
-  2019-02-28 12:14:10   19504012 validation-00001-of-00128
-  2019-02-28 12:14:10   19624967 validation-00002-of-00128
-  ....
-  2019-02-28 12:14:10   20063161 validation-00128-of-00128
-  ```
+    ➜ aws s3 ls s3://eks-dl-benchmark/imagenet/validation/
+    2019-02-28 12:14:10   19504012 validation-00001-of-00128
+    2019-02-28 12:14:10   19624967 validation-00002-of-00128
+    ....
+    2019-02-28 12:14:10   20063161 validation-00128-of-00128
+    ```
 
   The bucket name can be different but all data needs to be in the `imagenet` folder. The training data needs to be in the `train` sub folder and validation data in the `validation` sub folder.
 

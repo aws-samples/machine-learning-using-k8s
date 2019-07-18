@@ -1,0 +1,27 @@
+# For details, Please check eksctl documentation or API specs.
+# https://github.com/weaveworks/eksctl/blob/master/pkg/apis/eksctl.io/v1alpha4/types.go
+
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  # AWS_CLUSTER_NAME and AWS_REGION will override `name` and `region` here.
+  name: kubeflow-aws
+  region: us-west-2
+  version: '1.12'
+# If your region has multiple availability zones, you can specify 3 of them.
+#availabilityZones: ["us-west-2b", "us-west-2c", "us-west-2d"]
+
+# NodeGroup holds all configuration attributes that are specific to a nodegroup
+# You can have several node group in your cluster.
+nodeGroups:
+  - name: gpu-nodegroup
+    instanceType: p3.8xlarge
+    availabilityZones: ["us-west-2b"]
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 2
+    volumeSize: 500
+    ssh:
+      allow: true
+      publicKeyName: arun-us-west2
+

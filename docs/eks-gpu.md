@@ -26,7 +26,7 @@ If you meet any problem during installation, please check [Troubleshooting Deplo
 1. Run the following commands to download the latest `kfctl.sh`:
 
    ```
-   export KUBEFLOW_SRC=/tmp/kubeflow-aws
+   export KUBEFLOW_SRC=~/tmp/kubeflow-aws
    export KUBEFLOW_TAG=v0.5-branch
 
    mkdir -p ${KUBEFLOW_SRC} && cd ${KUBEFLOW_SRC}

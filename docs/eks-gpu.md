@@ -61,7 +61,7 @@ If you meet any problem during installation, please check [Troubleshooting Deplo
    # Customize your Amazon EKS cluster configuration before following the next step
    ```
 
-1. Open `cluster_config.yaml` and update the file so that it looks like as shown:
+1. Open `cluster_config.yaml` and update the file so that it looks like as shown below. This file can also be copied from the [repo](../samples/kubeflow/cluster_config.yaml).
 
    ```
    apiVersion: eksctl.io/v1alpha5

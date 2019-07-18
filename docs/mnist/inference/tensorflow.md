@@ -12,7 +12,7 @@ This document explains how to perform inference of [Fashion-MNIST](https://githu
 1. If you've gone through the [Training MNIST using TensorFlow and Keras on Amazon EKS](../training/tensorflow.md), a model is already stored in the identified S3 bucket. Initialize `S3_BUCKET` variable with the bucket:
 
    ```
-   export S3_BUCKET=eks-ml-example
+   export S3_BUCKET=eks-ml-data
    ```
 
    Skip rest of this section.

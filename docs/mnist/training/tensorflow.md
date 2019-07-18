@@ -92,7 +92,7 @@ This guide uses the [Fashion-MNIST](https://github.com/zalandoresearch/fashion-m
 
 	Test accuracy: 0.876800000668
 
-	Saved model: s3://eks-ml-example/mnist/export/1
+	Saved model: s3://eks-ml-data/mnist/export/1
 	```
 
 ## What happened?
